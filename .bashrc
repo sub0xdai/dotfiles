@@ -20,7 +20,7 @@ alias ll='exa -alF'
 alias la='exa -A'
 alias l='exa -CF'
 alias vim='nvim'
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history | tail -n1 | sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+alias alert='/home/sub0x/dotfiles/scripts/alert.sh'
 alias fetch='neofetch'
 alias shutdown='sync; shutdown -h now'
 alias tor='cd ~/Documents/tor-browser && ./start-tor-browser.desktop'
@@ -50,9 +50,10 @@ alias trestore='tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/restore.sh
 alias tn='tmux new-session -s $(basename $PWD)'
 alias tsd='tsave && tmux detach'
 alias tx='tmuxinator'
+alias tds='tmux detach'
 
 # Activate el-ai
-alias ell-ai='source ~/1-projects/sandbox/venv/bin/activate'
+alias l-ai='source ~/1-projects/sandbox/venv/bin/activate'
 
 
 # Start tmux automatically
@@ -176,3 +177,6 @@ if [ -f "$HOME/dotfiles/.env" ]; then
     export $(grep -v '^#' $HOME/dotfiles/.env | xargs)
 fi
 
+
+# Bash completion
+[ -r /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
