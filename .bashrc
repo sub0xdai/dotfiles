@@ -38,6 +38,10 @@ alias speed='speedtest-cli'
 alias pomo='pomo start -t'
 alias repo='~/dotfiles/scripts/repo.sh'
 alias goproj='~/dotfiles/scripts/setup_go.sh'
+#alias silverbullet='~/.deno/bin/silverbullet ~/1-projects/vaults/silverbullet'
+alias installed='~/dotfiles/scripts/installed.sh'
+
+
 
 # Tmux aliases
 alias tns='tmux new-session -s'
@@ -180,3 +184,13 @@ fi
 
 # Bash completion
 [ -r /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
+
+# ASDF
+export PATH="$HOME/.asdf/shims:$PATH"
+. /opt/asdf-vm/asdf.sh
+#. /opt/asdf-vm/completions/asdf.bash
+
+. "/home/sub0x/.deno/env"
+
+eval "$(deno completions bash)"
+
