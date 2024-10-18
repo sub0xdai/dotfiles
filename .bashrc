@@ -124,56 +124,54 @@ EOF
 
 # Starship prompt
 eval "$(starship init bash)"
-eval "$(zoxide init bash)"
-
-# FZF default command
-export FZF_DEFAULT_COMMAND='fd --type f'
-export TERM=xterm-256color
-
 
 # Clean up and set PATH
 clean_path() {
   echo "$1" | tr ':' '\n' | awk '!seen[$0]++' | tr '\n' ':' | sed 's/:$//'
 }
-# Set PATH
-export PATH=$(clean_path "$HOME/perl5/bin:$HOME/.local/share/gem/ruby/3.2.0/bin:$HOME/.npm-global/bin:$HOME/.atuin/bin:$HOME/.luarocks/bin:$HOME/.cargo/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:$HOME/.local/bin:$HOME/.dotnet:$HOME/.dotnet/tools:$HOME/go/bin:$PATH")
-# Ensure Go binaries are in PATH
-export PATH="$HOME/go/bin:$PATH"
+
+# Set initial PATH
+export PATH="$HOME/.asdf/shims:$HOME/perl5/bin:$HOME/.local/share/gem/ruby/3.2.0/bin:$HOME/.npm-global/bin:$HOME/.atuin/bin:$HOME/.luarocks/bin:$HOME/.cargo/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:$HOME/.local/bin:$HOME/.dotnet:$HOME/.dotnet/tools:$HOME/go/bin:$PATH"
+
+# FZF default command
+export FZF_DEFAULT_COMMAND='fd --type f'
+export TERM=xterm-256color
+
 # Set default browser
 export BROWSER=zen-browser
+
 # Cargo (Rust) environment
 . "$HOME/.cargo/env"
+
 # Ruby Gems
 export PATH="$(ruby -e 'print Gem.user_dir')/bin:$PATH"
-# Pipx
-export PATH="$PATH:$HOME/.local/bin"
+
 # .NET Core
 export DOTNET_ROOT=$HOME/.dotnet
 export PATH=$PATH:$HOME/.dotnet:$HOME/.dotnet/tools
+
 # Perl
 export PATH="/home/sub0x/perl5/bin${PATH:+:${PATH}}"
 export PERL5LIB="/home/sub0x/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"
 export PERL_LOCAL_LIB_ROOT="/home/sub0x/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"
 export PERL_MB_OPT="--install_base \"/home/sub0x/perl5\""
 export PERL_MM_OPT="INSTALL_BASE=/home/sub0x/perl5"
+
 # Luarocks
 eval "$(luarocks path --bin)"
-# Atuin
-export PATH="$HOME/.atuin/bin:$PATH"
+
 # Scripts
 export PATH="$PATH:$HOME/dotfiles/scripts"
+
 # Snap
 export PATH=$PATH:/var/lib/snapd/snap/bin
-# Final PATH cleanup (remove duplicates)
-export PATH=$(clean_path "$PATH")
+
 # Source preexec if available
 [[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
-eval "$(atuin init bash)"
 
 # Tmuxinator environment variables
 export EDITOR='nvim' 
 export SHELL='/bin/bash'
-
 source ~/dotfiles/scripts/grep_open.sh
 
 # Export openapi key
@@ -181,16 +179,21 @@ if [ -f "$HOME/dotfiles/.env" ]; then
     export $(grep -v '^#' $HOME/dotfiles/.env | xargs)
 fi
 
-
 # Bash completion
 [ -r /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
 
 # ASDF
-export PATH="$HOME/.asdf/shims:$PATH"
 . /opt/asdf-vm/asdf.sh
-#. /opt/asdf-vm/completions/asdf.bash
 
-. "/home/sub0x/.deno/env"
-
+# Deno
+. "$HOME/.deno/env"
 eval "$(deno completions bash)"
 
+# Final PATH cleanup (remove duplicates)
+export PATH=$(clean_path "$PATH")
+
+# Initialize zoxide
+eval "$(zoxide init bash)"
+
+# Initialize atuin
+eval "$(atuin init bash)"
