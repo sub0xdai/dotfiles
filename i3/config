@@ -39,8 +39,15 @@ client.urgent           #9B8BB5 #9B8BB5 #9B8BB5 #9B8BB5
 # DISPLAY SETUP
 #====================
 
-# Configure monitors
+# Configure monitors and cursor
 exec_always --no-startup-id xrandr --output HDMI-0 --primary --mode 3840x2160 --output DP-1 --mode 1920x1080 --left-of HDMI-0
+exec_always --no-startup-id xsetroot -cursor_name left_ptr
+exec_always --no-startup-id gsettings set org.gnome.desktop.interface cursor-theme 'capitaine-cursors'
+exec_always --no-startup-id gsettings set org.gnome.desktop.interface cursor-size 24
+exec_always --no-startup-id echo "Xcursor.size: 24" > ~/.Xresources
+exec_always --no-startup-id xrdb -merge ~/.Xresources
+exec_always --no-startup-id gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gdk/WindowScalingFactor': <2>}"
+exec_always --no-startup-id gsettings set org.gnome.desktop.interface scaling-factor 2
 
 
 #====================
@@ -67,7 +74,7 @@ exec_always --no-startup-id picom -b --config ~/.config/picom/picom.conf
 exec_always --no-startup-id /home/sub0x/autotiling/target/release/autotiling &
 exec_always --no-startup-id gsettings set org.gnome.desktop.interface gtk-theme $theme
 exec_always --no-startup-id gsettings set org.gnome.desktop.interface icon-theme "Papirus-Dark"
-exec --no-startup-id xss-lock --transfer-sleep-lock -- betterlockscreen -l
+exec --no-startup-id xidlehook --timer 2500 '/home/sub0x/dotfiles/scripts/betterlock_single_display.sh' ''
 exec --no-startup-id xfce4-power-manager
 exec --no-startup-id gammastep
 exec_always --no-startup-id xmodmap ~/.Xmodmap

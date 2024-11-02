@@ -33,14 +33,15 @@ alias update='sudo pacman -Syu'
 alias reload='source ~/.bashrc'
 alias weather='curl wttr.in/melbourne'
 alias fman='compgen -c | fzf | xargs man'
-alias fzf='fzf --preview="bat --color=always {}"'
+alias fz='fzf --preview="bat --color=always {}" --bind "enter:execute(nvim {})+abort"'
 alias speed='speedtest-cli'
 alias pomo='pomo start -t'
 alias repo='~/dotfiles/scripts/repo.sh'
 alias goproj='~/dotfiles/scripts/setup_go.sh'
-#alias silverbullet='~/.deno/bin/silverbullet ~/1-projects/vaults/silverbullet'
+alias silverbullet='~/.deno/bin/silverbullet ~/1-projects/vaults/silverbullet'
 alias installed='~/dotfiles/scripts/installed.sh'
-
+alias i3-msg='i3-msg -s $(ls /run/user/1000/i3/ipc-socket.*)'
+alias peel='tar xf'
 
 
 # Tmux aliases
@@ -51,10 +52,11 @@ alias tls='tmux list-sessions'
 alias tks='tmux kill-session -t'
 alias tsave='tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/save.sh'
 alias trestore='tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/restore.sh'
-alias tn='tmux new-session -s $(basename $PWD)'
+alias tn='tmux new -s "$(basename "$PWD")"'
 alias tsd='tsave && tmux detach'
 alias tx='tmuxinator'
 alias tds='tmux detach'
+alias ts='tmux switch-client -t'
 
 # Activate el-ai
 alias l-ai='source ~/1-projects/sandbox/venv/bin/activate'
@@ -157,6 +159,9 @@ export PERL_LOCAL_LIB_ROOT="/home/sub0x/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCA
 export PERL_MB_OPT="--install_base \"/home/sub0x/perl5\""
 export PERL_MM_OPT="INSTALL_BASE=/home/sub0x/perl5"
 
+# ASDF py
+export PATH="/home/sub0x/.asdf/installs/python/3.12.0/bin:$PATH"
+
 # Luarocks
 eval "$(luarocks path --bin)"
 
@@ -197,3 +202,8 @@ eval "$(zoxide init bash)"
 
 # Initialize atuin
 eval "$(atuin init bash)"
+
+# ~/.tmux/plugins
+export PATH=$HOME/.tmux/plugins/t-smart-tmux-session-manager/bin:$PATH
+# ~/.config/tmux/plugins
+export PATH=$HOME/.config/tmux/plugins/t-smart-tmux-session-manager/bin:$PATH

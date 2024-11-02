@@ -1,5 +1,10 @@
 #!/bin/bash
 
+exec > >(tee -a /tmp/lockscreen.log) 2>&1
+echo "Lock script started at $(date)"
+echo "Current user: $(whoami)"
+echo "Current DISPLAY: $DISPLAY"
+
 # Function to log out and sleep
 logout_and_sleep() {
     i3-msg exit
