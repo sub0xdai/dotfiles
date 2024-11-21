@@ -42,17 +42,15 @@ alias silverbullet='~/.deno/bin/silverbullet ~/1-projects/vaults/silverbullet'
 alias installed='~/dotfiles/scripts/installed.sh'
 alias i3-msg='i3-msg -s $(ls /run/user/1000/i3/ipc-socket.*)'
 alias peel='tar xf'
+alias ws='windsurf'
 
 
 # Tmux aliases
-alias tns='tmux new-session -s'
 alias trs='tmux rename-session -t'
-alias tas='tmux attach-session -t'
 alias tls='tmux list-sessions'
 alias tks='tmux kill-session -t'
 alias tsave='tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/save.sh'
 alias trestore='tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/restore.sh'
-alias tn='tmux new -s "$(basename "$PWD")"'
 alias tsd='tsave && tmux detach'
 alias tx='tmuxinator'
 alias tds='tmux detach'
@@ -61,11 +59,6 @@ alias ts='tmux switch-client -t'
 # Activate el-ai
 alias l-ai='source ~/1-projects/sandbox/venv/bin/activate'
 
-
-# Start tmux automatically
-if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
-  exec tmux
-fi
 
 # shell fn to create zettel note from terminal
 zk() {
@@ -202,6 +195,8 @@ eval "$(zoxide init bash)"
 
 # Initialize atuin
 eval "$(atuin init bash)"
+
+export MANPAGER="nvim +Man!"
 
 # ~/.tmux/plugins
 export PATH=$HOME/.tmux/plugins/t-smart-tmux-session-manager/bin:$PATH
