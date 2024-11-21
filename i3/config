@@ -57,9 +57,10 @@ exec_always --no-startup-id gsettings set org.gnome.desktop.interface scaling-fa
 exec_always --no-startup-id feh --randomize --bg-scale ~/Pictures/wallpapers/*
 
 
-# calculator floating
+#  floating
 for_window [class="gnome-calculator"] floating enable
 for_window [class="nautilus"] floating enable
+for_window [class="gnome-text-editor"] floating enable
 
 #====================
 # AUTOSTART APPLICATIONS
