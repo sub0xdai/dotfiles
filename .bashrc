@@ -27,7 +27,6 @@ alias tor='cd ~/Documents/tor-browser && ./start-tor-browser.desktop'
 alias commit='git add -A; git commit -m'
 alias ssha='eval $(ssh-agent) && ssh-add'
 alias virt='virt-manager'
-alias tm="tmux"
 alias powerm="xfce4-power-manager-settings"
 alias update='sudo pacman -Syu'
 alias reload='source ~/.bashrc'
@@ -42,7 +41,7 @@ alias silverbullet='~/.deno/bin/silverbullet ~/1-projects/vaults/silverbullet'
 alias installed='~/dotfiles/scripts/installed.sh'
 alias i3-msg='i3-msg -s $(ls /run/user/1000/i3/ipc-socket.*)'
 alias peel='tar xf'
-alias ws='windsurf'
+alias wind='windsurf'
 
 
 # Tmux aliases
@@ -54,7 +53,10 @@ alias trestore='tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/restore.sh
 alias tsd='tsave && tmux detach'
 alias tx='tmuxinator'
 alias tds='tmux detach'
+alias tas="tmux attach -t"
 alias ts='tmux switch-client -t'
+alias tm="tmux"
+alias tns="tmux new-session -s"
 
 # Activate el-ai
 alias l-ai='source ~/1-projects/sandbox/venv/bin/activate'
@@ -197,7 +199,7 @@ eval "$(zoxide init bash)"
 eval "$(atuin init bash)"
 
 export MANPAGER="nvim +Man!"
-
+export PATH=$PATH:/home/sub0x/.asdf/installs/golang/1.23.2/packages/bin
 # ~/.tmux/plugins
 export PATH=$HOME/.tmux/plugins/t-smart-tmux-session-manager/bin:$PATH
 # ~/.config/tmux/plugins

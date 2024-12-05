@@ -20,7 +20,7 @@ font pango:JetBrainsMono Nerd Font 14
 #====================
 
 # Set gaps
-gaps inner 4
+gaps inner 7
 gaps outer 2
 smart_gaps off
 
