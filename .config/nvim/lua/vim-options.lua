@@ -28,7 +28,7 @@ vim.keymap.set('n', '<leader>cx', ':chmod +x %<CR>', opts)
 
 
 -- Copy Full Path of Current File
-vim.keymap.set('n', '<Leader>CPF', ':let @+ = expand("%:p")<CR>', { noremap = true, silent = true, desc = "Copy full path of current file" })
+vim.keymap.set('n', '<Leader>cpf', ':let @+ = expand("%:p")<CR>', { noremap = true, silent = true, desc = "Copy full path of current file" })
 
 -- Make File Executable
 vim.keymap.set('n', '<Leader>X', ':!chmod +x %<CR>', { noremap = true, silent = true, desc = "Make current file executable" })

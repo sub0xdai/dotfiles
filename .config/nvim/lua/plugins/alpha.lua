@@ -42,7 +42,7 @@ return {
 
       -- Footer
 
-local quote ="sudo rm -rf --no-preserve-root /"
+local quote ="Mark 11:24"
 local width = 140 -- Adjust based on your terminal width
 local padding = math.floor((width - #quote) / 2)
 local padded_quote = string.rep(" ", padding) .. quote .. string.rep(" ", padding)

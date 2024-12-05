@@ -15,7 +15,7 @@ return {
                 percentage = 01,
             },
             config = function()
-                --vim.cmd.colorscheme "catppuccin-frappe"
+                vim.cmd.colorscheme "catppuccin-frappe"
             end
         }
     },
@@ -74,7 +74,7 @@ return {
                     -- Custom modifications before applying highlights
                 end,
             })
-            -- vim.cmd("colorscheme rose-pine")
+             -- vim.cmd("colorscheme rose-pine")
         end
     },
     {
@@ -94,7 +94,7 @@ return {
                     -- Custom highlight modifications can be added here
                 end,
             })
-            -- vim.cmd("colorscheme tokyonight")
+             -- vim.cmd("colorscheme tokyonight")
         end
     },
     {
@@ -106,7 +106,7 @@ return {
             require("dracula").setup({
                 transparent = true,  -- Enable transparency
             })
-            -- vim.cmd("colorscheme dracula")
+            --vim.cmd("colorscheme dracula")
         end
     },
     {
@@ -136,7 +136,7 @@ return {
                     background = true,
                 },
             })
-           -- vim.cmd("colorscheme onedark")
+          -- vim.cmd("colorscheme onedark")
         end
     },
 
@@ -189,7 +189,7 @@ return {
 					-- type = "#dcaed7",
 				},
 			})
-      vim.cmd("colorscheme vague")
+      --vim.cmd("colorscheme vague")
 		end,
 	},
 	{
