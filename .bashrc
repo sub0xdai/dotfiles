@@ -204,3 +204,5 @@ export PATH=$PATH:/home/sub0x/.asdf/installs/golang/1.23.2/packages/bin
 export PATH=$HOME/.tmux/plugins/t-smart-tmux-session-manager/bin:$PATH
 # ~/.config/tmux/plugins
 export PATH=$HOME/.config/tmux/plugins/t-smart-tmux-session-manager/bin:$PATH
+
+[ -f "$HOME/.secrets" ] && source "$HOME/.secrets"
