@@ -78,7 +78,7 @@ zkl() {
     fi
     read -p "Log: " log_entry
     sed -i '/# Log/,/^---/{/^---/!s/$/\n- '"$log_entry"'/;:a;n;ba}' "$todays_note"
-    echo "Log added"
+    echo "Entry added"
 }
 
 # Function to add a todo item to today's note
@@ -89,9 +89,9 @@ zkt() {
     if [ ! -f "$todays_note" ]; then
         create_daily_note
     fi
-    read -p "Todo: " todo_item
-    sed -i '/# Todo/,/^---/{/^---/!s/$/\n- [ ] '"$todo_item"'/;:a;n;ba}' "$todays_note"
-    echo "Todo added"
+    read -p "Task: " task_item
+    sed -i '/# Task/,/^---/{/^---/!s/$/\n- [ ] '"$task_item"'/;:a;n;ba}' "$todays_note"
+    echo "Task added"
 }
 
 # Function to create a new daily note with the template
@@ -111,7 +111,7 @@ tags: [daily, journal]
 
 -
 ---
-# Todo
+# Task
 
 - [ ] 
 ---
