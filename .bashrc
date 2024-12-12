@@ -42,7 +42,7 @@ alias installed='~/dotfiles/scripts/installed.sh'
 alias i3-msg='i3-msg -s $(ls /run/user/1000/i3/ipc-socket.*)'
 alias peel='tar xf'
 alias wind='windsurf'
-
+alias sysinfo='~/dotfiles/scripts/my_system.sh'
 
 # Tmux aliases
 alias trs='tmux rename-session -t'
