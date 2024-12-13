@@ -1,0 +1,6 @@
+--target=$(HOME)
+--dir=$(HOME)/dotfiles
+--ignore=README.md
+--ignore=.git
+--ignore=.gitignore
+--ignore=*.log
