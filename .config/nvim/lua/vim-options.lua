@@ -76,6 +76,22 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
+-- Terminal config (nvim)
+
+
+local sub0xterm = require('plugins.sub0xterm')
+
+vim.keymap.set("n", "<space>st", ":ToggleFloatingTerminal<CR>", { desc = "Toggle Floating Terminal", silent = true })
+
+vim.api.nvim_create_autocmd("TermOpen", {
+    group = vim.api.nvim_create_augroup("Sub0xTerminal", { clear = true }),
+    callback = function()
+        vim.opt_local.number = false
+        vim.opt_local.relativenumber = false
+    end,
+})
+
+
 -- Tabs and Indentation
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
@@ -104,5 +120,3 @@ vim.opt.showmode = false
 
 -- Filetype Plugins and Indentation
 vim.cmd("filetype plugin indent on")
-
-
