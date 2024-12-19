@@ -15,7 +15,7 @@ return {
                 percentage = 01,
             },
             config = function()
-                vim.cmd.colorscheme "catppuccin-frappe"
+             vim.cmd.colorscheme "catppuccin-mocha"
             end
         }
     },
@@ -94,7 +94,7 @@ return {
                     -- Custom highlight modifications can be added here
                 end,
             })
-             -- vim.cmd("colorscheme tokyonight")
+            --vim.cmd("colorscheme tokyonight")
         end
     },
     {
@@ -142,60 +142,61 @@ return {
 
 
 	{
-		"vague2k/vague.nvim",
+    "vague2k/vague.nvim",
     lazy = false,
     name = "vague",
     priority = 1000,
-		config = function()
-			require("vague").setup({
-				-- optional configuration here
-				transparent = true,
-				style = {
-					-- "none" is the same thing as default. But "italic" and "bold" are also valid options
-					boolean = "none",
-					number = "none",
-					float = "none",
-					error = "none",
-					comments = "none",
-					conditionals = "none",
-					functions = "none",
-					headings = "bold",
-					operators = "none",
-					strings = "none",
-					variables = "none",
-
-					-- keywords
-					keywords = "none",
-					keyword_return = "none",
-					keywords_loop = "none",
-					keywords_label = "none",
-					keywords_exception = "none",
-
-					-- builtin
-					builtin_constants = "none",
-					builtin_functions = "none",
-					builtin_types = "none",
-					builtin_variables = "none",
-				},
-				colors = {
-					func = "#bc96b0",
-					keyword = "#787bab",
-					-- string = "#d4bd98",
-					string = "#8a739a",
-					-- string = "#f2e6ff",
-					-- number = "#f2e6ff",
-					-- string = "#d8d5b1",
-					number = "#8f729e",
-					-- type = "#dcaed7",
-				},
-			})
-      --vim.cmd("colorscheme vague")
-		end,
-	},
-	{
-		"jnurmine/Zenburn",
-	},
-	{
-		"RRethy/base16-nvim",
-	},
+    config = function()
+        require("vague").setup({
+            transparent = true,
+            style = {
+                -- Base styles
+                boolean = "none",
+                number = "none",
+                float = "none",
+                error = "none",
+                comments = "italic",  -- Added italic for better code readability
+                conditionals = "none",
+                functions = "italic",
+                headings = "bold",
+                operators = "none",
+                strings = "none",
+                variables = "none",
+                -- Keywords
+                keywords = "none",
+                keyword_return = "none",
+                keywords_loop = "none",
+                keywords_label = "none",
+                keywords_exception = "none",
+                -- Builtin elements
+                builtin_constants = "none",
+                builtin_functions = "none",
+                builtin_types = "none",
+                builtin_variables = "none",
+            },
+            colors = {
+                -- Core syntax elements
+                func = "#bc96b0",            -- Soft pink for functions
+                keyword = "#787bab",         -- Muted purple for keywords
+                string = "#8a739a",          -- Dusty purple for strings
+                number = "#8f729e",          -- Deep lavender for numbers
+                -- Additional syntax elements
+                type = "#9a8fa3",           -- Soft mauve for types
+                constant = "#a686a3",       -- Muted rose for constants
+                parameter = "#b5a0b2",      -- Light plum for parameters
+                operator = "#8b7b96",       -- Grayed purple for operators
+                variable = "#a394aa",       -- Gentle purple for variables 
+                -- Special elements
+                comment = "#6d6d8f",        -- Muted blue-gray for comments
+                warning = "#c6a9bc",        -- Light rose for warnings
+                error = "#b58aa3",          -- Deeper rose for errors  
+                -- UI elements
+                selection = "#8f8299",      -- Muted purple for selections
+                cursor = "#b8a6b5",         -- Light mauve for cursor
+                pmenu = "#968aa3",          -- Soft purple for popup menu
+            },
+        })
+        -- vim.cmd("colorscheme vague")
+    end,
+  }
 }
