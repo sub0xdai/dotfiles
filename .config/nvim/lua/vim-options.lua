@@ -12,22 +12,21 @@ vim.opt.splitright = true           -- open new horizontal splits right
 vim.opt.splitkeep = "cursor"
 vim.wo.number = true
 
--- Key Mappings
-vim.keymap.set('n', '<c-k>', ':wincmd k<CR>')
-vim.keymap.set('n', '<c-j>', ':wincmd j<CR>')
-vim.keymap.set('n', '<c-h>', ':wincmd h<CR>')
-vim.keymap.set('n', '<c-l>', ':wincmd l<CR>')
-vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
-vim.keymap.set('n', '<leader>h', ':nohlsearch<CR>')
-vim.keymap.set('n', '<C-n>', ':vnew<CR>', {noremap = true, silent = true})
-vim.keymap.set('n', '<leader>cx', ':chmod +x %<CR>', opts)
+-- Window navigation
+vim.keymap.set('n', '<c-k>', '<cmd>wincmd k<CR>', { silent = true })
+vim.keymap.set('n', '<c-j>', '<cmd>wincmd j<CR>', { silent = true })
+vim.keymap.set('n', '<c-h>', '<cmd>wincmd h<CR>', { silent = true })
+vim.keymap.set('n', '<c-l>', '<cmd>wincmd l<CR>', { silent = true })
 
+-- Clear search highlight
+vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>', { silent = true })
 
--- Copy Full Path of Current File
-vim.keymap.set('n', '<Leader>cpf', ':let @+ = expand("%:p")<CR>', { noremap = true, silent = true, desc = "Copy full path of current file" })
+-- New vertical split
+vim.keymap.set('n', '<C-n>', '<cmd>vnew<CR>', { noremap = true, silent = true })
 
--- Make File Executable
-vim.keymap.set('n', '<Leader>X', ':!chmod +x %<CR>', { noremap = true, silent = true, desc = "Make current file executable" })
+-- File operations
+vim.keymap.set('n', '<Leader>X', '<cmd>!chmod +x %<CR>', { noremap = true, silent = true, desc = "Make current file executable" })
+vim.keymap.set('n', '<Leader>cpf', '<cmd>let @+ = expand("%:p")<CR>', { noremap = true, silent = true, desc = "Copy full path of current file" })
 
 -- Key Mappings for Buffer Navigation
 vim.keymap.set('n', '<C-[>', ':bprevious<CR>', { noremap = true, silent = true })
@@ -72,9 +71,8 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
+
 -- Terminal config (nvim)
-
-
 local sub0xterm = require('plugins.sub0xterm')
 
 vim.keymap.set("n", "<space>st", ":ToggleFloatingTerminal<CR>", { desc = "Toggle Floating Terminal", silent = true })
@@ -99,13 +97,13 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = "go",
   callback = function()
     vim.opt_local.expandtab = false
-    vim.opt_local.tabstop = 8
-    vim.opt_local.shiftwidth = 8
+    vim.opt_local.tabstop = 3
+    vim.opt_local.shiftwidth = 3
   end,
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = {"python", "c", "cpp", "cs", "h", "hpp"},
+  pattern = {"python", "c", "cpp", "cs", "h", "hpp", "php", "rust", "xml", "dockerfile"},
   callback = function()
     vim.opt_local.expandtab = true
     vim.opt_local.tabstop = 4

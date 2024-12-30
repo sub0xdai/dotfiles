@@ -107,11 +107,17 @@ tags: [daily, journal]
 ---
 >  [[$(date -d "yesterday" +%Y-%m-%d)]] <=> [[$(date -d "tomorrow" +%Y-%m-%d)]]
 ---
-> [!NOTE] # Log
+
+> [!seealso] # Log
+
 -
+
 ---
+
 > [!tldr] # Task
+
 - [ ] 
+
 ---
 > [[5-notes]]
 EOF
