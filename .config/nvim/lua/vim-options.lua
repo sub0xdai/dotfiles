@@ -1,10 +1,6 @@
 vim = vim or {}
 
 -- General Settings
-vim.cmd("set expandtab")
-vim.cmd("set tabstop=2")
-vim.cmd("set softtabstop=2")
-vim.cmd("set shiftwidth=2")
 vim.g.mapleader = " "
 vim.g.maplocalleader = ' '
 vim.g.background = "light"
@@ -92,11 +88,30 @@ vim.api.nvim_create_autocmd("TermOpen", {
 })
 
 
--- Tabs and Indentation
+-- Tabs and Indentation - globally
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.shiftround = true
 vim.opt.expandtab = true
+
+-- File type specific indentation
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "go",
+  callback = function()
+    vim.opt_local.expandtab = false
+    vim.opt_local.tabstop = 8
+    vim.opt_local.shiftwidth = 8
+  end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = {"python", "c", "cpp", "cs", "h", "hpp"},
+  callback = function()
+    vim.opt_local.expandtab = true
+    vim.opt_local.tabstop = 4
+    vim.opt_local.shiftwidth = 4
+  end,
+})
 
 -- Additional Commands
 vim.cmd [[ set noswapfile ]]
@@ -113,7 +128,6 @@ vim.opt.undodir = vim.fn.stdpath('config') .. '/undo'
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.signcolumn = "yes"
-vim.opt.wrap = false
 vim.opt.wrap = true
 vim.opt.linebreak = true
 vim.opt.showmode = false
