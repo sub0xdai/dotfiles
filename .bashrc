@@ -56,7 +56,7 @@ alias tds='tmux detach'
 alias tas="tmux attach -t"
 alias ts='tmux switch-client -t'
 alias tm="tmux"
-alias tns="tmux new-session -s"
+alias tns="tmux new-session -d -s"
 
 # Activate el-ai
 alias l-ai='source ~/1-projects/sandbox/venv/bin/activate'
@@ -107,12 +107,10 @@ tags: [daily, journal]
 ---
 >  [[$(date -d "yesterday" +%Y-%m-%d)]] <=> [[$(date -d "tomorrow" +%Y-%m-%d)]]
 ---
-# Log
-
+> [!NOTE] # Log
 -
 ---
-# Task
-
+> [!tldr] # Task
 - [ ] 
 ---
 > [[5-notes]]

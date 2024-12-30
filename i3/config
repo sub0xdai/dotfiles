@@ -224,3 +224,4 @@ bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcu
 
 # Start XDG autostart .desktop files using dex
 exec --no-startup-id dex --autostart --environment i3
+exec --no-startup-id dunst
