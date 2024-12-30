@@ -5,6 +5,9 @@ general.import = [
 [env]
 TERM = "xterm-256color"
 
+[terminal.shell]
+program = "/usr/bin/zsh"
+
 [font]
 size = 14.0
 

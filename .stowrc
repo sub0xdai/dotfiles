@@ -1,6 +1,6 @@
---target=$(HOME)
---dir=$(HOME)/dotfiles
+--target=/home/sub0x
+--dir=/home/sub0x/dotfiles
 --ignore=README.md
 --ignore=.git
 --ignore=.gitignore
---ignore=*.log
+--ignore=.*\.log$
