@@ -32,7 +32,6 @@ alias ls='exa --icons --group-directories-first --color=always'
 alias ll='exa -lah --icons --group-directories-first --color=always'
 alias la='exa -a --icons --group-directories-first --color=always'
 alias l='exa -F --icons --group-directories-first --color=always'
-alias lt='exa -aT --icons --group-directories-first --color=always' # Tree listing
 alias l.='exa -a | grep -E "^\." --color=always' # Show only dot files
 alias vim='nvim'
 alias alert='/home/sub0x/dotfiles/scripts/alert.sh'
@@ -43,10 +42,8 @@ alias commit='git add -A; git commit -m'
 alias ssha='eval $(ssh-agent) && ssh-add'
 alias virt='virt-manager'
 alias powerm="xfce4-power-manager-settings"
-alias update='sudo pacman -Syu'
 alias weather='curl wttr.in/melbourne'
 alias fman='compgen -c | fzf | xargs man'
-alias fz='fzf --preview="bat --color=always {}" --bind "enter:execute(nvim {})+abort"'
 alias speed='speedtest-cli'
 alias pomo='pomo start -t'
 alias repo='~/dotfiles/scripts/repo.sh'
@@ -57,10 +54,16 @@ alias i3-msg='i3-msg -s $(ls /run/user/1000/i3/ipc-socket.*)'
 alias peel='tar xf'
 alias wind='windsurf'
 alias sysinfo='~/dotfiles/scripts/my_system.sh'
+alias lazy='lazygit'
 
 # Dir colors for exa
-if [ -x /usr/bin/dircolors ]; then
+if command -v dircolors &> /dev/null; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+elif [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(/usr/bin/dircolors -b ~/.dircolors)" || eval "$(/usr/bin/dircolors -b)"
+else
+    # Fallback color configuration if dircolors is not available
+    export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
 fi
 
 # Tmux aliases
@@ -80,13 +83,26 @@ alias tns="tmux new-session -d -s"
 # Activate el-ai
 alias l-ai='source ~/1-projects/sandbox/venv/bin/activate'
 
-# Replace the simple reload alias with a function
+# Reload shell configuration files
 reload() {
     if [ -n "$ZSH_VERSION" ]; then
-        source ~/.zshrc
+        # If using Zsh, source .zshrc and shell_common
+        if [ -f ~/.zshrc ]; then
+            source ~/.zshrc
+        fi
+        if [ -f ~/.shell_common ]; then
+            source ~/.shell_common
+        fi
     else
-        source ~/.bashrc
+        # If not using Zsh (assuming Bash), source .bashrc and shell_common
+        if [ -f ~/.bashrc ]; then
+            source ~/.bashrc
+        fi
+        if [ -f ~/.shell_common ]; then
+            source ~/.shell_common
+        fi
     fi
+
 }
 
 # Common functions
@@ -105,7 +121,7 @@ zkl() {
     fi
     echo -n "Log: "
     read log_entry
-    sed -i '/# Log/,/^---/{/^---/!s/$/\n- '"$log_entry"'/;:a;n;ba}' "$todays_note"
+    sed -i '/Log/,/^---/{/^---/!s/$/\n- '"$log_entry"'/;:a;n;ba}' "$todays_note"
     echo "Entry added"
 }
 
@@ -118,27 +134,61 @@ zkt() {
     fi
     echo -n "Task: "
     read task_item
-    sed -i '/# Task/,/^---/{/^---/!s/$/\n- [ ] '"$task_item"'/;:a;n;ba}' "$todays_note"
+    sed -i '/Task/,/^---/{/^---/!s/$/\n- [ ] '"$task_item"'/;:a;n;ba}' "$todays_note"
     echo "Task added"
 }
 
 create_daily_note() {
-    cat << EOF > "$todays_note"
+    cat << 'EOF' > "$todays_note"
 ---
-id: $(uuidgen)
-title: $today
-desc: journal and log with tasks
-alias: []
-tags: [daily, journal]
+id: <% tp.user.uuid() %>
+title: <% tp.file.title %>
+desc: daily log with tasks
+tags: [journal]
 ---
 ---
->  [[$(date -d "yesterday" +%Y-%m-%d)]] <=> [[$(date -d "tomorrow" +%Y-%m-%d)]]
+# <% moment(tp.file.title, 'YYYY-MM-DD').format("dddd, DD MMMM YYYY") %>
+
+>  [[<% tp.date.now("YYYY-MM-DD", -1) %>]] <=> [[<% tp.date.now("YYYY-MM-DD", +1) %>]]
 ---
-> [!seealso] # Log
--
+
+> [!NOTE] Log
+- 
+
 ---
-> [!tldr] # Task
+
+> [!tldr] Task
 - [ ] 
+
+---
+
+> [!warning] Backlog
+
+```dataviewjs
+// Get dates for last 5 days
+const dates = [];
+for (let i = 0; i < 5; i++) {
+    const d = dv.date("today").minus({days: i});
+    dates.push(d.toFormat("yyyy-MM-dd"));
+}
+
+// Create regex pattern from dates
+const pattern = dates.map(d => d.replace(/-/g, "-")).join("|");
+
+// Create tasks query
+const query = `
+not done
+hide backlinks
+path regex matches /${pattern}/
+description regex does not match /^$/
+sort by created
+short mode
+`;
+
+// Output tasks block
+dv.paragraph("```tasks\n" + query + "\n```");
+```
+
 ---
 > [[5-notes]]
 EOF
@@ -150,10 +200,12 @@ export BROWSER=zen-browser
 export TERM=xterm-256color
 export MANPAGER="nvim +Man!"
 
-# FZF setup with Catppuccin Mocha theme
+# FZF Configuration
+
+# Default search command
 export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git --exclude node_modules --exclude .cache"
 
-# FZF setup with Catppuccin colors and transparent terminal
+# FZF default options with Catppuccin Mocha theme
 export FZF_DEFAULT_OPTS="
   --height 50% 
   --layout=reverse 
@@ -167,21 +219,36 @@ export FZF_DEFAULT_OPTS="
   --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc
   --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#2dd4bf"
 
-# Use the same command for CTRL+T
+# Ctrl+T configuration
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-
-# Directory search command for ALT+C
-export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git --exclude node_modules"
-
-# Enhanced file preview with bat
 export FZF_CTRL_T_OPTS="
   --preview 'bat --style=numbers --color=always --line-range :500 {}' 
-  --preview-window 'right:60%:wrap'"
+  --preview-window 'right:60%:wrap'
+  --color=border:#aa96da
+  --border-label=' Ctrl+T ' 
+  --border-label-pos=2"
 
-# Directory preview with eza tree
+# Alt+C configuration
+export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git --exclude node_modules"
 export FZF_ALT_C_OPTS="
   --preview 'eza --icons=always --tree --level=2 --color=always {}' 
-  --preview-window 'right:60%'"
+  --preview-window 'right:60%'
+  --color=border:#a6e3a1
+  --border-label=' Alt+C ' 
+  --border-label-pos=2"
+
+# FZF Alias with Enhanced Configuration
+alias fz='fzf \
+  --preview="bat --color=always {}" \
+  --bind "enter:execute(nvim {})+abort" \
+  --border=rounded \
+  --margin=1 \
+  --padding=1 \
+  --color=border:#89b4fa,spinner:#9080b3,pointer:#9080b3 \
+  --color=bg:-1,bg+:-1,header:#cba6f7 \
+  --color=fg:#e0def4,fg+:#e0def4,prompt:#cba6f7 \
+  --border-label=" FZF " \
+  --border-label-pos=2'
 
 # Tmux popup configuration
 export FZF_TMUX_OPTS="-p 90%,70% -w 90% -h 70%"

@@ -1,11 +1,11 @@
-# Source common configurations
-source ~/.shell_common
-
 # Oh My Zsh configuration
 export ZSH="$HOME/.oh-my-zsh"
 
 # Set Oh My Zsh theme (though you're using starship, keep this as fallback)
 ZSH_THEME="robbyrussell"
+
+# ASDF
+. /opt/asdf-vm/asdf.sh
 
 # Oh My Zsh plugins
 plugins=(
@@ -24,6 +24,10 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
+
+# Source common configurations
+source ~/.shell_common
+
 # Zsh-specific settings
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
@@ -41,8 +45,7 @@ eval "$(atuin init zsh)"
 # Deno
 . "$HOME/.deno/env"
 
-# ASDF
-. /opt/asdf-vm/asdf.sh
+
 
 # Clean path (using zsh syntax)
 typeset -U PATH path
