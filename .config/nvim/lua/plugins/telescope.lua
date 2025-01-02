@@ -5,9 +5,13 @@ return {
   {
     "nvim-telescope/telescope.nvim",
     tag = "0.1.5",
-    dependencies = { 
+    dependencies = {
       "nvim-lua/plenary.nvim",
-      "jvgrootveld/telescope-zoxide",           
+      "jvgrootveld/telescope-zoxide",
+      {
+        "nvim-telescope/telescope-fzf-native.nvim",
+        build = "make"
+      }
     },
     config = function()
       require("telescope").setup({
@@ -15,29 +19,34 @@ return {
           ["ui-select"] = {
             require("telescope.themes").get_dropdown({}),
           },
+          fzf = {
+            fuzzy = true,
+            override_generic_sorter = true,
+            override_file_sorter = true,
+            case_mode = "smart_case",
+          },
         },
       })
       local builtin = require("telescope.builtin")
-          vim.keymap.set("n", "<leader><leader>", builtin.find_files, {desc="Find"})
-          vim.keymap.set("n", "<leader>fg", builtin.live_grep, {desc="Grep"})
-          vim.keymap.set("n", "<leader>of", builtin.oldfiles, {desc="Recent"})
-          vim.keymap.set('n', '<leader>fb', builtin.buffers, {desc="Buffers"})
-          vim.keymap.set("n", "<leader>fz", builtin.current_buffer_fuzzy_find, {desc="Current"})
-          vim.keymap.set("n", "<leader>fo", [[<cmd>lua require('telescope').extensions.zoxide.list()<CR>]], {desc="Zoxide"})
-          vim.keymap.set("n", "<leader>fm", builtin.marks, {desc="Marks"})
-          vim.keymap.set("n", "<leader>gf", builtin.git_files, {desc="GitFiles"})
-          vim.keymap.set("n", "<leader>fh", builtin.help_tags, {desc="Help"})
-          vim.keymap.set("n", "<leader>fk", builtin.keymaps, {desc="Maps"})
-          vim.keymap.set("n", "<leader>fr", builtin.lsp_references, {desc="References"})
-          vim.keymap.set("n", "<leader>fd", builtin.lsp_definitions, {desc="Definitions"})
-          vim.keymap.set("n", "<leader>fs", builtin.lsp_document_symbols, {desc="Symbols"})
+      vim.keymap.set("n", "<leader><leader>", builtin.find_files, {desc="Find"})
+      vim.keymap.set("n", "<leader>fg", builtin.live_grep, {desc="Grep"})
+      vim.keymap.set("n", "<leader>of", builtin.oldfiles, {desc="Recent"})
+      vim.keymap.set('n', '<leader>fb', builtin.buffers, {desc="Buffers"})
+      vim.keymap.set("n", "<leader>fz", builtin.current_buffer_fuzzy_find, {desc="Current"})
+      vim.keymap.set("n", "<leader>fo", [[<cmd>lua require('telescope').extensions.zoxide.list()<CR>]], {desc="Zoxide"})
+      vim.keymap.set("n", "<leader>fm", builtin.marks, {desc="Marks"})
+      vim.keymap.set("n", "<leader>gf", builtin.git_files, {desc="GitFiles"})
+      vim.keymap.set("n", "<leader>fh", builtin.help_tags, {desc="Help"})
+      vim.keymap.set("n", "<leader>fk", builtin.keymaps, {desc="Maps"})
+      vim.keymap.set("n", "<leader>fr", builtin.lsp_references, {desc="References"})
 
+      -- Load extensions
       require("telescope").load_extension("ui-select")
+      require("telescope").load_extension("fzf")
       require("telescope").load_extension("zoxide")
     end,
   },
 }
-
 
 -- Explanation of Key Mappings:
 
@@ -55,7 +64,7 @@ return {
 
 -- 5. <leader>fz - Current Buffer Fuzzy Find
 --    - Searches within the currently open file for a string, allowing you to jump to a specific location in the file.
---
+
 -- 6. <leader>gf - Git Files
 --    - Quickly finds and lists all files tracked by Git.
 
@@ -81,4 +90,3 @@ return {
 
 -- 13. <leader>fx - Diagnostics
 --     - Displays a list of current LSP diagnostics (errors, warnings) in the project or file.
-
