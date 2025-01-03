@@ -15,7 +15,7 @@ return {
                 percentage = 01,
             },
             config = function()
-             vim.cmd.colorscheme "catppuccin-mocha"
+              -- vim.cmd.colorscheme "catppuccin-mocha"
             end
         }
     },
@@ -74,7 +74,7 @@ return {
                     -- Custom modifications before applying highlights
                 end,
             })
-             -- vim.cmd("colorscheme rose-pine")
+              -- vim.cmd("colorscheme rose-pine")
         end
     },
     {
@@ -94,7 +94,7 @@ return {
                     -- Custom highlight modifications can be added here
                 end,
             })
-            --vim.cmd("colorscheme tokyonight")
+           -- vim.cmd("colorscheme tokyonight")
         end
     },
     {
@@ -150,53 +150,76 @@ return {
         require("vague").setup({
             transparent = true,
             style = {
-                -- Base styles
                 boolean = "none",
                 number = "none",
                 float = "none",
                 error = "none",
-                comments = "italic",  -- Added italic for better code readability
+                comments = "italic",
                 conditionals = "none",
                 functions = "italic",
                 headings = "bold",
                 operators = "none",
                 strings = "none",
                 variables = "none",
-                -- Keywords
                 keywords = "none",
-                keyword_return = "none",
-                keywords_loop = "none",
-                keywords_label = "none",
-                keywords_exception = "none",
-                -- Builtin elements
-                builtin_constants = "none",
-                builtin_functions = "none",
-                builtin_types = "none",
-                builtin_variables = "none",
             },
             colors = {
-                -- Core syntax elements
-                func = "#bc96b0",            -- Soft pink for functions
-                keyword = "#787bab",         -- Muted purple for keywords
-                string = "#8a739a",          -- Dusty purple for strings
-                number = "#8f729e",          -- Deep lavender for numbers
-                -- Additional syntax elements
-                type = "#9a8fa3",           -- Soft mauve for types
-                constant = "#a686a3",       -- Muted rose for constants
-                parameter = "#b5a0b2",      -- Light plum for parameters
-                operator = "#8b7b96",       -- Grayed purple for operators
-                variable = "#a394aa",       -- Gentle purple for variables 
-                -- Special elements
-                comment = "#6d6d8f",        -- Muted blue-gray for comments
-                warning = "#c6a9bc",        -- Light rose for warnings
-                error = "#b58aa3",          -- Deeper rose for errors  
-                -- UI elements
-                selection = "#8f8299",      -- Muted purple for selections
-                cursor = "#b8a6b5",         -- Light mauve for cursor
-                pmenu = "#968aa3",          -- Soft purple for popup menu
+                -- Enhanced contrast for core syntax
+                func = "#e4c5dc",            -- Brighter pink for functions
+                keyword = "#cba6f7",         -- Catppuccin Mauve for keywords
+                string = "#d4c1e6",          -- Brighter strings
+                number = "#af92be",          -- Enhanced numbers
+                type = "#b6a9bd",            -- Brighter types
+                constant = "#c1a6c3",        -- Enhanced constants
+                parameter = "#d5c0d2",       -- Brighter parameters
+                operator = "#b593a9",        -- Enhanced operators
+                special_char = "#c49ab1",    -- Brighter special chars
+                variable = "#c3b4ca",        -- Enhanced variables
+                -- Improved diagnostic colors
+                diagnostic = "#e4b5c5",
+                comment = "#8d8daf",         -- Slightly brighter comments
+                warning = "#e6c9dc",
+                error = "#d5aac3",
+                -- Enhanced UI elements
+                selection = "#afa2b9",
+                cursor = "#d8c6d5",
+                pmenu = "#b6aac3",
+            },
+            highlights = {
+                -- Enhanced TreeSitter groups
+                ["@module"] = { fg = "#cba6f7" },         -- For module names in chains
+                ["@namespace"] = { fg = "#cba6f7" },      -- For namespace parts
+                ["@method.call"] = { fg = "#e4c5dc" },    -- Keep method calls in original color
+                
+                -- Basic punctuation groups
+                ["@punctuation"] = { fg = "#fab387" },               -- Base color for all punctuation
+                ["@punctuation.bracket"] = { fg = "#74c7ec" },       -- All kinds of brackets
+                ["@punctuation.special"] = { fg = "#94e2d5" },       -- Special punctuation
+                
+                ["@field.key"] = { fg = "#cba6f7" },     -- For table keys
+                ["@function"] = { fg = "#e4c5dc" },
+                ["@function.builtin"] = { fg = "#e4c5dc" },
+                ["@string"] = { fg = "#d4c1e6" },
+                ["@number"] = { fg = "#af92be" },
+                ["@boolean"] = { fg = "#af92be" },
+                ["@type"] = { fg = "#b6a9bd" },
+                ["@keyword"] = { fg = "#cba6f7" },
+                ["@variable"] = { fg = "#c3b4ca" },
+                ["@parameter"] = { fg = "#d5c0d2" },
+                ["@constant"] = { fg = "#c1a6c3" },
+                ["@comment"] = { fg = "#8d8daf", italic = true },
+                -- Enhanced punctuation contrast
+                ["@punctuation.delimiter"] = { fg = "#b593a9" },
+                ["@character.special"] = { fg = "#c49ab1" },
+
+                -- Enhanced diagnostic highlights
+                DiagnosticError = { fg = "#e4b5c5" },
+                DiagnosticWarn = { fg = "#d8c0d0" },
+                DiagnosticInfo = { fg = "#c8b2c5" },
+                DiagnosticHint = { fg = "#baa7b7" },
             },
         })
-        -- vim.cmd("colorscheme vague")
+         vim.cmd("colorscheme vague")
     end,
-  }
+}
 }

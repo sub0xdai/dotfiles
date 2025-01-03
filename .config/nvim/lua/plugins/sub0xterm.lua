@@ -18,6 +18,10 @@ return {
         local float_term_buf = nil
         local float_term_win = nil
 
+        -- Define the custom highlight group for the border
+          vim.api.nvim_set_hl(0, 'FloatTermBorder', { fg = '#B586DB' })  -- Bright purple color
+
+
         -- Get directory of current buffer or oil.nvim
         local function get_current_buffer_directory()
             local current_buf = api.nvim_get_current_buf()
@@ -89,7 +93,7 @@ return {
             float_term_win = api.nvim_open_win(float_term_buf, true, win_opts)
 
             -- Set window options
-            api.nvim_win_set_option(float_term_win, 'winhl', 'Normal:Normal,FloatBorder:FloatBorder')
+            api.nvim_win_set_option(float_term_win, 'winhl', 'Normal:Normal,FloatBorder:FloatTermBorder')
 
             -- Start terminal in the correct directory
             vim.fn.termopen(vim.o.shell, {
