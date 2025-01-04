@@ -15,10 +15,33 @@ return {
                 percentage = 01,
             },
             config = function()
-              -- vim.cmd.colorscheme "catppuccin-mocha"
+               --vim.cmd.colorscheme "catppuccin-mocha"
             end
         }
     },
+          {
+          "rebelot/kanagawa.nvim",
+          lazy = false,
+          name = "kanagawa",
+          priority = 1000,
+          config = function()
+              require("kanagawa").setup({
+                  compile = false,
+                  undercurl = true,
+                  commentStyle = { italic = true },
+                  functionStyle = {},
+                  keywordStyle = { italic = true },
+                  statementStyle = { bold = true },
+                  typeStyle = {},
+                  transparent = true,
+                  dimInactive = false,
+                  terminalColors = true,
+              })
+                --vim.cmd("colorscheme kanagawa-wave")
+                -- vim.cmd("colorscheme kanagawa-dragon")
+               -- vim.cmd("colorscheme kanagawa-lotus")
+          end,
+      },
     {
         "rose-pine/neovim",
         lazy = false,
@@ -190,12 +213,10 @@ return {
                 ["@module"] = { fg = "#cba6f7" },         -- For module names in chains
                 ["@namespace"] = { fg = "#cba6f7" },      -- For namespace parts
                 ["@method.call"] = { fg = "#e4c5dc" },    -- Keep method calls in original color
-                
                 -- Basic punctuation groups
                 ["@punctuation"] = { fg = "#fab387" },               -- Base color for all punctuation
                 ["@punctuation.bracket"] = { fg = "#74c7ec" },       -- All kinds of brackets
                 ["@punctuation.special"] = { fg = "#94e2d5" },       -- Special punctuation
-                
                 ["@field.key"] = { fg = "#cba6f7" },     -- For table keys
                 ["@function"] = { fg = "#e4c5dc" },
                 ["@function.builtin"] = { fg = "#e4c5dc" },
@@ -219,7 +240,7 @@ return {
                 DiagnosticHint = { fg = "#baa7b7" },
             },
         })
-         vim.cmd("colorscheme vague")
+          vim.cmd("colorscheme vague")
     end,
 }
 }
