@@ -42,7 +42,7 @@ return {
 
       -- Footer
 
-local quote ="Mark 11:24"
+local quote ="Gaze within a mirror. See the Creator."
 local width = 140 -- Adjust based on your terminal width
 local padding = math.floor((width - #quote) / 2)
 local padded_quote = string.rep(" ", padding) .. quote .. string.rep(" ", padding)

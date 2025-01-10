@@ -22,6 +22,11 @@ return {
         a = { fg = '#2D2D2D', bg = '#F5C2C2' },  -- Soft pink
         b = { fg = '#f8f8f2', bg = 'NONE' },
         c = { fg = '#f8f8f2', bg = 'NONE' }
+      },
+      command = {
+        a = { fg = '#2D2D2D', bg = '#ebbcba' },  -- Soft rose        
+        b = { fg = '#f8f8f2', bg = 'NONE' },
+        c = { fg = '#f8f8f2', bg = 'NONE' }
       }
     }
 
