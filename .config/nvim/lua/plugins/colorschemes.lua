@@ -233,6 +233,11 @@ return {
                 ["@punctuation.delimiter"] = { fg = "#b593a9" },
                 ["@character.special"] = { fg = "#c49ab1" },
 
+                -- YAML Frontmatter specific highlights
+                ["@text.literal.markdown_inline"] = { fg = "#fab387" },  -- For the frontmatter section markers (---)
+                ["@text.title.yaml.frontmatter"] = { fg = "#cba6f7", bold = true },  -- For the keys in frontmatter
+                ["@text.yaml.frontmatter"] = { fg = "#94e2d5" },  -- For the values in frontmatter
+                ["@punctuation.special.yaml.frontmatter"] = { fg = "#74c7ec" },  -- For colons and dashes
                 -- Enhanced diagnostic highlights
                 DiagnosticError = { fg = "#e4b5c5" },
                 DiagnosticWarn = { fg = "#d8c0d0" },

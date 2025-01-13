@@ -19,8 +19,13 @@ return {
         "clangd",
         "solargraph",
         "gopls",
-        "marksman"
-      },
+        "marksman",
+        "bashls",
+        "yamlls",
+        "jsonls",
+        "terraformls",
+        "dockerls"
+              },
       automatic_installation = true,
     },
   },
@@ -31,7 +36,7 @@ return {
     config = function()
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
       local lspconfig = require("lspconfig")
-      local servers = { "pyright", "html", "lua_ls", "clangd", "solargraph", "gopls", "marksman" }
+      local servers = { "pyright", "html", "lua_ls", "clangd", "solargraph", "gopls", "marksman", "bashls", "yamlls", "jsonls", "terraformls", "dockerls"  }
       for _, lsp in ipairs(servers) do
         lspconfig[lsp].setup({
           capabilities = capabilities

@@ -46,7 +46,6 @@ alias weather='curl wttr.in/melbourne'
 alias fman='compgen -c | fzf | xargs man'
 alias speed='speedtest-cli'
 alias pomo='pomo start -t'
-alias repo='~/dotfiles/scripts/repo.sh '
 alias goproj='~/dotfiles/scripts/setup_go.sh'
 alias silverbullet='~/.deno/bin/silverbullet ~/1-projects/vaults/silverbullet'
 alias installed='~/dotfiles/scripts/installed.sh'
@@ -55,6 +54,36 @@ alias peel='tar xf'
 alias wind='windsurf'
 alias sysinfo='~/dotfiles/scripts/my_system.sh'
 alias lazy='lazygit'
+
+# Git remote set functions
+git_sub0x() {
+    REPO=${1:-$(basename $(pwd))}
+    git remote set-url origin git@github-sub0xdai:sub0xdai/$REPO.git
+}
+
+migrate_repo() {
+    echo "Target (1: sub0xdai-git, 2: tehuti-git):"
+    read choice
+    
+    target_dir="$HOME/1-projects/"
+    target_user=""
+    target_email=""
+    
+    if [ "$choice" = "1" ]; then
+        target_dir+="sub0xdai-git"
+        target_user="sub0xdai"
+        target_email="$SUB0X_EMAIL"
+    else
+        target_dir+="tehuti-git"
+        target_user="tehuticode"
+        target_email="$TEHUTI_EMAIL"
+    fi
+
+    mv "$1" "$target_dir/"
+    cd "$target_dir/$1"
+    git config --local user.name "$target_user"
+    git config --local user.email "$target_email"
+}
 
 # Dir colors for exa
 if command -v dircolors &> /dev/null; then
@@ -275,6 +304,8 @@ export PATH=$PATH:/var/lib/snapd/snap/bin
 export PATH=$PATH:/home/sub0x/.asdf/installs/golang/1.23.2/packages/bin
 export PATH=$HOME/.tmux/plugins/t-smart-tmux-session-manager/bin:$PATH
 export PATH=$HOME/.config/tmux/plugins/t-smart-tmux-session-manager/bin:$PATH
+export PATH=$HOME/.asdf/installs/golang/1.23.2/packages/bin:$PATH
+export PATH=$HOME/.asdf/installs/golang/1.23.4/packages/bin:$PATH
 
 # Source additional configurations
 [ -f "$HOME/.secrets" ] && source "$HOME/.secrets"
@@ -283,3 +314,4 @@ if [ -f "$HOME/dotfiles/.env" ]; then
 fi
 
 source ~/dotfiles/scripts/grep_open.sh
+export PATH=$HOME/go/bin:$PATH
