@@ -268,16 +268,16 @@ export FZF_ALT_C_OPTS="
 
 # FZF Alias with Enhanced Configuration
 alias fz='fzf \
-  --preview="bat --color=always {}" \
-  --bind "enter:execute(nvim {})+abort" \
-  --border=rounded \
-  --margin=1 \
-  --padding=1 \
-  --color=border:#89b4fa,spinner:#9080b3,pointer:#9080b3 \
-  --color=bg:-1,bg+:-1,header:#cba6f7 \
-  --color=fg:#e0def4,fg+:#e0def4,prompt:#cba6f7 \
-  --border-label=" FZF " \
-  --border-label-pos=2'
+  --preview "bat --color=always {}" \
+  --bind "enter:execute([[ \$(file --mime-type -b {}) == application/pdf ]] && zathura {} || nvim {})+abort" \
+  --border rounded \
+  --margin 1 \
+  --padding 1 \
+  --color border:#89b4fa,spinner:#9080b3,pointer:#9080b3 \
+  --color bg:-1,bg+:-1,header:#cba6f7 \
+  --color fg:#e0def4,fg+:#e0def4,prompt:#cba6f7 \
+  --border-label " FZF " \
+  --border-label-pos 2'
 
 # Tmux popup configuration
 export FZF_TMUX_OPTS="-p 90%,70% -w 90% -h 70%"

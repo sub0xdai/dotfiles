@@ -27,6 +27,7 @@ vim.keymap.set('n', '<C-n>', '<cmd>vnew<CR>', { noremap = true, silent = true })
 -- File operations
 vim.keymap.set('n', '<Leader>X', '<cmd>!chmod +x %<CR>', { noremap = true, silent = true, desc = "Make current file executable" })
 vim.keymap.set('n', '<Leader>cpf', '<cmd>let @+ = expand("%:p")<CR>', { noremap = true, silent = true, desc = "Copy full path of current file" })
+vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 
 -- Key Mappings for Buffer Navigation
 vim.keymap.set('n', '<C-[>', ':bprevious<CR>', { noremap = true, silent = true })

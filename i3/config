@@ -62,6 +62,10 @@ for_window [class="gnome-calculator"] floating enable
 for_window [class="nautilus"] floating enable
 for_window [class="gnome-text-editor"] floating enable
 
+# Position floating windows in visible area
+floating_maximum_size 1920 x 1080
+for_window [floating] move position center
+
 #====================
 # AUTOSTART APPLICATIONS
 #====================
@@ -73,9 +77,20 @@ exec --no-startup-id blueman-applet
 exec --no-startup-id nm-applet
 exec_always --no-startup-id picom -b --config ~/.config/picom/picom.conf
 exec_always --no-startup-id /home/sub0x/autotiling/target/release/autotiling &
-exec_always --no-startup-id gsettings set org.gnome.desktop.interface gtk-theme $theme
 exec_always --no-startup-id gsettings set org.gnome.desktop.interface icon-theme "Papirus-Dark"
-exec --no-startup-id xidlehook --timer 2500 '/home/sub0x/dotfiles/scripts/betterlock_single_display.sh' ''
+#exec --no-startup-id xidlehook --timer 2500 '/home/sub0x/dotfiles/scripts/betterlock_single_display.sh' ''
+exec --no-startup-id xidlehook \
+  --timer 2500 \
+    'i3lock -n -f -e -c 000000 --radius 120 --ring-color=ffffff3e --inside-color=00000000 --line-color=ffffff00 --keyhl-color=ffffff80 --ringver-color=ffffff3e --insidever-color=ffffff1c' \
+    '' \
+  --timer 1800 \
+    'i3-msg exit' \
+    '' \
+  --timer 3000 \
+    'systemctl suspend' \
+    ''
+exec_always --no-startup-id gsettings set org.gnome.desktop.interface text-scaling-factor 1.5
+
 exec --no-startup-id xfce4-power-manager
 exec --no-startup-id gammastep
 exec_always --no-startup-id xmodmap ~/.Xmodmap
@@ -98,7 +113,8 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 # Application launchers
 bindsym $mod+Return exec alacritty
 bindsym $mod+Shift+o exec ~/Applications/Obsidian-1.6.7.AppImage
-bindsym $mod+Mod1+l exec --no-startup-id ~/dotfiles/scripts/betterlock_single_display.sh
+#bindsym $mod+Mod1+l exec --no-startup-id ~/dotfiles/scripts/betterlock_single_display.sh
+bindsym $mod+Mod1+l exec --no-startup-id i3lock -n -f -e -c 000000 --radius 120 --ring-color=ffffff3e --inside-color=00000000 --line-color=ffffff00 --keyhl-color=ffffff80 --ringver-color=ffffff3e --insidever-color=ffffff1c
 bindsym $mod+Shift+s exec --no-startup-id flameshot gui
 bindsym $mod+d exec --no-startup-id dmenu_run
 bindsym $mod+e exec nautilus
