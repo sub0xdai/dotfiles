@@ -3,30 +3,29 @@ return {
   config = function()
     local custom_theme = {
       normal = {
-        a = { fg = '#2D2D2D', bg = '#B4BEFE' },  -- Soft lavender
-        b = { fg = '#f8f8f2', bg = 'NONE' },
-        c = { fg = '#f8f8f2', bg = 'NONE' }
+        a = { fg = '#000000', bg = '#7a7284' },  -- Signature teal
+        b = { fg = '#c1c1c1', bg = 'NONE' },     -- Light gray
+        c = { fg = '#c1c1c1', bg = 'NONE' }      -- Light gray
       },
       insert = {
-        a = { fg = '#2D2D2D', bg = '#98C379' },  -- Soft sage green
-        b = { fg = '#f8f8f2', bg = 'NONE' },
-        c = { fg = '#f8f8f2', bg = 'NONE' }
-
+        a = { fg = '#000000', bg = '#a4adb3' },  -- Muted brown
+        b = { fg = '#c1c1c1', bg = 'NONE' },
+        c = { fg = '#c1c1c1', bg = 'NONE' }
       },
       visual = {
-        a = { fg = '#2D2D2D', bg = '#FAB387' },  -- Soft peach
-        b = { fg = '#f8f8f2', bg = 'NONE' },
-        c = { fg = '#f8f8f2', bg = 'NONE' }
+        a = { fg = '#000000', bg = '#8c7f70' },  -- Darker brown
+        b = { fg = '#c1c1c1', bg = 'NONE' },
+        c = { fg = '#c1c1c1', bg = 'NONE' }
       },
       replace = {
-        a = { fg = '#2D2D2D', bg = '#F5C2C2' },  -- Soft pink
-        b = { fg = '#f8f8f2', bg = 'NONE' },
-        c = { fg = '#f8f8f2', bg = 'NONE' }
+        a = { fg = '#000000', bg = '#888888' },  -- Mid gray
+        b = { fg = '#c1c1c1', bg = 'NONE' },
+        c = { fg = '#c1c1c1', bg = 'NONE' }
       },
       command = {
-        a = { fg = '#2D2D2D', bg = '#ebbcba' },  -- Soft rose        
-        b = { fg = '#f8f8f2', bg = 'NONE' },
-        c = { fg = '#f8f8f2', bg = 'NONE' }
+        a = { fg = '#000000', bg = '#999999' },  -- Light gray        
+        b = { fg = '#c1c1c1', bg = 'NONE' },
+        c = { fg = '#c1c1c1', bg = 'NONE' }
       }
     }
 

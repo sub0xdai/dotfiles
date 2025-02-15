@@ -1,30 +1,30 @@
-# Catppuccin Mocha colors for exa with pastel blue directories
+# Black Metal inspired colors for exa
 export EXA_COLORS="\
-di=38;5;146:\
-ex=38;5;211:\
-ln=38;5;186:\
-*.md=38;5;249:\
-*.txt=38;5;249:\
-*.yml=38;5;146:\
-*.yaml=38;5;146:\
-*.json=38;5;146:\
-*.toml=38;5;146:\
-*.lua=38;5;146:\
-*.sh=38;5;211:\
-*.zsh=38;5;211:\
-*.bash=38;5;211:\
-*.git=38;5;183:\
-*.gitignore=38;5;183:\
-ur=38;5;159:\
-uw=38;5;211:\
-ux=38;5;211:\
-ue=38;5;211:\
-gr=38;5;159:\
-gw=38;5;211:\
-gx=38;5;211:\
-tr=38;5;159:\
-tw=38;5;211:\
-tx=38;5;211"
+di=38;5;146:\      # Directories - muted blue-gray
+ex=38;5;188:\      # Executables - light gray
+ln=38;5;102:\      # Symlinks - darker gray
+*.md=38;5;246:\    # Markdown files - medium gray
+*.txt=38;5;246:\   # Text files - medium gray
+*.yml=38;5;110:\   # YAML files - muted blue
+*.yaml=38;5;110:\  # YAML files - muted blue
+*.json=38;5;110:\  # JSON files - muted blue
+*.toml=38;5;110:\  # TOML files - muted blue
+*.lua=38;5;110:\   # Lua files - muted blue
+*.sh=38;5;188:\    # Shell scripts - light gray
+*.zsh=38;5;188:\   # Zsh scripts - light gray
+*.bash=38;5;188:\  # Bash scripts - light gray
+*.git=38;5;102:\   # Git files - darker gray
+*.gitignore=38;5;102:\  # Gitignore - darker gray
+ur=38;5;145:\      # User read - light gray
+uw=38;5;188:\      # User write - lighter gray
+ux=38;5;188:\      # User execute - lighter gray
+ue=38;5;188:\      # User special - lighter gray
+gr=38;5;145:\      # Group read - light gray
+gw=38;5;188:\      # Group write - lighter gray
+gx=38;5;188:\      # Group execute - lighter gray
+tr=38;5;145:\      # Others read - light gray
+tw=38;5;188:\      # Others write - lighter gray
+tx=38;5;188"       # Others execute - lighter gray
 
 
 # Common aliases
