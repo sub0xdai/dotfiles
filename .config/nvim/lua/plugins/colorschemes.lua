@@ -3,7 +3,7 @@ return {
 		"vague2k/vague.nvim",
 		config = function()
 			vim.opt.termguicolors = true
-			vim.cmd('colorscheme vague')
+			vim.cmd('colorscheme base16-black-metal-gorgoroth')
 			require("vague").setup({
 				-- optional configuration here
 				transparent = true,

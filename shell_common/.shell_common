@@ -1,31 +1,22 @@
 # Black Metal inspired colors for exa
 export EXA_COLORS="\
-di=38;5;146:\      # Directories - muted blue-gray
-ex=38;5;188:\      # Executables - light gray
-ln=38;5;102:\      # Symlinks - darker gray
-*.md=38;5;246:\    # Markdown files - medium gray
-*.txt=38;5;246:\   # Text files - medium gray
-*.yml=38;5;110:\   # YAML files - muted blue
-*.yaml=38;5;110:\  # YAML files - muted blue
-*.json=38;5;110:\  # JSON files - muted blue
-*.toml=38;5;110:\  # TOML files - muted blue
-*.lua=38;5;110:\   # Lua files - muted blue
-*.sh=38;5;188:\    # Shell scripts - light gray
-*.zsh=38;5;188:\   # Zsh scripts - light gray
-*.bash=38;5;188:\  # Bash scripts - light gray
-*.git=38;5;102:\   # Git files - darker gray
-*.gitignore=38;5;102:\  # Gitignore - darker gray
-ur=38;5;145:\      # User read - light gray
-uw=38;5;188:\      # User write - lighter gray
-ux=38;5;188:\      # User execute - lighter gray
-ue=38;5;188:\      # User special - lighter gray
-gr=38;5;145:\      # Group read - light gray
-gw=38;5;188:\      # Group write - lighter gray
-gx=38;5;188:\      # Group execute - lighter gray
-tr=38;5;145:\      # Others read - light gray
-tw=38;5;188:\      # Others write - lighter gray
-tx=38;5;188"       # Others execute - lighter gray
-
+da=38;5;110:\
+uu=38;5;244:\
+sn=38;5;102:\
+sb=38;5;102:\
+ur=38;5;103:\
+uw=38;5;95:\
+ux=38;5;96:\
+ue=38;5;96:\
+gr=38;5;103:\
+gw=38;5;95:\
+gx=38;5;96:\
+tr=38;5;103:\
+tw=38;5;95:\
+tx=38;5;96:\
+di=38;5;110:\
+fi=38;5;251:\
+*.lua=38;5;146"
 
 # Common aliases
 alias ls='exa --icons --group-directories-first --color=always'
@@ -85,14 +76,25 @@ migrate_repo() {
     git config --local user.email "$target_email"
 }
 
-# Dir colors for exa
+# Dir colors for exa and traditional ls
 if command -v dircolors &> /dev/null; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
 elif [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(/usr/bin/dircolors -b ~/.dircolors)" || eval "$(/usr/bin/dircolors -b)"
 else
-    # Fallback color configuration if dircolors is not available
-    export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
+    # Fallback color configuration matching our black metal theme
+    export LS_COLORS='\
+di=38;5;110:\ # Directories in cyan blue (matching exa)
+ln=38;5;102:\ # Symlinks in darker gray
+so=38;5;244:\ # Sockets in gray
+pi=38;5;244:\ # Pipes in gray
+ex=38;5;244:\ # Executables in gray
+bd=38;5;110:\ # Block devices in cyan
+cd=38;5;110:\ # Character devices in cyan
+su=38;5;244:\ # Setuid files in gray
+sg=38;5;244:\ # Setgid files in gray
+tw=38;5;110:\ # Sticky writable directories in cyan
+ow=38;5;110'  # Other writable directories in cyan
 fi
 
 # Tmux aliases

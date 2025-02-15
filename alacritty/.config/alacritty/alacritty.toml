@@ -29,7 +29,7 @@ family = "JetBrainsMono Nerd Font"
 style = "Regular"
 
 [window]
-opacity = 0.8
+opacity = 0.9
 
 [cursor]
 smooth_motion = true
