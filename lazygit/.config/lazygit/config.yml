@@ -1,0 +1,39 @@
+gui:
+  theme:
+    activeBorderColor:
+      - "#5f8787"  # signature black metal teal
+      - bold
+
+    inactiveBorderColor:
+      - "#444444"  # dark gray
+
+    searchingActiveBorderColor:
+      - "#8c7f70"  # muted brown
+      - bold
+
+    optionsTextColor:
+      - "#999999"  # light gray
+
+    selectedLineBgColor:
+      - "#222222"  # very dark gray
+
+    inactiveViewSelectedLineBgColor:
+      - "#333333"  # slightly lighter dark gray
+
+    cherryPickedCommitFgColor:
+      - "#5f8787"  # teal
+
+    cherryPickedCommitBgColor:
+      - "#222222"  # dark gray
+
+    markedBaseCommitFgColor:
+      - "#5f8787"  # teal
+
+    markedBaseCommitBgColor:
+      - "#333333"  # dark gray
+
+    unstagedChangesColor:
+      - "#8c7f70"  # muted brown
+
+    defaultFgColor:
+      - "#c1c1c1"  # light gray
