@@ -1,5 +1,5 @@
---target=/home/sub0x
---dir=/home/sub0x/dotfiles
+--target=/home/m0xu
+--dir=/home/m0xu/dotfiles
 --ignore=README.md
 --ignore=.git
 --ignore=.gitignore

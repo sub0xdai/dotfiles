@@ -7,4 +7,4 @@ echo "xautolock wrapper executed at $(date)" >> /tmp/xautolock_wrapper.log
 export DISPLAY=:0
 
 # Execute the lock script
-/home/sub0x/dotfiles/scripts/betterlock_single_display.sh
+/home/m0xu/dotfiles/scripts/betterlock_single_display.sh

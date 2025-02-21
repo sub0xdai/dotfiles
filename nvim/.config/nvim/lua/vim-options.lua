@@ -29,6 +29,18 @@ vim.keymap.set('n', '<Leader>X', '<cmd>!chmod +x %<CR>', { noremap = true, silen
 vim.keymap.set('n', '<Leader>cpf', '<cmd>let @+ = expand("%:p")<CR>', { noremap = true, silent = true, desc = "Copy full path of current file" })
 vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 
+-- Create a new file with prompt for filename
+vim.keymap.set('n', '<Leader>nf', function()
+  vim.ui.input({
+    prompt = "Enter new file name: ",
+  }, function(input)
+    if input then
+      -- Create and edit the new file
+      vim.cmd('edit ' .. input)
+    end
+  end)
+end, { noremap = true, silent = true, desc = "Create new file" })
+
 -- Key Mappings for Buffer Navigation
 vim.keymap.set('n', '<C-[>', ':bprevious<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<C-]>', ':bnext<CR>', { noremap = true, silent = true })

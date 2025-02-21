@@ -31,12 +31,12 @@ style = "Regular"
 [window]
 opacity = 0.9
 
-[cursor]
-smooth_motion = true
-smooth_motion_factor = 0.9
-smooth_motion_spring = 0.5
-smooth_motion_max_stretch_x = 3.0
-smooth_motion_max_stretch_y = 3.0
-block_replace_shape = "underline"
+#[cursor]
+#smooth_motion = true
+#smooth_motion_factor = 0.9
+#smooth_motion_spring = 0.5
+#smooth_motion_max_stretch_x = 3.0
+#smooth_motion_max_stretch_y = 3.0
+#block_replace_shape = "underline"
 
 

@@ -16,14 +16,12 @@ return {
         "pyright",
         "html",
         "lua_ls",
-        "clangd",
         "solargraph",
         "gopls",
         "marksman",
         "bashls",
         "yamlls",
         "jsonls",
-        "terraformls",
         "dockerls"
               },
       automatic_installation = true,
@@ -36,15 +34,42 @@ return {
     config = function()
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
       local lspconfig = require("lspconfig")
-      local servers = { "pyright", "html", "lua_ls", "clangd", "solargraph", "gopls", "marksman", "bashls", "yamlls", "jsonls", "terraformls", "dockerls"  }
-      for _, lsp in ipairs(servers) do
+      local servers = { "pyright", "html", "lua_ls", "solargraph", "gopls", "marksman", "bashls", "yamlls", "jsonls",  "dockerls"  }
+      -- Set up all servers except lua_ls with default config
+    for _, lsp in ipairs(servers) do
+      if lsp ~= "lua_ls" then
         lspconfig[lsp].setup({
           capabilities = capabilities
         })
       end
+    end
+
+    -- Custom setup for lua_ls
+    lspconfig["lua_ls"].setup({
+      capabilities = capabilities,
+      settings = {
+        Lua = {
+          runtime = {
+            version = 'LuaJIT',
+          },
+          diagnostics = {
+            globals = {'vim', 'use'},
+          },
+          workspace = {
+            library = vim.api.nvim_get_runtime_file('', true),
+            maxPreload = 10000,
+            preloadFileSize = 10000,
+          },
+          telemetry = {enable = false},
+          completion = {
+            callSnippet = 'Replace',
+          },
+        },
+      },
+    })
       -- LSP Keybindings
       vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover Documentation" })
-      vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, { desc = "Go to Definition" })
+        vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, { desc = "Go to Definition" })
       vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, { desc = "Find References" })
       vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action" })
     end,

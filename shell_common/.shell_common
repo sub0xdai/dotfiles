@@ -19,13 +19,13 @@ fi=38;5;251:\
 *.lua=38;5;146"
 
 # Common aliases
-alias ls='exa --icons --group-directories-first --color=always'
-alias ll='exa -lah --icons --group-directories-first --color=always'
-alias la='exa -a --icons --group-directories-first --color=always'
-alias l='exa -F --icons --group-directories-first --color=always'
-alias l.='exa -a | grep -E "^\." --color=always' # Show only dot files
+alias ls='eza --icons --group-directories-first --color=always'
+alias ll='eza -lah --icons --group-directories-first --color=always'
+alias la='eza -a --icons --group-directories-first --color=always'
+alias l='eza -F --icons --group-directories-first --color=always'
+alias l.='eza -a | grep -E "^\." --color=always' # Show only dot files
 alias vim='nvim'
-alias alert='/home/sub0x/dotfiles/scripts/alert.sh'
+alias alert='/home/m0xu/dotfiles/scripts/alert.sh'
 alias fetch='neofetch'
 alias shutdown='sync; shutdown -h now'
 alias tor='cd ~/Documents/tor-browser && ./start-tor-browser.desktop'
@@ -45,6 +45,7 @@ alias peel='tar xf'
 alias wind='windsurf'
 alias sysinfo='~/dotfiles/scripts/my_system.sh'
 alias lazy='lazygit'
+
 
 # Git remote set functions
 git_sub0x() {
@@ -83,18 +84,7 @@ elif [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(/usr/bin/dircolors -b ~/.dircolors)" || eval "$(/usr/bin/dircolors -b)"
 else
     # Fallback color configuration matching our black metal theme
-    export LS_COLORS='\
-di=38;5;110:\ # Directories in cyan blue (matching exa)
-ln=38;5;102:\ # Symlinks in darker gray
-so=38;5;244:\ # Sockets in gray
-pi=38;5;244:\ # Pipes in gray
-ex=38;5;244:\ # Executables in gray
-bd=38;5;110:\ # Block devices in cyan
-cd=38;5;110:\ # Character devices in cyan
-su=38;5;244:\ # Setuid files in gray
-sg=38;5;244:\ # Setgid files in gray
-tw=38;5;110:\ # Sticky writable directories in cyan
-ow=38;5;110'  # Other writable directories in cyan
+    export LS_COLORS='di=38;5;110:ln=38;5;102:so=38;5;244:pi=38;5;244:ex=38;5;96:bd=38;5;110:cd=38;5;110:su=38;5;244:sg=38;5;244:tw=38;5;95:ow=38;5;110'
 fi
 
 # Tmux aliases
@@ -113,6 +103,8 @@ alias tns="tmux new-session -d -s"
 
 # Activate el-ai
 alias l-ai='source ~/1-projects/sandbox/venv/bin/activate'
+
+
 
 # Reload shell configuration files
 reload() {
@@ -230,7 +222,8 @@ export EDITOR='nvim'
 export BROWSER=zen-browser
 export TERM=xterm-256color
 export MANPAGER="nvim +Man!"
-
+# For eza compatibility
+export EZA_COLORS="$EXA_COLORS"
 # FZF Configuration
 
 # Default search command
@@ -246,9 +239,9 @@ export FZF_DEFAULT_OPTS="
   --info=inline
   --pointer='→'
   --marker='♡'
-  --color=bg:-1,bg+:-1,spinner:#f5e0dc,hl:#2dd4bf
-  --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc
-  --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#2dd4bf"
+  --color=bg:-1,bg+:-1,spinner:#f5e0dc,hl:#8aadf4
+  --color=fg:#cdd6f4,header:#ed8796,info:#c6a0f6,pointer:#f5e0dc
+  --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#c6a0f6,hl+:#8aadf4"
 
 # Ctrl+T configuration
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
@@ -294,16 +287,16 @@ export DOTNET_ROOT=$HOME/.dotnet
 export PATH=$PATH:$HOME/.dotnet:$HOME/.dotnet/tools
 
 # Perl configuration
-export PATH="/home/sub0x/perl5/bin${PATH:+:${PATH}}"
-export PERL5LIB="/home/sub0x/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"
-export PERL_LOCAL_LIB_ROOT="/home/sub0x/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"
-export PERL_MB_OPT="--install_base \"/home/sub0x/perl5\""
-export PERL_MM_OPT="INSTALL_BASE=/home/sub0x/perl5"
+export PATH="/home/m0xu/perl5/bin${PATH:+:${PATH}}"
+export PERL5LIB="/home/m0xu/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"
+export PERL_LOCAL_LIB_ROOT="/home/m0xu/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"
+export PERL_MB_OPT="--install_base \"/home/m0xu/perl5\""
+export PERL_MM_OPT="INSTALL_BASE=/home/m0xu/perl5"
 
 # Additional paths
 export PATH="$PATH:$HOME/dotfiles/scripts"
 export PATH=$PATH:/var/lib/snapd/snap/bin
-export PATH=$PATH:/home/sub0x/.asdf/installs/golang/1.23.2/packages/bin
+export PATH=$PATH:/home/m0xu/.asdf/installs/golang/1.23.2/packages/bin
 export PATH=$HOME/.tmux/plugins/t-smart-tmux-session-manager/bin:$PATH
 export PATH=$HOME/.config/tmux/plugins/t-smart-tmux-session-manager/bin:$PATH
 export PATH=$HOME/.asdf/installs/golang/1.23.2/packages/bin:$PATH

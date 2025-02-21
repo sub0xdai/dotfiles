@@ -70,8 +70,8 @@ return {
       local telescopeConfig = require("telescope.config")
       
       -- Clone the default Telescope configuration
-      local vimgrep_arguments = { unpack(telescopeConfig.values.vimgrep_arguments) }
-      -- Don't search in the `.git` directory.
+      local unpack = unpack or table.unpack  -- Compatibility for both Lua versions
+      local vimgrep_arguments = { unpack(telescopeConfig.values.vimgrep_arguments) }      -- Don't search in the `.git` directory.
       table.insert(vimgrep_arguments, "--glob")
       table.insert(vimgrep_arguments, "!**/.git/*")
       -- Add trim option for better performance
@@ -183,45 +183,3 @@ return {
   },
 }
 
--- Explanation of Key Mappings:
-
--- 1. <leader>ff- Find Files
---    - Opens a fuzzy search window to find files in the current working directory.
-
--- 2. <leader>fg - Live Grep
---    - Performs a global search by searching for a string across all files in the project using `rg` (ripgrep).
-
--- 3. <leader><leader> - Old Files
---    - Lists recently opened files, useful for quickly accessing files you've worked on before.
-
--- 4. <leader>fb - Find Buffers
---    - Shows a list of open buffers, allowing you to switch between them easily.
-
--- 5. <leader>fz - Current Buffer Fuzzy Find
---    - Searches within the currently open file for a string, allowing you to jump to a specific location in the file.
-
--- 6. <leader>gf - Git Files
---    - Quickly finds and lists all files tracked by Git.
-
--- 7. <leader>fh - Find Help Tags
---    - Opens a fuzzy finder for Neovim's help tags, allowing you to search for specific help documentation.
-
--- 8. <leader>fm - Find Keymaps
---    - Lists all available key mappings in your Neovim configuration for easy reference.
-
--- LSP Mappings:
-
--- 9. <leader>fr - Find References
---     - Lists all references to the symbol under your cursor across the project, useful for tracing function usage.
-
--- 10. <leader>fd - Find Definitions
---     - Jumps to the definition of the symbol under your cursor (e.g., function, variable).
-
--- 11. <leader>fs - Document Symbols
---     - Lists all symbols in the current file (functions, classes, etc.) for quick navigation.
-
--- 12. <leader>fw - Workspace Symbols
---     - Lists all symbols across the entire project, allowing for project-wide symbol search.
-
--- 13. <leader>fx - Diagnostics
---     - Displays a list of current LSP diagnostics (errors, warnings) in the project or file.

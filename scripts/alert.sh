@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # File: alert.sh
-# Location: /home/sub0x/dotfiles/scripts/alert.sh
+# Location: /home/m0xu/dotfiles/scripts/alert.sh
 # Description: Interactively sets a timed alert with a custom message that triggers a persistent desktop notification and plays a sound at the specified time.
 # Usage: ./alert.sh
 

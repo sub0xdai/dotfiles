@@ -1,16 +1,2 @@
-configuration {
-    modi: "drun,window";
-    icon-theme: "Oranchelo";
-    show-icons: true;
-    terminal: "alacritty";
-    drun-display-format: "{icon} {name}";
-    location: 0;
-    disable-history: false;
-    hide-scrollbar: true;
-    display-drun: "Applications";
-    display-window: "Windows";
-    sidebar-mode: true;
-    drun-search-paths: ["~/.local/share/applications", "/usr/share/applications"];
-}
 
-@theme "catppuccin-mocha"
+@theme "/usr/share/rofi/themes/Arc-Dark.rasi"

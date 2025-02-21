@@ -1,5 +1,5 @@
 return {
-    dir = "/home/sub0x/dotfiles/.local/share/nvim/site/pack/local/start/sub0xterm",
+    dir = "/home/m0xu/dotfiles/.local/share/nvim/site/pack/local/start/sub0xterm",
     name = "sub0xterm",
     config = function()
         -- Cache frequently used API calls
@@ -19,7 +19,7 @@ return {
         local float_term_win = nil
 
         -- Define the custom highlight group for the border
-          vim.api.nvim_set_hl(0, 'FloatTermBorder', { fg = '#B586DB' })  -- Bright purple color
+          vim.api.nvim_set_hl(0, 'FloatTermBorder', { fg = '#e8deff' })  -- Grey purple color
 
 
         -- Get directory of current buffer or oil.nvim

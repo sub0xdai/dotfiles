@@ -8,9 +8,7 @@
 # Set Mod key (Windows key)
 set $mod Mod4
 
-# Set GTK theme
-set $theme 'Catppuccin-Mocha-Standard-Sky-Dark'
-exec_always --no-startup-id gsettings set org.gnome.desktop.interface gtk-theme $theme
+
 
 # Set font
 font pango:JetBrainsMono Nerd Font 14
@@ -29,11 +27,11 @@ for_window [class=".*"] border pixel 2
 hide_edge_borders none
 smart_borders on
 
-# Border colors
-client.focused          #D1B3E8 #D1B3E8 #D1B3E8 #D1B3E8
-client.unfocused        #9B8BB5 #9B8BB5 #9B8BB5 #9B8BB5
-client.focused_inactive #9B8BB5 #9B8BB5 #9B8BB5 #9B8BB5
-client.urgent           #9B8BB5 #9B8BB5 #9B8BB5 #9B8BB5
+#53565A Border colors
+client.focused          #808588 #808588 #808588 #808588
+client.unfocused        #393D47 #393D47 #393D47 #393D47
+client.focused_inactive #393D47 #393D47 #393D47 #393D47
+client.urgent           #36454f #36454f #36454f #36454f
 
 #====================
 # DISPLAY SETUP
@@ -42,25 +40,20 @@ client.urgent           #9B8BB5 #9B8BB5 #9B8BB5 #9B8BB5
 # Configure monitors and cursor
 exec_always --no-startup-id xrandr --output HDMI-0 --primary --mode 3840x2160 --output DP-1 --mode 1920x1080 --left-of HDMI-0
 exec_always --no-startup-id xsetroot -cursor_name left_ptr
-exec_always --no-startup-id gsettings set org.gnome.desktop.interface cursor-theme 'capitaine-cursors'
-exec_always --no-startup-id gsettings set org.gnome.desktop.interface cursor-size 24
 exec_always --no-startup-id echo "Xcursor.size: 24" > ~/.Xresources
 exec_always --no-startup-id xrdb -merge ~/.Xresources
-exec_always --no-startup-id gsettings set org.gnome.settings-daemon.plugins.xsettings overrides "{'Gdk/WindowScalingFactor': <2>}"
-exec_always --no-startup-id gsettings set org.gnome.desktop.interface scaling-factor 2
 
 
 #====================
 # WALLPAPERS
 #====================
 
-exec_always --no-startup-id feh --randomize --bg-scale ~/Pictures/wallpapers/*
+exec_always --no-startup-id feh --randomize --bg-scale ~/Pictures/Wallpapers/*
 
 
 #  floating
 for_window [class="gnome-calculator"] floating enable
-for_window [class="nautilus"] floating enable
-for_window [class="gnome-text-editor"] floating enable
+for_window [class="pcmanfm"] floating enable
 
 # Position floating windows in visible area
 floating_maximum_size 1920 x 1080
@@ -69,16 +62,15 @@ for_window [floating] move position center
 #====================
 # AUTOSTART APPLICATIONS
 #====================
-
+exec_always --no-startup-id gsettings set org.gnome.desktop.interface icon-theme 'Adwaita'
 exec_always --no-startup-id killall polybar
 exec_always --no-startup-id ~/.config/polybar/launch_polybar.sh
 exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id blueman-applet
 exec --no-startup-id nm-applet
 exec_always --no-startup-id picom -b --config ~/.config/picom/picom.conf
-exec_always --no-startup-id /home/sub0x/autotiling/target/release/autotiling &
-exec_always --no-startup-id gsettings set org.gnome.desktop.interface icon-theme "Papirus-Dark"
-#exec --no-startup-id xidlehook --timer 2500 '/home/sub0x/dotfiles/scripts/betterlock_single_display.sh' ''
+exec_always --no-startup-id autotiling &
+#exec --no-startup-id xidlehook --timer 2500 '/home/m0xu/dotfiles/scripts/betterlock_single_display.sh' ''
 exec --no-startup-id xidlehook \
   --timer 2500 \
     'i3lock -n -f -e -c 000000 --radius 120 --ring-color=ffffff3e --inside-color=00000000 --line-color=ffffff00 --keyhl-color=ffffff80 --ringver-color=ffffff3e --insidever-color=ffffff1c' \
@@ -89,11 +81,10 @@ exec --no-startup-id xidlehook \
   --timer 3000 \
     'systemctl suspend' \
     ''
-exec_always --no-startup-id gsettings set org.gnome.desktop.interface text-scaling-factor 1.5
 
 exec --no-startup-id xfce4-power-manager
 exec --no-startup-id gammastep
-exec_always --no-startup-id xmodmap ~/.Xmodmap
+exec_always --no-startup-id xmodmap ~/.xmodmap
 
 
 #====================
@@ -117,7 +108,7 @@ bindsym $mod+Shift+o exec ~/Applications/Obsidian-1.6.7.AppImage
 bindsym $mod+Mod1+l exec --no-startup-id i3lock -n -f -e -c 000000 --radius 120 --ring-color=ffffff3e --inside-color=00000000 --line-color=ffffff00 --keyhl-color=ffffff80 --ringver-color=ffffff3e --insidever-color=ffffff1c
 bindsym $mod+Shift+s exec --no-startup-id flameshot gui
 bindsym $mod+d exec --no-startup-id dmenu_run
-bindsym $mod+e exec nautilus
+bindsym $mod+e exec pcmanfm
 bindsym $mod+p exec rofi -show combi
 bindsym $mod+w exec zen-browser
 

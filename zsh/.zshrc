@@ -50,4 +50,4 @@ eval "$(atuin init zsh)"
 # Clean path (using zsh syntax)
 typeset -U PATH path
 
-if [ -e /home/sub0x/.nix-profile/etc/profile.d/nix.sh ]; then . /home/sub0x/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+if [ -e /home/m0xu/.nix-profile/etc/profile.d/nix.sh ]; then . /home/m0xu/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
