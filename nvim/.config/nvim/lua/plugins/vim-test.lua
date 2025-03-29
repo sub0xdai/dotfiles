@@ -4,8 +4,8 @@ return {
     "preservim/vimux"
   },
   config = function()
-    vim.keymap.set("n", "<leader>t", ":TestNearest<CR>", {})
-    vim.keymap.set("n", "<leader>T", ":TestFile<CR>", {})
+    vim.keymap.set("n", "<leader>ts", ":TestNearest<CR>", {})
+    vim.keymap.set("n", "<leader>TS", ":TestFile<CR>", {})
     vim.keymap.set("n", "<leader>a", ":TestSuite<CR>", {})
     vim.keymap.set("n", "<leader>l", ":TestLast<CR>", {})
     vim.keymap.set("n", "<leader>g", ":TestVisit<CR>", {})

@@ -15,6 +15,7 @@ return {
         ["p"] = actions.paste, -- Paste a copied or cut file
         ["d"] = actions.delete, -- Delete a file
         ["<esc>"] = actions.close, -- Close the oil buffer on Escape
+        ["<C-p>"] = actions.preview,
        },
     })
 

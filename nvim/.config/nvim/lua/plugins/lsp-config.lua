@@ -1,141 +1,264 @@
 return {
-  -- Mason for managing LSP servers, DAP servers, linters, and formatters
-  {
-    "williamboman/mason.nvim",
-    lazy = false,
-    config = function()
-      require("mason").setup()
-    end
-  },
-  -- Mason-lspconfig for easier LSP server setup
-  {
-    "williamboman/mason-lspconfig.nvim",
-    lazy = false,
-    opts = {
-      ensure_installed = {
-        "pyright",
-        "html",
-        "lua_ls",
-        "solargraph",
-        "gopls",
-        "marksman",
-        "bashls",
-        "yamlls",
-        "jsonls",
-        "dockerls"
-              },
-      automatic_installation = true,
-    },
-  },
-  -- LSP configuration
-  {
-    "neovim/nvim-lspconfig",
-    lazy = false,
-    config = function()
-      local capabilities = require('cmp_nvim_lsp').default_capabilities()
-      local lspconfig = require("lspconfig")
-      local servers = { "pyright", "html", "lua_ls", "solargraph", "gopls", "marksman", "bashls", "yamlls", "jsonls",  "dockerls"  }
-      -- Set up all servers except lua_ls with default config
-    for _, lsp in ipairs(servers) do
-      if lsp ~= "lua_ls" then
-        lspconfig[lsp].setup({
-          capabilities = capabilities
-        })
-      end
-    end
+	{
+		"williamboman/mason.nvim",
+		config = function()
+			require("mason").setup({
+				PATH = "prepend",
+			})
+		end,
+	},
+	{
+		"williamboman/mason-lspconfig.nvim",
+		config = function()
+			require("mason-lspconfig").setup({
+				ensure_installed = {
+					--"nil_ls",
+					"bashls",
+					"lua_ls",
+					"rust_analyzer",
+					"gopls",
+					"templ",
+					"html",
+					"cssls",
+					"emmet_language_server",
+					"htmx",
+					"tailwindcss",
+					"ts_ls",
+					-- "tsserver",
+					"pylsp",
+					"clangd",
+					"prismals",
+					"yamlls",
+					"jsonls",
+					"eslint",
+					-- "hls",
+					"zls",
+					"marksman",
+					"sqlls",
+					"wgsl_analyzer",
+					"texlab",
+					"intelephense",
+					"nim_langserver",
+					"zls",
+				},
+			})
+		end,
+	},
+	{
+		"neovim/nvim-lspconfig",
+		config = function()
+			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-    -- Custom setup for lua_ls
-    lspconfig["lua_ls"].setup({
-      capabilities = capabilities,
-      settings = {
-        Lua = {
-          runtime = {
-            version = 'LuaJIT',
-          },
-          diagnostics = {
-            globals = {'vim', 'use'},
-          },
-          workspace = {
-            library = vim.api.nvim_get_runtime_file('', true),
-            maxPreload = 10000,
-            preloadFileSize = 10000,
-          },
-          telemetry = {enable = false},
-          completion = {
-            callSnippet = 'Replace',
-          },
-        },
-      },
-    })
-      -- LSP Keybindings
-      vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover Documentation" })
-        vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, { desc = "Go to Definition" })
-      vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, { desc = "Find References" })
-      vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action" })
-    end,
-  },
-  -- Treesitter for better syntax highlighting and code understanding
-  {
-    "nvim-treesitter/nvim-treesitter",
-    build = ":TSUpdate",
-    config = function()
-      require("nvim-treesitter.configs").setup({
-        ensure_installed = { "go", "python", "lua", "c", "cpp", "ruby", "html" },
-        highlight = { enable = true },
-        indent = { enable = true },
-      })
-    end,
-  },
-  -- Formatter
-  {
-    "stevearc/conform.nvim",
-    event = { "BufReadPre", "BufNewFile" },
-    config = function()
-      local conform = require("conform")
-      conform.setup({
-        formatters_by_ft = {
-          go = { "gofmt" },
-          python = { "black" },
-          lua = { "stylua" },
-          -- Add formatters for other languages as needed
-        },
-      })
-      vim.keymap.set({ "n", "v" }, "<leader>l", function()
-        conform.format({
-          lsp_fallback = true,
-          async = false,
-          timeout_ms = 1000,
-        })
-      end, { desc = "Format file or range (in visual mode)" })
-    end,
-  },
-  -- Debugger
-  {
-    "mfussenegger/nvim-dap",
-    dependencies = {
-      "leoluz/nvim-dap-go",
-      "rcarriga/nvim-dap-ui",
-    },
-    config = function()
-      local dap, dapui = require("dap"), require("dapui")
-      require("dap-go").setup()
-      dapui.setup()
-      
-      -- Debugging keymaps
-      vim.keymap.set("n", "<leader>dt", dap.toggle_breakpoint, { desc = "Toggle Breakpoint" })
-      vim.keymap.set("n", "<leader>dc", dap.continue, { desc = "Start/Continue Debugging" })
-      vim.keymap.set("n", "<leader>do", dapui.toggle, { desc = "Toggle Debug UI" })
-      
-      -- Automatically open dapui when debugging starts
-      dap.listeners.after.event_initialized["dapui_config"] = function()
-        dapui.open()
-      end
-      dap.listeners.before.event_terminated["dapui_config"] = function()
-        dapui.close()
-      end
-      dap.listeners.before.event_exited["dapui_config"] = function()
-        dapui.close()
-      end
-    end,
-  },
+			local lspconfig = require("lspconfig")
+
+			lspconfig.nil_ls.setup({
+				capabilities = capabilities,
+			})
+			lspconfig.sqlls.setup({
+				capabilities = capabilities,
+			})
+			lspconfig.intelephense.setup({
+				capabilities = capabilities,
+			})
+			lspconfig.texlab.setup({
+				capabilities = capabilities,
+			})
+			lspconfig.zls.setup({
+				capabilities = capabilities,
+				cmd = { "zls" },
+			})
+			lspconfig.hls.setup({
+				capabilities = capabilities,
+				single_file_support = true,
+			})
+			lspconfig.bashls.setup({
+				capabilities = capabilities,
+			})
+			lspconfig.lua_ls.setup({
+				capabilities = capabilities,
+				settings = {
+					Lua = {
+						diagnostics = {
+							globals = { "vim" }, -- Recognize 'vim' as a global variable
+						},
+						workspace = {
+							library = vim.api.nvim_get_runtime_file("", true), -- Include Neovim runtime files
+						},
+						telemetry = {
+							enable = false,
+						},
+					},
+				},
+			})
+			lspconfig.wgsl_analyzer.setup({
+				capabilities = capabilities,
+			})
+			lspconfig.jsonls.setup({
+				capabilities = capabilities,
+			})
+			lspconfig.gopls.setup({
+				capabilities = capabilities,
+			})
+			lspconfig.cssls.setup({
+				capabilities = capabilities,
+			})
+			lspconfig.prismals.setup({
+				capabilities = capabilities,
+			})
+			lspconfig.yamlls.setup({
+				capabilities = capabilities,
+			})
+			lspconfig.html.setup({
+				capabilities = capabilities,
+				filetypes = {
+					"templ",
+					"html",
+					"php",
+					"css",
+					"javascriptreact",
+					"typescriptreact",
+					"javascript",
+					"typescript",
+					"jsx",
+					"tsx",
+				},
+			})
+			lspconfig.htmx.setup({
+				capabilities = capabilities,
+				filetypes = { "html", "templ" },
+			})
+			lspconfig.emmet_language_server.setup({
+				capabilities = capabilities,
+				filetypes = {
+					"templ",
+					"html",
+					"css",
+					"php",
+					"javascriptreact",
+					"typescriptreact",
+					"javascript",
+					"typescript",
+					"jsx",
+					"tsx",
+					"markdown",
+				},
+			})
+			lspconfig.tailwindcss.setup({
+				capabilities = capabilities,
+				filetypes = {
+					"templ",
+					"html",
+					"css",
+					"javascriptreact",
+					"typescriptreact",
+					"javascript",
+					"typescript",
+					"jsx",
+					"tsx",
+				},
+				root_dir = require("lspconfig").util.root_pattern(
+					"tailwind.config.js",
+					"tailwind.config.cjs",
+					"tailwind.config.mjs",
+					"tailwind.config.ts",
+					"postcss.config.js",
+					"postcss.config.cjs",
+					"postcss.config.mjs",
+					"postcss.config.ts",
+					"package.json",
+					"node_modules",
+					".git"
+				),
+			})
+			lspconfig.templ.setup({
+				capabilities = capabilities,
+				filetypes = { "templ" },
+			})
+			local configs = require("lspconfig.configs")
+
+			if not configs.ts_ls then
+				configs.ts_ls = {
+					default_config = {
+						cmd = { "typescript-language-server", "--stdio" },
+						capabilities = capabilities,
+						filetypes = {
+							"javascript",
+							"javascriptreact",
+							"typescript",
+							"typescriptreact",
+							"html",
+						},
+						root_dir = require("lspconfig").util.root_pattern("package.json", "tsconfig.json", ".git"),
+						-- single_file_support = true,
+					},
+				}
+			end
+			lspconfig.ts_ls.setup({
+				capabilities = capabilities,
+			})
+			lspconfig.eslint.setup({
+				capabilities = capabilities,
+			})
+
+			require("lspconfig").clangd.setup({
+				cmd = {
+					"clangd",
+					"--background-index",
+					"--pch-storage=memory",
+					"--all-scopes-completion",
+					"--pretty",
+					"--header-insertion=never",
+					"-j=4",
+					"--inlay-hints",
+					"--header-insertion-decorators",
+					"--function-arg-placeholders",
+					"--completion-style=detailed",
+				},
+				filetypes = { "c", "cpp", "objc", "objcpp" },
+				root_dir = require("lspconfig").util.root_pattern("src"),
+				init_option = { fallbackFlags = { "-std=c++2a" } },
+				capabilities = capabilities,
+				single_file_support = true,
+			})
+
+			function get_python_path()
+				-- Check if there's an active virtual environment
+				local venv_path = os.getenv("VIRTUAL_ENV")
+				if venv_path then
+					return venv_path .. "/bin/python3"
+				else
+					-- get os name
+					local os_name = require("utils").get_os()
+					-- get os interpreter path
+					if os_name == "windows" then
+						return "C:/python312"
+					elseif os_name == "linux" then
+						return "/usr/bin/python3"
+					else
+						return nil
+					end
+					-- Fallback to global Python interpreter
+				end
+			end
+
+			lspconfig.pylsp.setup({
+				capabilities = capabilities,
+				settings = {
+					python = {
+						pythonPath = get_python_path(),
+					},
+				},
+			})
+
+			lspconfig.marksman.setup({
+				capabilities = capabilities,
+			})
+			lspconfig.gleam.setup({
+				capabilities = capabilities,
+			})
+			lspconfig.nim_langserver.setup({
+				capabilities = capabilities,
+			})
+		end,
+	},
 }

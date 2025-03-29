@@ -38,14 +38,13 @@ alias fman='compgen -c | fzf | xargs man'
 alias speed='speedtest-cli'
 alias pomo='pomo start -t'
 alias goproj='~/dotfiles/scripts/setup_go.sh'
-alias silverbullet='~/.deno/bin/silverbullet ~/1-projects/vaults/silverbullet'
 alias installed='~/dotfiles/scripts/installed.sh'
 alias i3-msg='i3-msg -s $(ls /run/user/1000/i3/ipc-socket.*)'
 alias peel='tar xf'
 alias wind='windsurf'
 alias sysinfo='~/dotfiles/scripts/my_system.sh'
-alias lazy='lazygit'
-
+alias lg='lazygit'
+alias wiki="wikiman"
 
 # Git remote set functions
 git_sub0x() {
@@ -157,7 +156,9 @@ zkt() {
     fi
     echo -n "Task: "
     read task_item
-    sed -i '/Task/,/^---/{/^---/!s/$/\n- [ ] '"$task_item"'/;:a;n;ba}' "$todays_note"
+    # Escape special characters in the task item
+    escaped_task=$(printf '%s' "$task_item" | sed 's/[\/&]/\\&/g')
+    sed -i '/Task/,/^---/{/^---/!s/$/\n- [ ] '"$escaped_task"'/;:a;n;ba}' "$todays_note"
     echo "Task added"
 }
 
@@ -301,6 +302,9 @@ export PATH=$HOME/.tmux/plugins/t-smart-tmux-session-manager/bin:$PATH
 export PATH=$HOME/.config/tmux/plugins/t-smart-tmux-session-manager/bin:$PATH
 export PATH=$HOME/.asdf/installs/golang/1.23.2/packages/bin:$PATH
 export PATH=$HOME/.asdf/installs/golang/1.23.4/packages/bin:$PATH
+
+
+
 
 # Source additional configurations
 [ -f "$HOME/.secrets" ] && source "$HOME/.secrets"

@@ -174,6 +174,7 @@ return {
       vim.keymap.set("n", "<leader>fh", builtin.help_tags, {desc="Help"})
       vim.keymap.set("n", "<leader>fk", builtin.keymaps, {desc="Maps"})
       vim.keymap.set("n", "<leader>fr", builtin.lsp_references, {desc="References"})
+      vim.keymap.set("n", "<leader>ds", builtin.lsp_document_symbols, {desc="Doc symbols"})
 
       -- Load extensions
       require("telescope").load_extension("ui-select")

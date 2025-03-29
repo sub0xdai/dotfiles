@@ -44,7 +44,8 @@ return {
 					--string = "#d8d5b1",
 					number = "#8f729e",
 					type = "#dcaed7",
-				},
+
+        },
 			})
 		end,
 	},

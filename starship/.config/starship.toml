@@ -15,9 +15,11 @@ $character"""
 style = "#c1c1c1" # Pinkish grey
 
 [character]
-success_symbol = "[λ](#888888)" # muted gray
-error_symbol = "[λ](#9b8d7f)"   # warm gray for errors
-vimcmd_symbol = "[λ](#666666)"  # darker gray for vim
+# Explicitly control the position with no newline
+format = "$symbol"
+success_symbol = "[λ ](#888888)" # muted gray with space after lambda
+error_symbol = "[λ ](#9b8d7f)"   # warm gray for errors with space after lambda
+vimcmd_symbol = "[λ ](#666666)"  # darker gray for vim with space after lambda
 
 [git_branch]
 format = "[$branch]($style)"
