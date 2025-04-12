@@ -45,6 +45,10 @@ alias wind='windsurf'
 alias sysinfo='~/dotfiles/scripts/my_system.sh'
 alias lg='lazygit'
 alias wiki="wikiman"
+alias xampp='podman exec -it my-xampp /bin/bash'
+alias xampp-mysql='podman exec -it my-xampp /opt/lampp/bin/mysql -u root'
+alias burpsuite="$HOME/dotfiles/scripts/run-burpsuite.sh"
+alias wireshark="$HOME/dotfiles/scripts/run-wireshark.sh"
 
 # Git remote set functions
 git_sub0x() {
@@ -297,12 +301,13 @@ export PERL_MM_OPT="INSTALL_BASE=/home/m0xu/perl5"
 # Additional paths
 export PATH="$PATH:$HOME/dotfiles/scripts"
 export PATH=$PATH:/var/lib/snapd/snap/bin
-export PATH=$PATH:/home/m0xu/.asdf/installs/golang/1.23.2/packages/bin
 export PATH=$HOME/.tmux/plugins/t-smart-tmux-session-manager/bin:$PATH
 export PATH=$HOME/.config/tmux/plugins/t-smart-tmux-session-manager/bin:$PATH
+# Go paths (ordered by version)
 export PATH=$HOME/.asdf/installs/golang/1.23.2/packages/bin:$PATH
 export PATH=$HOME/.asdf/installs/golang/1.23.4/packages/bin:$PATH
-
+export PATH=$HOME/.asdf/installs/golang/1.24.2/packages/bin:$PATH
+export PATH="$PATH:$(go env GOPATH)/bin"
 
 
 

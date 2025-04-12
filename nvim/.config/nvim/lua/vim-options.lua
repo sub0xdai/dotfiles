@@ -29,6 +29,24 @@ vim.keymap.set('n', '<Leader>X', '<cmd>!chmod +x %<CR>', { noremap = true, silen
 vim.keymap.set('n', '<Leader>cpf', '<cmd>let @+ = expand("%:p")<CR>', { noremap = true, silent = true, desc = "Copy full path of current file" })
 vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 
+-- Dadbod + ui 
+-- Open the database UI
+vim.keymap.set('n', '<leader>db', ':DBUI<CR>', { noremap = true })
+-- Save connection
+vim.keymap.set('n', '<leader>ds', ':DBUIAddConnection<CR>', { noremap = true })
+-- Toggle the database UI
+vim.keymap.set('n', '<leader>dt', ':DBUIToggle<CR>', { noremap = true })
+-- Find buffer
+vim.keymap.set('n', '<leader>df', ':DBUIFindBuffer<CR>', { noremap = true })
+-- Rename buffer
+vim.keymap.set('n', '<leader>dr', ':DBUIRenameBuffer<CR>', { noremap = true })
+-- Last query info
+vim.keymap.set('n', '<leader>dl', ':DBUILastQueryInfo<CR>', { noremap = true })
+-- Execute query under cursor
+vim.keymap.set('n', '<leader>de', ':DB<CR>', { noremap = true })
+-- Execute the entire buffer as a query
+vim.keymap.set('n', '<leader>da', ':w !DB<CR>', { noremap = true })
+
 -- Create a new file with prompt for filename
 vim.keymap.set('n', '<Leader>nf', function()
   vim.ui.input({
