@@ -105,7 +105,7 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 #====================
 
 # Application launchers
-bindsym $mod+Return exec alacritty
+bindsym $mod+Return exec ghostty
 bindsym $mod+Shift+o exec ~/Applications/Obsidian-1.6.7.AppImage
 #bindsym $mod+Mod1+l exec --no-startup-id ~/dotfiles/scripts/betterlock_single_display.sh
 bindsym $mod+Mod1+l exec --no-startup-id i3lock -n -f -e -c 000000 --radius 120 --ring-color=ffffff3e --inside-color=00000000 --line-color=ffffff00 --keyhl-color=ffffff80 --ringver-color=ffffff3e --insidever-color=ffffff1c
