@@ -15,11 +15,18 @@ vim.wo.relativenumber = true
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "markdown",
     command = "setlocal conceallevel=2"
-
 })
 
-
-
+-- Add compatibility layer for deprecated Vim functions
+-- This helps older plugins work with newer Neovim versions
+if vim.fn.has('nvim-0.12') == 1 then
+  -- Only add the compatibility function if the new function exists
+  -- and the old one doesn't
+  if vim.islist and not vim.tbl_islist then
+    vim.tbl_islist = vim.islist
+  end
+end
+require("compat").setup()
 require("vim-options")
 require("lazy").setup("plugins")
 

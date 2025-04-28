@@ -16,17 +16,28 @@ return {
         print("cmp not loaded")
         return
       end
-      require("luasnip.loaders.from_vscode").lazy_load()
-     
+      -- Load snippets - using pcall to prevent errors if it fails
+      pcall(function() require("luasnip.loaders.from_vscode").lazy_load() end)
       cmp.setup({
         snippet = {
           expand = function(args)
-            require("luasnip").lsp_expand(args.body)
+            -- Check if luasnip is available before using it
+            local has_luasnip, luasnip = pcall(require, "luasnip")
+            if has_luasnip then
+              luasnip.lsp_expand(args.body)
+            end
           end,
         },
         window = {
-          completion = cmp.config.window.bordered(),
-          documentation = cmp.config.window.bordered(),
+          -- Use simpler window config that will still give rounded borders
+          completion = {
+            border = "rounded",
+            winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,CursorLine:PmenuSel,Search:None",
+          },
+          documentation = {
+            border = "rounded",
+            winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,CursorLine:PmenuSel,Search:None",
+          },
         },
         mapping = cmp.mapping.preset.insert({
           ["<C-b>"] = cmp.mapping.scroll_docs(-4),
@@ -34,7 +45,7 @@ return {
           ["<C-Space>"] = cmp.mapping.complete(),
           ["<C-e>"] = cmp.mapping.abort(),
           ["<CR>"] = cmp.mapping.confirm({ select = true }),
-          ["<C-y>"] = cmp.mapping.complete(), -- New manual trigger
+          ["<C-y>"] = cmp.mapping.complete(), -- Manual trigger
         }),
         sources = cmp.config.sources({
           { name = "nvim_lsp" },
@@ -47,7 +58,6 @@ return {
           completeopt = 'menu,menuone,noinsert'
         }
       })
-
       -- Set up cmp for cmdline
       cmp.setup.cmdline(':', {
         sources = {
@@ -57,4 +67,3 @@ return {
     end,
   },
 }
-

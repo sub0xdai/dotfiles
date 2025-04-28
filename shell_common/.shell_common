@@ -107,7 +107,15 @@ alias tns="tmux new-session -d -s"
 # Activate el-ai
 alias l-ai='source ~/1-projects/sandbox/venv/bin/activate'
 
-
+# Yazi shell wrapper
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		builtin cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
 
 # Reload shell configuration files
 reload() {

@@ -1,4 +1,4 @@
-# Ghostty configuration
+#  Ghostty configuration
 font-family = JetBrainsMono Nerd Font
 font-size = 14
 
@@ -6,7 +6,7 @@ font-size = 14
 term = xterm-256color
 
 # Window settings
-background-opacity = 0.8
+background-opacity = 0.6
 window-decoration = false
 window-padding-x = 4
 window-padding-y = 4
@@ -17,6 +17,7 @@ background = #000000
 
 # Cursor colors
 cursor-color = #c1c1c1
+cursor-style = "underline"
 
 # Normal colors (palette indices 0-7)
 palette = 0=#000000
@@ -37,3 +38,5 @@ palette = 12=#a3b7bc
 palette = 13=#999999
 palette = 14=#9cb7b7
 palette = 15=#c1c1c1
+
+
