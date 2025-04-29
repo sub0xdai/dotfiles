@@ -1,3 +1,4 @@
-//@theme "/usr/share/rofi/themes/Monokai.rasi"
-//@theme "/usr/share/rofi/themes/gruvbox-dark-soft.rasi"
+@theme "/usr/share/rofi/themes/Monokai.rasi"
+@theme "/usr/share/rofi/themes/gruvbox-dark-soft.rasi"
 @theme "nord"
+@theme "~/dotfiles/rofi/themes/base16-rofi/themes/base16-default-dark.rasi"
