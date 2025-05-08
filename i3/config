@@ -109,7 +109,7 @@ bindsym $mod+Return exec ghostty
 bindsym $mod+Shift+o exec ~/Applications/Obsidian-1.6.7.AppImage
 #bindsym $mod+Mod1+l exec --no-startup-id ~/dotfiles/scripts/betterlock_single_display.sh
 bindsym $mod+Mod1+l exec --no-startup-id i3lock -n -f -e -c 000000 --radius 120 --ring-color=ffffff3e --inside-color=00000000 --line-color=ffffff00 --keyhl-color=ffffff80 --ringver-color=ffffff3e --insidever-color=ffffff1c
-bindsym $mod+Shift+s exec --no-startup-id "mkdir -p /tmp/screenshots && flameshot gui --clipboard --path /tmp/screenshots"
+bindsym $mod+Shift+s exec --no-startup-id ~/dotfiles/scripts/__custom_flameshot.sh 
 bindsym $mod+d exec --no-startup-id dmenu_run
 bindsym $mod+e exec pcmanfm
 bindsym $mod+p exec rofi -show combi

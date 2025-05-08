@@ -25,7 +25,8 @@ alias la='eza -a --icons --group-directories-first --color=always'
 alias l='eza -F --icons --group-directories-first --color=always'
 alias l.='eza -a | grep -E "^\." --color=always' # Show only dot files
 alias vim='nvim'
-alias alert='/home/m0xu/dotfiles/scripts/alert.sh'
+alias nano='nvim'
+alias alert='/home/m0xu/dotfiles/scripts/__alert.sh'
 alias fetch='neofetch'
 alias shutdown='sync; shutdown -h now'
 alias tor='cd ~/Documents/tor-browser && ./start-tor-browser.desktop'
@@ -37,18 +38,29 @@ alias weather='curl wttr.in/melbourne'
 alias fman='compgen -c | fzf | xargs man'
 alias speed='speedtest-cli'
 alias pomo='pomo start -t'
-alias goproj='~/dotfiles/scripts/setup_go.sh'
-alias installed='~/dotfiles/scripts/installed.sh'
+alias goproj='~/dotfiles/scripts/__setup_go.sh'
+alias installed='~/dotfiles/scripts/__installed.sh'
 alias i3-msg='i3-msg -s $(ls /run/user/1000/i3/ipc-socket.*)'
-alias peel='tar xf'
 alias wind='windsurf'
-alias sysinfo='~/dotfiles/scripts/my_system.sh'
+alias sysinfo='~/dotfiles/scripts/__my_system.sh'
 alias lg='lazygit'
 alias wiki="wikiman"
 alias xampp='podman exec -it my-xampp /bin/bash'
 alias xampp-mysql='podman exec -it my-xampp /opt/lampp/bin/mysql -u root'
-alias burpsuite="$HOME/dotfiles/scripts/run-burpsuite.sh"
-alias wireshark="$HOME/dotfiles/scripts/run-wireshark.sh"
+alias burpsuite="$HOME/dotfiles/scripts/__run-burpsuite.sh"
+alias wireshark="$HOME/dotfiles/scripts/__run-wireshark.sh"
+
+
+
+#  Open tar or zip
+peel() {
+    if [[ "$1" == *.zip ]]; then
+        unzip "$1"
+    else
+        tar xf "$1"
+    fi
+}
+
 
 # Git remote set functions
 git_sub0x() {
@@ -325,5 +337,5 @@ if [ -f "$HOME/dotfiles/.env" ]; then
     export $(grep -v '^#' $HOME/dotfiles/.env | xargs)
 fi
 
-source ~/dotfiles/scripts/grep_open.sh
+source ~/dotfiles/scripts/__grep_open.sh
 export PATH=$HOME/go/bin:$PATH
