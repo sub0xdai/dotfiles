@@ -44,6 +44,7 @@ alias i3-msg='i3-msg -s $(ls /run/user/1000/i3/ipc-socket.*)'
 alias wind='windsurf'
 alias sysinfo='~/dotfiles/scripts/__my_system.sh'
 alias lg='lazygit'
+alias gs='git status --short'
 alias wiki="wikiman"
 alias xampp='podman exec -it my-xampp /bin/bash'
 alias xampp-mysql='podman exec -it my-xampp /opt/lampp/bin/mysql -u root'
