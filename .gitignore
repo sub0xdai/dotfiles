@@ -2,3 +2,7 @@
 
 .env
 .config/nvim/undo/
+nvim/.config/nvim/undo/*
+*.tmp
+*.swp
+.env*
