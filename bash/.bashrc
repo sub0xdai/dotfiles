@@ -30,3 +30,4 @@ eval "$(zoxide init bash)"
 eval "$(atuin init bash)"
 # Final PATH cleanup (remove duplicates)
 export PATH=$(clean_path "$PATH")
+export PATH=~/.npm-global/bin:$PATH

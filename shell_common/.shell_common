@@ -152,6 +152,19 @@ reload() {
 
 }
 
+# Shows installed packages in order of newest to oldest
+packages-by-date() {
+  pacman -Qi |
+  grep '^\(Name\|Install Date\)\s*:' |
+  cut -d ':' -f 2- |
+  paste - - |
+  while read pkg_name install_date
+  do
+  install_date=$(date --date="$install_date" -Iseconds)   
+  echo "$install_date   $pkg_name"
+  done | sort
+}
+
 # Common functions
 zk() {
     echo -n "title: "
@@ -340,3 +353,4 @@ fi
 
 source ~/dotfiles/scripts/__grep_open.sh
 export PATH=$HOME/go/bin:$PATH
+export PATH=~/.npm-global/bin:$PATH
