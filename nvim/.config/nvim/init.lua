@@ -10,8 +10,16 @@ if not vim.loop.fs_stat(lazypath) then
   })
 end
 vim.opt.rtp:prepend(lazypath)
+
 vim.g.python3_host_prog = vim.fn.exepath('python3')
 vim.wo.relativenumber = true
+
+-- VimTeX configuration (must be set before plugins load)
+vim.g.maplocalleader = " "
+vim.g.vimtex_view_method = "zathura"
+vim.g.vimtex_compiler_method = "tectonic"
+vim.g.vimtex_quickfix_mode = 0
+
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "markdown",
     command = "setlocal conceallevel=2"
@@ -26,8 +34,7 @@ if vim.fn.has('nvim-0.12') == 1 then
     vim.tbl_islist = vim.islist
   end
 end
+
 require("compat").setup()
 require("vim-options")
 require("lazy").setup("plugins")
-
-

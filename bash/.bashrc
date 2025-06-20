@@ -31,3 +31,5 @@ eval "$(atuin init bash)"
 # Final PATH cleanup (remove duplicates)
 export PATH=$(clean_path "$PATH")
 export PATH=~/.npm-global/bin:$PATH
+. "$HOME/.asdf/asdf.sh"
+. "$HOME/.asdf/completions/asdf.bash"

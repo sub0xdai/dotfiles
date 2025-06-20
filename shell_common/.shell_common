@@ -51,7 +51,12 @@ alias xampp-mysql='podman exec -it my-xampp /opt/lampp/bin/mysql -u root'
 alias burpsuite="$HOME/dotfiles/scripts/__run-burpsuite.sh"
 alias wireshark="$HOME/dotfiles/scripts/__run-wireshark.sh"
 
+# System maintenance aliases with path expansion
+alias sysmaint='$HOME/dotfiles/scripts/__sysmaintenance.sh'
+alias sm='sysmaint'
+alias sysm='sysmaint'  # Alternative short form
 
+alias kebab='$HOME/dotfiles/scripts/__kebab_case.sh'
 
 #  Open tar or zip
 peel() {
