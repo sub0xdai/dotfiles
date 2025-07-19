@@ -140,6 +140,9 @@ bindsym $mod+Shift+space floating toggle
 bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
 
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
 # Resize mode
 mode "resize" {
     bindsym j resize shrink width 10 px or 10 ppt
