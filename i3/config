@@ -38,7 +38,7 @@ client.urgent           #36454f #36454f #36454f #36454f
 #====================
 
 # Configure monitors and cursor
-exec_always --no-startup-id xrandr --output HDMI-0 --primary --mode 3840x2160 --output DP-1 --mode 1920x1080 --left-of HDMI-0
+exec_always --no-startup-id ~/dotfiles/scripts/__manage_monitors.sh
 exec_always --no-startup-id xsetroot -cursor_name left_ptr
 exec_always --no-startup-id echo "Xcursor.size: 24" > ~/.Xresources
 exec_always --no-startup-id xrdb -merge ~/.Xresources
@@ -84,11 +84,12 @@ exec --no-startup-id xidlehook \
     'systemctl suspend' \
     ''
 
-exec_always --no-startup-id redshift -c ~/.config/redshift.conf &
+# exec_always --no-startup-id redshift -c ~/.config/redshift.conf &
 exec --no-startup-id xfce4-power-manager
 exec --no-startup-id gammastep
 exec_always --no-startup-id xmodmap ~/.xmodmap
-
+# Use two separate commands for greater reliability
+exec --no-startup-id "sleep 1 && setxkbmap -option caps:none && xmodmap -e 'keycode 66 = F12'"
 
 #====================
 # AUDIO CONTROLS
@@ -139,6 +140,9 @@ bindsym $mod+t layout toggle split
 bindsym $mod+Shift+space floating toggle
 bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
+bindsym $mod+m exec --no-startup-id ~/dotfiles/scripts/__manage_monitors.sh
+bindsym Mod+Shift+c exec --no-startup-id "xmodmap -e 'clear Lock' -e 'keycode 66 = F12'"
+
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -199,16 +203,16 @@ bindsym $mod+Shift+9 move container to workspace number $ws9
 bindsym $mod+Shift+0 move container to workspace number $ws10
 
 # Assign workspace to monitor 
-workspace $ws1  output DP-1
-workspace $ws2  output HDMI-0
-workspace $ws3  output HDMI-0
-workspace $ws4  output HDMI-0
-workspace $ws5  output HDMI-0
-workspace $ws6  output HDMI-0
-workspace $ws7  output HDMI-0
-workspace $ws8  output HDMI-0
-workspace $ws9  output DP-1
-workspace $ws10  output DP-1
+workspace $ws1  output DP-1 HDMI-0
+workspace $ws2  output HDMI-0 DP-1  
+workspace $ws3  output HDMI-0 DP-1
+workspace $ws4  output HDMI-0 DP-1
+workspace $ws5  output HDMI-0 DP-1
+workspace $ws6  output HDMI-0 DP-1
+workspace $ws7  output HDMI-0 DP-1
+workspace $ws8  output HDMI-0 DP-1
+workspace $ws9  output DP-1 HDMI-0
+workspace $ws10 output DP-1 HDMI-0
 
 
 
@@ -227,7 +231,7 @@ floating_modifier $mod
 tiling_drag modifier titlebar
 
 # Reload the configuration file
-bindsym $mod+Shift+c reload
+bindsym $mod+Shift+x reload
 
 # Restart i3 inplace
 bindsym $mod+Shift+r restart
@@ -236,5 +240,4 @@ bindsym $mod+Shift+r restart
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
 
 # Start XDG autostart .desktop files using dex
-exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id dunst

@@ -6,7 +6,7 @@ font-size = 14
 term = xterm-256color
 
 # Window settings
-background-opacity = 0.6
+background-opacity = 0.9
 window-decoration = false
 window-padding-x = 4
 window-padding-y = 4

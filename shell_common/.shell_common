@@ -50,6 +50,8 @@ alias xampp='podman exec -it my-xampp /bin/bash'
 alias xampp-mysql='podman exec -it my-xampp /opt/lampp/bin/mysql -u root'
 alias burpsuite="$HOME/dotfiles/scripts/__run-burpsuite.sh"
 alias wireshark="$HOME/dotfiles/scripts/__run-wireshark.sh"
+alias C='claude --dangerously-skip-permissions'
+alias cog-sse='docker run -d -e TRANSPORT_MODE=sse --env-file $HOME/cognee-mcp/.env -p 8000:8000 -v cognee_data:/app/.venv/lib/python3.12/site-packages/cognee/.cognee_system cognee/cognee-mcp:main'
 
 # System maintenance aliases with path expansion
 alias sysmaint='$HOME/dotfiles/scripts/__sysmaintenance.sh'
@@ -57,6 +59,34 @@ alias sm='sysmaint'
 alias sysm='sysmaint'  # Alternative short form
 
 alias kebab='$HOME/dotfiles/scripts/__kebab_case.sh'
+
+
+
+# Function to find the project root and copy project_index.md
+cpi() {
+    # Find the root of the git repository
+    local root_dir=$(git rev-parse --show-toplevel)
+
+    # Check if a root directory was found
+    if [ -z "$root_dir" ]; then
+        echo "Error: Not a git repository. Cannot find project root."
+        return 1
+    fi
+
+    local index_file="$root_dir/project_index.md"
+
+    # Check if the index file exists
+    if [ ! -f "$index_file" ]; then
+        echo "Error: project_index.md not found in project root ($root_dir)."
+        return 1
+    fi
+
+    # Copy the file's content to the clipboard
+    cat "$index_file" | xclip -selection clipboard
+    echo "✅ project_index.md copied to clipboard."
+}
+
+
 
 #  Open tar or zip
 peel() {
@@ -337,17 +367,19 @@ export PERL_LOCAL_LIB_ROOT="/home/m0xu/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL
 export PERL_MB_OPT="--install_base \"/home/m0xu/perl5\""
 export PERL_MM_OPT="INSTALL_BASE=/home/m0xu/perl5"
 
+# XDG Base Directory specification
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+
 # Additional paths
 export PATH="$PATH:$HOME/dotfiles/scripts"
 export PATH=$PATH:/var/lib/snapd/snap/bin
 export PATH=$HOME/.tmux/plugins/t-smart-tmux-session-manager/bin:$PATH
-export PATH=$HOME/.config/tmux/plugins/t-smart-tmux-session-manager/bin:$PATH
-# Go paths (ordered by version)
-export PATH=$HOME/.asdf/installs/golang/1.23.2/packages/bin:$PATH
-export PATH=$HOME/.asdf/installs/golang/1.23.4/packages/bin:$PATH
-export PATH=$HOME/.asdf/installs/golang/1.24.2/packages/bin:$PATH
-export PATH="$PATH:$(go env GOPATH)/bin"
+export PATH=$XDG_CONFIG_HOME/tmux/plugins/t-smart-tmux-session-manager/bin:$PATH
 
+# Go paths (use latest version and GOPATH)
+export GOPATH="$HOME/go"
+export PATH=$HOME/.asdf/installs/golang/1.24.2/packages/bin:$PATH
+export PATH="$GOPATH/bin:$PATH"
 
 
 # Source additional configurations
@@ -357,5 +389,6 @@ if [ -f "$HOME/dotfiles/.env" ]; then
 fi
 
 source ~/dotfiles/scripts/__grep_open.sh
-export PATH=$HOME/go/bin:$PATH
-export PATH=~/.npm-global/bin:$PATH
+
+
+
