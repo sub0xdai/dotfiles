@@ -88,9 +88,8 @@ exec --no-startup-id xidlehook \
 exec --no-startup-id xfce4-power-manager
 exec --no-startup-id gammastep
 exec_always --no-startup-id xmodmap ~/.xmodmap
-# Use two separate commands for greater reliability
-exec --no-startup-id "sleep 1 && setxkbmap -option caps:none && xmodmap -e 'keycode 66 = F12'"
-
+# Use two separate commands for greater reliabilityexec --no-startup-id "sleep 1 && setxkbmap -option caps:none && xmodmap -e 'keycode 66 = F12'"
+exec --no-startup-id "sleep 1 && setxkbmap -option caps:none && xmodmap -e 'keycode 66 = F4'"
 #====================
 # AUDIO CONTROLS
 #====================
