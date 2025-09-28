@@ -52,6 +52,8 @@ alias burpsuite="$HOME/dotfiles/scripts/__run-burpsuite.sh"
 alias wireshark="$HOME/dotfiles/scripts/__run-wireshark.sh"
 alias C='claude --dangerously-skip-permissions'
 alias cog-sse='docker run -d -e TRANSPORT_MODE=sse --env-file $HOME/cognee-mcp/.env -p 8000:8000 -v cognee_data:/app/.venv/lib/python3.12/site-packages/cognee/.cognee_system cognee/cognee-mcp:main'
+alias reset='setxkbmap -layout us' # Reset i3 after this 
+
 
 # System maintenance aliases with path expansion
 alias sysmaint='$HOME/dotfiles/scripts/__sysmaintenance.sh'
