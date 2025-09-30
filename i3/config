@@ -87,9 +87,7 @@ exec --no-startup-id xidlehook \
 # exec_always --no-startup-id redshift -c ~/.config/redshift.conf &
 exec --no-startup-id xfce4-power-manager
 exec --no-startup-id gammastep
-exec_always --no-startup-id xmodmap ~/.xmodmap
-# Use two separate commands for greater reliabilityexec --no-startup-id "sleep 1 && setxkbmap -option caps:none && xmodmap -e 'keycode 66 = F12'"
-exec --no-startup-id "sleep 1 && setxkbmap -option caps:none && xmodmap -e 'keycode 66 = F4'"
+exec_always --no-startup-id "setxkbmap -option caps:none && xmodmap -e 'keycode 66 = F4'"
 #====================
 # AUDIO CONTROLS
 #====================
@@ -140,8 +138,6 @@ bindsym $mod+Shift+space floating toggle
 bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
 bindsym $mod+m exec --no-startup-id ~/dotfiles/scripts/__manage_monitors.sh
-bindsym Mod+Shift+c exec --no-startup-id "xmodmap -e 'clear Lock' -e 'keycode 66 = F12'"
-
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
