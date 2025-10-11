@@ -161,5 +161,45 @@ vim.opt.wrap = true
 vim.opt.linebreak = true
 vim.opt.showmode = false
 
+
+-- Toggle Markdown task list checkbox for the current line or visual selection
+local function toggle_markdown_task()
+  local mode = vim.api.nvim_get_mode().mode
+  local start_line, end_line
+
+  if mode == "v" or mode == "V" then
+    local start_pos = vim.api.nvim_buf_get_mark(0, "<")
+    local end_pos = vim.api.nvim_buf_get_mark(0, ">")
+    start_line, end_line = start_pos[1], end_pos[1]
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", true)
+  else
+    start_line, end_line = vim.fn.line("."), vim.fn.line(".")
+  end
+
+  for line_num = start_line, end_line do
+    local line = vim.api.nvim_buf_get_lines(0, line_num - 1, line_num, false)[1]
+    if line then
+      local new_line = line
+      -- Looks for the standard Markdown task syntax: "- [ ] " or "- [x] "
+      if line:match("^%s*%- %[ %] ") then
+        new_line = line:gsub("%- %[ %] ", "- [x] ", 1)
+      elseif line:match("^%s*%- %[x%] ") then
+        new_line = line:gsub("%- %[x%] ", "- [ ] ", 1)
+      end
+      if new_line ~= line then
+        vim.api.nvim_buf_set_lines(0, line_num - 1, line_num, false, { new_line })
+      end
+    end
+  end
+end
+
+-- In Normal mode, convert the current line to a Markdown task
+vim.keymap.set("n", "<A-t>", "I- [ ] <Esc>", { desc = "Create Markdown task" })
+
+-- In Insert mode, insert the Markdown task syntax
+vim.keymap.set("i", "<A-t>", "- [ ] ", { desc = "Create Markdown task" })
+
+-- Toggle the task in Normal or Visual mode
+vim.keymap.set({ "n", "v" }, "<A-x>", toggle_markdown_task, { desc = "Toggle Markdown task" })
 -- Filetype Plugins and Indentation
 vim.cmd("filetype plugin indent on")
