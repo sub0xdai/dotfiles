@@ -1,6 +1,7 @@
 #!/bin/bash
 # ~/.config/i3/scripts/__manage_monitors.sh
 # Detects monitor configuration and sets up workspaces accordingly
+sleep 1
 
 detect_monitors() {
     DP1_ACTIVE=$(xrandr | grep "DP-1 connected" | grep -v "disconnected" | wc -l)
@@ -75,6 +76,8 @@ main() {
             exit 1
             ;;
     esac
+
+    feh --randomize --bg-scale ~/Pictures/Wallpapers/*
 }
 
 main

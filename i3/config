@@ -48,7 +48,7 @@ exec_always --no-startup-id xrdb -merge ~/.Xresources
 # WALLPAPERS
 #====================
 
-exec_always --no-startup-id feh --randomize --bg-scale ~/Pictures/Wallpapers/*
+# Moved this to script- exec_always --no-startup-id feh --randomize --bg-scale ~/Pictures/Wallpapers/*
 
 exec --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh
 exec --no-startup-id dbus-update-activation-environment --systemd DISPLAY
@@ -87,8 +87,10 @@ exec --no-startup-id xidlehook \
 # exec_always --no-startup-id redshift -c ~/.config/redshift.conf &
 exec --no-startup-id xfce4-power-manager
 exec --no-startup-id gammastep
-exec_always --no-startup-id "setxkbmap -option caps:none && xmodmap -e 'keycode 66 = F4'"
+exec_always --no-startup-id "sleep 1 && xmodmap ~/.xmodmap"
+
 #====================
+
 # AUDIO CONTROLS
 #====================
 
