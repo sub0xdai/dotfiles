@@ -174,25 +174,6 @@ return {
 				capabilities = capabilities,
 				filetypes = { "templ" },
 			})
-			local configs = require("lspconfig.configs")
-
-			if not configs.ts_ls then
-				configs.ts_ls = {
-					default_config = {
-						cmd = { "typescript-language-server", "--stdio" },
-						capabilities = capabilities,
-						filetypes = {
-							"javascript",
-							"javascriptreact",
-							"typescript",
-							"typescriptreact",
-							"html",
-						},
-						root_dir = require("lspconfig").util.root_pattern("package.json", "tsconfig.json", ".git"),
-						-- single_file_support = true,
-					},
-				}
-			end
 			lspconfig.ts_ls.setup({
 				capabilities = capabilities,
 			})

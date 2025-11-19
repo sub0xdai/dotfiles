@@ -36,7 +36,7 @@ alias virt='virt-manager'
 alias powerm="xfce4-power-manager-settings"
 alias weather='curl wttr.in/melbourne'
 alias fman='compgen -c | fzf | xargs man'
-alias speed='speedtest-cli'
+alias speed='speedtest-cli --simple'
 alias pomo='pomo start -t'
 alias goproj='~/dotfiles/scripts/__setup_go.sh'
 alias installed='~/dotfiles/scripts/__installed.sh'
@@ -55,6 +55,7 @@ alias cog-sse='docker run -d -e TRANSPORT_MODE=sse --env-file $HOME/cognee-mcp/.
 alias reset='setxkbmap -layout us' # Reset i3 after this
 alias activate='source .venv/bin/activate'
 alias yz='yazi' 
+alias docker='podman'
 
 # System maintenance aliases with path expansion
 alias sysmaint='$HOME/dotfiles/scripts/__sysmaintenance.sh'

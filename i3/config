@@ -87,7 +87,7 @@ exec --no-startup-id xidlehook \
 # exec_always --no-startup-id redshift -c ~/.config/redshift.conf &
 exec --no-startup-id xfce4-power-manager
 exec --no-startup-id gammastep
-exec_always --no-startup-id "sleep 1 && xmodmap ~/.xmodmap"
+exec_always --no-startup-id "sleep 0.5 && xmodmap ~/.xmodmap"
 
 #====================
 
