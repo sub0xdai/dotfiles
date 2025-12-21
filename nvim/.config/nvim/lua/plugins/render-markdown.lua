@@ -20,6 +20,13 @@ return {
             -- Set debounce time for rendering (in milliseconds)
             debounce = 100,
 
+            -- Bullet point configuration
+            bullet = {
+                icons = { '●', '○', '◆', '◇' },
+                left_pad = 0,
+                right_pad = 1,
+            },
+
             -- Use default window options
             win_options = {
                 conceallevel = {

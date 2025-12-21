@@ -38,14 +38,12 @@ return {
         globalstatus = true
       },
       extensions = {
-        'neo-tree',
         'fugitive',
         'quickfix',
         'nvim-dap-ui',
         'man',
         'oil',
         'mason',
-        'fzf'
       }
     })
   end

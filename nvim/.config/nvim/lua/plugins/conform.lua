@@ -10,7 +10,17 @@ return {
           go = { "gofmt" },
           python = { "black" },
           lua = { "stylua" },
-          -- Add formatters for other languages as needed
+          javascript = { "prettier" },
+          typescript = { "prettier" },
+          javascriptreact = { "prettier" },
+          typescriptreact = { "prettier" },
+          css = { "prettier" },
+          html = { "prettier" },
+          json = { "prettier" },
+          yaml = { "prettier" },
+          markdown = { "prettier" },
+          ruby = { "rubocop" },
+          eruby = { "rubocop" },
         },
       })
       vim.keymap.set({ "n", "v" }, "<leader>l", function()

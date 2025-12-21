@@ -2,8 +2,6 @@ return {
 	{
 		"vague2k/vague.nvim",
 		config = function()
-			vim.opt.termguicolors = true
-			vim.cmd('colorscheme base16-black-metal-khold')
 			require("vague").setup({
 				-- optional configuration here
 				transparent = true,
@@ -54,6 +52,28 @@ return {
 	},
 	{
 		"RRethy/base16-nvim",
+	},
+	{
+		"webhooked/kanso.nvim",
+		lazy = false,
+		priority = 1000,
+		config = function()
+			vim.opt.termguicolors = true
+			-- variants: kanso-zen, kanso-ink, kanso-mist (dark) | kanso-pearl (light)
+			require("kanso").setup({
+				transparent = true,
+				commentStyle = {},
+				functionStyle = {},
+				keywordStyle = {},
+				statementStyle = {},
+				typeStyle = {},
+				background = {
+					dark = "ink",
+					light = "pearl",
+				},
+			})
+			vim.cmd("colorscheme kanso-ink")
+		end,
 	},
 }
 

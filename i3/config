@@ -42,14 +42,15 @@ exec_always --no-startup-id ~/dotfiles/scripts/__manage_monitors.sh
 exec_always --no-startup-id xsetroot -cursor_name left_ptr
 exec_always --no-startup-id echo "Xcursor.size: 24" > ~/.Xresources
 exec_always --no-startup-id xrdb -merge ~/.Xresources
-
+# Keyboard settings - exec_always ensures mapping persists after reload
+exec_always --no-startup-id sleep 0.5 && xmodmap ~/.xmodmap
+exec_always --no-startup-id xset r rate 200 40
 
 #====================
 # WALLPAPERS
 #====================
 
 # Moved this to script- exec_always --no-startup-id feh --randomize --bg-scale ~/Pictures/Wallpapers/*
-
 exec --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh
 exec --no-startup-id dbus-update-activation-environment --systemd DISPLAY
 
@@ -87,7 +88,6 @@ exec --no-startup-id xidlehook \
 # exec_always --no-startup-id redshift -c ~/.config/redshift.conf &
 exec --no-startup-id xfce4-power-manager
 exec --no-startup-id gammastep
-exec_always --no-startup-id "sleep 0.5 && xmodmap ~/.xmodmap"
 
 #====================
 

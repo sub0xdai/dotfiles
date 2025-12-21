@@ -39,7 +39,6 @@ return {
 					"texlab",
 					"intelephense",
 					"nim_langserver",
-					"zls",
 				},
 			})
 		end,
@@ -49,114 +48,61 @@ return {
 		config = function()
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-			local lspconfig = require("lspconfig")
+			local function get_python_path()
+				local venv_path = os.getenv("VIRTUAL_ENV")
+				if venv_path then
+					return venv_path .. "/bin/python3"
+				else
+					local os_name = require("utils").get_os()
+					if os_name == "windows" then
+						return "C:/python312"
+					elseif os_name == "linux" then
+						return "/usr/bin/python3"
+					else
+						return nil
+					end
+				end
+			end
 
-			lspconfig.nil_ls.setup({
-				capabilities = capabilities,
-			})
-			lspconfig.sqlls.setup({
-				capabilities = capabilities,
-			})
-			lspconfig.intelephense.setup({
-				capabilities = capabilities,
-			})
-			lspconfig.texlab.setup({
-				capabilities = capabilities,
-			})
-			lspconfig.zls.setup({
-				capabilities = capabilities,
-				cmd = { "zls" },
-			})
-			lspconfig.hls.setup({
-				capabilities = capabilities,
-				single_file_support = true,
-			})
-			lspconfig.bashls.setup({
-				capabilities = capabilities,
-			})
-			lspconfig.lua_ls.setup({
+			-- LSP configs using vim.lsp.config (new API)
+			vim.lsp.config.sqlls = { capabilities = capabilities }
+			vim.lsp.config.intelephense = { capabilities = capabilities }
+			vim.lsp.config.texlab = { capabilities = capabilities }
+			vim.lsp.config.zls = { capabilities = capabilities, cmd = { "zls" } }
+			vim.lsp.config.hls = { capabilities = capabilities, single_file_support = true }
+			vim.lsp.config.bashls = { capabilities = capabilities }
+			vim.lsp.config.lua_ls = {
 				capabilities = capabilities,
 				settings = {
 					Lua = {
-						diagnostics = {
-							globals = { "vim" }, -- Recognize 'vim' as a global variable
-						},
-						workspace = {
-							library = vim.api.nvim_get_runtime_file("", true), -- Include Neovim runtime files
-						},
-						telemetry = {
-							enable = false,
-						},
+						diagnostics = { globals = { "vim" } },
+						workspace = { library = vim.api.nvim_get_runtime_file("", true) },
+						telemetry = { enable = false },
 					},
 				},
-			})
-			lspconfig.wgsl_analyzer.setup({
+			}
+			vim.lsp.config.wgsl_analyzer = { capabilities = capabilities }
+			vim.lsp.config.jsonls = { capabilities = capabilities }
+			vim.lsp.config.gopls = { capabilities = capabilities }
+			vim.lsp.config.cssls = { capabilities = capabilities }
+			vim.lsp.config.prismals = { capabilities = capabilities }
+			vim.lsp.config.yamlls = { capabilities = capabilities }
+			vim.lsp.config.html = {
 				capabilities = capabilities,
-			})
-			lspconfig.jsonls.setup({
-				capabilities = capabilities,
-			})
-			lspconfig.gopls.setup({
-				capabilities = capabilities,
-			})
-			lspconfig.cssls.setup({
-				capabilities = capabilities,
-			})
-			lspconfig.prismals.setup({
-				capabilities = capabilities,
-			})
-			lspconfig.yamlls.setup({
-				capabilities = capabilities,
-			})
-			lspconfig.html.setup({
-				capabilities = capabilities,
-				filetypes = {
-					"templ",
-					"html",
-					"php",
-					"css",
-					"javascriptreact",
-					"typescriptreact",
-					"javascript",
-					"typescript",
-					"jsx",
-					"tsx",
-				},
-			})
-			lspconfig.htmx.setup({
+				filetypes = { "templ", "html", "php", "css", "javascriptreact", "typescriptreact", "javascript", "typescript", "jsx", "tsx" },
+			}
+			vim.lsp.config.htmx = {
 				capabilities = capabilities,
 				filetypes = { "html", "templ" },
-			})
-			lspconfig.emmet_language_server.setup({
+			}
+			vim.lsp.config.emmet_language_server = {
 				capabilities = capabilities,
-				filetypes = {
-					"templ",
-					"html",
-					"css",
-					"php",
-					"javascriptreact",
-					"typescriptreact",
-					"javascript",
-					"typescript",
-					"jsx",
-					"tsx",
-					"markdown",
-				},
-			})
-			lspconfig.tailwindcss.setup({
+				filetypes = { "templ", "html", "css", "php", "javascriptreact", "typescriptreact", "javascript", "typescript", "jsx", "tsx", "markdown" },
+			}
+			vim.lsp.config.tailwindcss = {
 				capabilities = capabilities,
-				filetypes = {
-					"templ",
-					"html",
-					"css",
-					"javascriptreact",
-					"typescriptreact",
-					"javascript",
-					"typescript",
-					"jsx",
-					"tsx",
-				},
-				root_dir = require("lspconfig").util.root_pattern(
+				filetypes = { "templ", "html", "css", "javascriptreact", "typescriptreact", "javascript", "typescript", "jsx", "tsx" },
+				root_markers = {
 					"tailwind.config.js",
 					"tailwind.config.cjs",
 					"tailwind.config.mjs",
@@ -167,21 +113,16 @@ return {
 					"postcss.config.ts",
 					"package.json",
 					"node_modules",
-					".git"
-				),
-			})
-			lspconfig.templ.setup({
+					".git",
+				},
+			}
+			vim.lsp.config.templ = {
 				capabilities = capabilities,
 				filetypes = { "templ" },
-			})
-			lspconfig.ts_ls.setup({
-				capabilities = capabilities,
-			})
-			lspconfig.eslint.setup({
-				capabilities = capabilities,
-			})
-
-			require("lspconfig").clangd.setup({
+			}
+			vim.lsp.config.ts_ls = { capabilities = capabilities }
+			vim.lsp.config.eslint = { capabilities = capabilities }
+			vim.lsp.config.clangd = {
 				cmd = {
 					"clangd",
 					"--background-index",
@@ -196,49 +137,48 @@ return {
 					"--completion-style=detailed",
 				},
 				filetypes = { "c", "cpp", "objc", "objcpp" },
-				root_dir = require("lspconfig").util.root_pattern("src"),
-				init_option = { fallbackFlags = { "-std=c++2a" } },
+				root_markers = { "src" },
+				init_options = { fallbackFlags = { "-std=c++2a" } },
 				capabilities = capabilities,
 				single_file_support = true,
-			})
-
-			function get_python_path()
-				-- Check if there's an active virtual environment
-				local venv_path = os.getenv("VIRTUAL_ENV")
-				if venv_path then
-					return venv_path .. "/bin/python3"
-				else
-					-- get os name
-					local os_name = require("utils").get_os()
-					-- get os interpreter path
-					if os_name == "windows" then
-						return "C:/python312"
-					elseif os_name == "linux" then
-						return "/usr/bin/python3"
-					else
-						return nil
-					end
-					-- Fallback to global Python interpreter
-				end
-			end
-
-			lspconfig.pylsp.setup({
+			}
+			vim.lsp.config.pylsp = {
 				capabilities = capabilities,
 				settings = {
-					python = {
-						pythonPath = get_python_path(),
-					},
+					python = { pythonPath = get_python_path() },
 				},
-			})
+			}
+			vim.lsp.config.marksman = { capabilities = capabilities }
+			vim.lsp.config.gleam = { capabilities = capabilities }
+			vim.lsp.config.nim_langserver = { capabilities = capabilities }
 
-			lspconfig.marksman.setup({
-				capabilities = capabilities,
-			})
-			lspconfig.gleam.setup({
-				capabilities = capabilities,
-			})
-			lspconfig.nim_langserver.setup({
-				capabilities = capabilities,
+			-- Enable all configured servers
+			vim.lsp.enable({
+				"sqlls",
+				"intelephense",
+				"texlab",
+				"zls",
+				"hls",
+				"bashls",
+				"lua_ls",
+				"wgsl_analyzer",
+				"jsonls",
+				"gopls",
+				"cssls",
+				"prismals",
+				"yamlls",
+				"html",
+				"htmx",
+				"emmet_language_server",
+				"tailwindcss",
+				"templ",
+				"ts_ls",
+				"eslint",
+				"clangd",
+				"pylsp",
+				"marksman",
+				"gleam",
+				"nim_langserver",
 			})
 		end,
 	},
