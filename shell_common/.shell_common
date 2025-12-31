@@ -64,7 +64,7 @@ alias sysm='sysmaint'  # Alternative short form
 
 alias kebab='$HOME/dotfiles/scripts/__kebab_case.sh'
 
-
+bindkey -s '^Xgc' 'git commit -m ""\C-b'
 
 # Function to find the project root and copy project_index.md
 cpi() {
