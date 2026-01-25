@@ -48,11 +48,11 @@ return {
           ["<C-y>"] = cmp.mapping.complete(), -- Manual trigger
         }),
         sources = cmp.config.sources({
+          { name = "lazydev", group_index = 0 },
           { name = "nvim_lsp" },
           { name = "luasnip" },
           { name = "buffer" },
           { name = "path" },
-          { name = "nvim_lua" },
         }),
         completion = {
           completeopt = 'menu,menuone,noinsert'
