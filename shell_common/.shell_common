@@ -56,6 +56,7 @@ alias reset='setxkbmap -layout us' # Reset i3 after this
 alias activate='source .venv/bin/activate'
 alias yz='yazi' 
 alias docker='podman'
+alias note='vim ~/1-projects/vaults/sub0x_vault/scratchpad.md'
 
 # System maintenance aliases with path expansion
 alias sysmaint='$HOME/dotfiles/scripts/__sysmaintenance.sh'
