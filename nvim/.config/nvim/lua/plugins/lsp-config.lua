@@ -33,7 +33,7 @@ return {
 					"eslint",
 					-- "hls",
 					"zls",
-					"marksman",
+					"markdown_oxide",
 					"sqlls",
 					"wgsl_analyzer",
 					"texlab",
@@ -146,7 +146,43 @@ return {
 					python = { pythonPath = get_python_path() },
 				},
 			}
-			vim.lsp.config.marksman = { capabilities = capabilities }
+			-- markdown-oxide: PKM-focused LSP for Obsidian-style vaults
+			local md_oxide_capabilities = vim.tbl_deep_extend(
+				"force",
+				capabilities,
+				{
+					workspace = {
+						didChangeWatchedFiles = {
+							dynamicRegistration = true,
+						},
+					},
+				}
+			)
+
+			vim.lsp.config.markdown_oxide = {
+				capabilities = md_oxide_capabilities,
+				on_attach = function(client, bufnr)
+					-- Daily note command with natural language support
+					-- Examples: :Daily, :Daily tomorrow, :Daily two days ago, :Daily +7
+					vim.api.nvim_create_user_command("Daily", function(args)
+						vim.lsp.buf.execute_command({ command = "jump", arguments = { args.args } })
+					end, { desc = "Open daily note", nargs = "*" })
+
+					-- Code lens auto-refresh for reference counts
+					if client.server_capabilities.codeLensProvider then
+						vim.api.nvim_create_autocmd(
+							{ "TextChanged", "InsertLeave", "CursorHold", "BufEnter" },
+							{
+								buffer = bufnr,
+								callback = function()
+									vim.lsp.codelens.refresh({ bufnr = bufnr })
+								end,
+							}
+						)
+						vim.lsp.codelens.refresh({ bufnr = bufnr })
+					end
+				end,
+			}
 			vim.lsp.config.gleam = { capabilities = capabilities }
 			vim.lsp.config.nim_langserver = { capabilities = capabilities }
 
@@ -174,7 +210,7 @@ return {
 				"eslint",
 				"clangd",
 				"pylsp",
-				"marksman",
+				"markdown_oxide",
 				"gleam",
 				"nim_langserver",
 			})

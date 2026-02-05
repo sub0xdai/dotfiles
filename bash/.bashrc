@@ -33,3 +33,5 @@ export PATH=$(clean_path "$PATH")
 export PATH=~/.npm-global/bin:$PATH
 . "$HOME/.asdf/asdf.sh"
 . "$HOME/.asdf/completions/asdf.bash"
+
+alias claude-mem='bun "/home/m0xu/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
