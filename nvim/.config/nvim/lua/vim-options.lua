@@ -12,6 +12,7 @@ vim.opt.splitright = true           -- open new horizontal splits right
 vim.opt.splitkeep = "cursor"
 vim.wo.number = true
 
+
 -- Window navigation
 vim.keymap.set('n', '<c-k>', '<cmd>wincmd k<CR>', { silent = true })
 vim.keymap.set('n', '<c-j>', '<cmd>wincmd j<CR>', { silent = true })
@@ -20,6 +21,17 @@ vim.keymap.set('n', '<c-l>', '<cmd>wincmd l<CR>', { silent = true })
 
 -- Clear search highlight
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>', { silent = true })
+
+-- Jump past closing characters in insert mode
+-- Skips past ]] if that's what's ahead, otherwise jumps 1 char
+vim.keymap.set('i', '<C-l>', function()
+  local col = vim.api.nvim_win_get_cursor(0)[2]
+  local line = vim.api.nvim_get_current_line()
+  if line:sub(col + 1, col + 2) == "]]" then
+    return "<Right><Right>"
+  end
+  return "<Right>"
+end, { silent = true, expr = true })
 
 -- New vertical split
 vim.keymap.set('n', '<C-n>', '<cmd>vnew<CR>', { noremap = true, silent = true })
@@ -116,7 +128,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     --end,
 --})
 
-
 -- Tabs and Indentation - globally
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
@@ -159,6 +170,7 @@ vim.opt.relativenumber = true
 vim.opt.signcolumn = "yes"
 vim.opt.wrap = true
 vim.opt.linebreak = true
+vim.opt.textwidth = 100
 vim.opt.showmode = false
 
 

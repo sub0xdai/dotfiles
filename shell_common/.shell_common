@@ -27,7 +27,7 @@ alias l.='eza -a | grep -E "^\." --color=always' # Show only dot files
 alias vim='nvim'
 alias nano='nvim'
 alias alert='/home/m0xu/dotfiles/scripts/__alert.sh'
-alias fetch='neofetch'
+alias fetch='fastfetch'
 alias shutdown='sync; shutdown -h now'
 alias tor='cd ~/Documents/tor-browser && ./start-tor-browser.desktop'
 alias commit='git add -A; git commit -m'

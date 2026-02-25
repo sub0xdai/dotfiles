@@ -3,8 +3,9 @@ return {
   event = "BufEnter",
   opts = {
     softener = {
-      markdown = 1.3,
-      latex = 1.2,
+      markdown = true,
+      latex = true,
+      text = true,
     },
     create_keymaps = false,
   },
