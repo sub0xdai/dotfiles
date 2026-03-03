@@ -1,6 +1,11 @@
 return {
   "andrewferrier/wrapping.nvim",
   event = "BufEnter",
+  config = function(_, opts)
+    local wrapping = require("wrapping")
+    wrapping.setup(opts)
+    wrapping.set_mode_heuristically()
+  end,
   opts = {
     softener = {
       markdown = true,

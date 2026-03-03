@@ -93,6 +93,14 @@ cpi() {
 
 
 
+# Block PR merge without approval 
+if [[ "$*" == *"pr merge"* ]]; then 
+  echo "Blocked: merging requires human approval"
+  exit 1 
+fi 
+
+
+
 #  Open tar or zip
 peel() {
     if [[ "$1" == *.zip ]]; then
