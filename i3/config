@@ -57,6 +57,7 @@ exec --no-startup-id dbus-update-activation-environment --systemd DISPLAY
 #  floating
 for_window [class="gnome-calculator"] floating enable
 for_window [class="pcmanfm"] floating enable
+for_window [class="planify"] floating enable, resize set 900 700
 
 # Position floating windows in visible area
 floating_maximum_size 1920 x 1080
@@ -69,7 +70,6 @@ exec_always --no-startup-id gsettings set org.gnome.desktop.interface icon-theme
 exec_always --no-startup-id killall polybar
 exec_always --no-startup-id ~/.config/polybar/launch_polybar.sh
 exec --no-startup-id dex --autostart --environment i3
-exec --no-startup-id blueman-applet
 exec --no-startup-id nm-applet
 exec_always --no-startup-id picom -b --config ~/.config/picom/picom.conf
 exec_always --no-startup-id autotiling &
@@ -114,6 +114,7 @@ bindsym $mod+d exec --no-startup-id dmenu_run
 bindsym $mod+e exec pcmanfm
 bindsym $mod+p exec rofi -show combi
 bindsym $mod+w exec zen-browser
+bindsym $mod+Mod1+t exec planify
 
 # Window management
 bindsym $mod+q kill

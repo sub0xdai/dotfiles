@@ -1,5 +1,5 @@
-# Black Metal inspired colors for exa
-export EXA_COLORS="\
+# Black Metal inspired colors for eza
+export EZA_COLORS="\
 da=38;5;110:\
 uu=38;5;244:\
 sn=38;5;102:\
@@ -33,21 +33,17 @@ alias tor='cd ~/Documents/tor-browser && ./start-tor-browser.desktop'
 alias commit='git add -A; git commit -m'
 alias ssha='eval $(ssh-agent) && ssh-add'
 alias virt='virt-manager'
-alias powerm="xfce4-power-manager-settings"
 alias weather='curl wttr.in/melbourne'
-alias fman='compgen -c | fzf | xargs man'
+alias fman='print -rl -- ${(ko)commands} | fzf | xargs man'
 alias speed='speedtest-cli --simple'
 alias pomo='pomo start -t'
 alias goproj='~/dotfiles/scripts/__setup_go.sh'
 alias installed='~/dotfiles/scripts/__installed.sh'
 alias i3-msg='i3-msg -s $(ls /run/user/1000/i3/ipc-socket.*)'
-alias wind='windsurf'
 alias sysinfo='~/dotfiles/scripts/__my_system.sh'
 alias lg='lazygit'
 alias gs='git status --short'
 alias wiki="wikiman"
-alias xampp='podman exec -it my-xampp /bin/bash'
-alias xampp-mysql='podman exec -it my-xampp /opt/lampp/bin/mysql -u root'
 alias burpsuite="$HOME/dotfiles/scripts/__run-burpsuite.sh"
 alias wireshark="$HOME/dotfiles/scripts/__run-wireshark.sh"
 alias C='claude --dangerously-skip-permissions'
@@ -57,6 +53,11 @@ alias activate='source .venv/bin/activate'
 alias yz='yazi' 
 alias docker='podman'
 alias note='vim ~/1-projects/vaults/sub0x_vault/scratchpad.md'
+alias gemini='gemini -y'
+alias cc-clean='pkill -f "claude" && echo "cleaned"'
+
+# Initialize a new project with your 'Ascended' AI configuration
+alias c-init='cp -rn ~/.claude_template/* . && echo "🚀 Minimalist AI context initialized."'
 
 # System maintenance aliases with path expansion
 alias sysmaint='$HOME/dotfiles/scripts/__sysmaintenance.sh'
@@ -91,13 +92,6 @@ cpi() {
     echo "✅ project_index.md copied to clipboard."
 }
 
-
-
-# Block PR merge without approval 
-if [[ "$*" == *"pr merge"* ]]; then 
-  echo "Blocked: merging requires human approval"
-  exit 1 
-fi 
 
 
 
@@ -141,7 +135,7 @@ migrate_repo() {
     git config --local user.email "$target_email"
 }
 
-# Dir colors for exa and traditional ls
+# Dir colors for traditional ls
 if command -v dircolors &> /dev/null; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
 elif [ -x /usr/bin/dircolors ]; then
@@ -158,15 +152,12 @@ alias tks='tmux kill-session -t'
 alias tsave='tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/save.sh'
 alias trestore='tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/restore.sh'
 alias tsd='tsave && tmux detach'
-alias tx='tmuxinator'
 alias tds='tmux detach'
 alias tas="tmux attach -t"
 alias ts='tmux switch-client -t'
 alias tm="tmux"
 alias tns="tmux new-session -d -s"
 
-# Activate el-ai
-alias l-ai='source ~/1-projects/sandbox/venv/bin/activate'
 
 # Yazi shell wrapper
 function y() {
@@ -221,60 +212,73 @@ zk() {
 }
 
 zkl() {
-    notes_path=~/1-projects/vaults/sub0x_vault/5-notes
-    today=$(date +%Y-%m-%d)
-    todays_note="$notes_path/$today.md"
-    if [ ! -f "$todays_note" ]; then
-        create_daily_note
-    fi
+    local vault=~/1-projects/vaults/sub0x_vault
+    local year=$(date +%Y)
+    local today=$(date +%Y-%m-%d)
+    local note="$vault/journal/$year/$today.md"
+    mkdir -p "$vault/journal/$year"
     echo -n "Log: "
     read log_entry
-    sed -i '/Log/,/^---/{/^---/!s/$/\n- '"$log_entry"'/;:a;n;ba}' "$todays_note"
-    echo "Entry added"
+    echo "- $log_entry" >> "$note"
+    echo "✅ Entry added to $today"
 }
 
 zkt() {
-    notes_path=~/1-projects/vaults/sub0x_vault/5-notes
-    today=$(date +%Y-%m-%d)
-    todays_note="$notes_path/$today.md"
-    if [ ! -f "$todays_note" ]; then
-        create_daily_note
-    fi
+    local vault=~/1-projects/vaults/sub0x_vault
+    local year=$(date +%Y)
+    local today=$(date +%Y-%m-%d)
+    local note="$vault/journal/$year/$today.md"
+    mkdir -p "$vault/journal/$year"
     echo -n "Task: "
     read task_item
-    # Escape special characters in the task item
-    escaped_task=$(printf '%s' "$task_item" | sed 's/[\/&]/\\&/g')
-    sed -i '/Task/,/^---/{/^---/!s/$/\n- [ ] '"$escaped_task"'/;:a;n;ba}' "$todays_note"
-    echo "Task added"
+    echo "- [ ] $task_item" >> "$note"
+    echo "✅ Task added to $today"
 }
 
+
 create_daily_note() {
-    cat << 'EOF' > "$todays_note"
+    local vault=~/1-projects/vaults/sub0x_vault
+    local year=$(date +%Y)
+    local today=$(date +%Y-%m-%d)
+    local todays_note="$vault/journal/$year/$today.md"
+    local yesterday=$(date -d "yesterday" +%Y-%m-%d)
+    local tomorrow=$(date -d "tomorrow" +%Y-%m-%d)
+    local display_date=$(date +"%A, %d %B %Y")
+
+    mkdir -p "$vault/journal/$year"
+
+    if [ -f "$todays_note" ]; then
+        echo "Daily note already exists: $today"
+        nvim "$todays_note"
+        return
+    fi
+
+    cat << EOF > "$todays_note"
 ---
-id: <% tp.user.uuid() %>
-title: <% tp.file.title %>
+id: $(uuidgen 2>/dev/null || cat /proc/sys/kernel/random/uuid)
+title: $today
 desc: daily log with tasks
 tags: [journal]
 ---
 ---
-# <% moment(tp.file.title, 'YYYY-MM-DD').format("dddd, DD MMMM YYYY") %>
+# $display_date
 
->  [[<% tp.date.now("YYYY-MM-DD", -1) %>]] <=> [[<% tp.date.now("YYYY-MM-DD", +1) %>]]
+>  [[$yesterday]] <=> [[$tomorrow]]
 ---
 
 > [!NOTE] Log
-- 
+-
 
 ---
 
 > [!tldr] Task
-- [ ] 
+- [ ]
 
 ---
 
 > [!warning] Backlog
 
-```dataviewjs
+\`\`\`dataviewjs
 // Get dates for last 5 days
 const dates = [];
 for (let i = 0; i < 5; i++) {
@@ -282,26 +286,25 @@ for (let i = 0; i < 5; i++) {
     dates.push(d.toFormat("yyyy-MM-dd"));
 }
 
-// Create regex pattern from dates
 const pattern = dates.map(d => d.replace(/-/g, "-")).join("|");
 
-// Create tasks query
-const query = `
+const query = \`
 not done
 hide backlinks
-path regex matches /${pattern}/
+path regex matches /\${pattern}/
 description regex does not match /^$/
 sort by created
 short mode
-`;
+\`;
 
-// Output tasks block
-dv.paragraph("```tasks\n" + query + "\n```");
-```
+dv.paragraph("\`\`\`tasks\\n" + query + "\\n\`\`\`");
+\`\`\`
 
 ---
 > [[5-notes]]
 EOF
+    echo "Created daily note: $today"
+    nvim "$todays_note"
 }
 
 # Environment variables
@@ -309,8 +312,6 @@ export EDITOR='nvim'
 export BROWSER=zen-browser
 export TERM=xterm-256color
 export MANPAGER="nvim +Man!"
-# For eza compatibility
-export EZA_COLORS="$EXA_COLORS"
 # FZF Configuration
 
 # Default search command
@@ -364,53 +365,48 @@ alias fz='fzf \
 # Tmux popup configuration
 export FZF_TMUX_OPTS="-p 90%,70% -w 90% -h 70%"
 
-# Path configurations
-# asdf shims disabled - using mise instead
-# export PATH="$HOME/.asdf/shims:$HOME/perl5/bin:$HOME/.local/share/gem/ruby/3.2.0/bin:$HOME/.npm-global/bin:$HOME/.atuin/bin:$HOME/.luarocks/bin:$HOME/.cargo/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:$HOME/.local/bin:$HOME/.dotnet:$HOME/.dotnet/tools:$HOME/go/bin:$PATH"
-export PATH="$HOME/perl5/bin:$HOME/.local/share/gem/ruby/3.2.0/bin:$HOME/.npm-global/bin:$HOME/.atuin/bin:$HOME/.luarocks/bin:$HOME/.cargo/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:$HOME/.local/bin:$HOME/.dotnet:$HOME/.dotnet/tools:$HOME/go/bin:$PATH"
-
-# Language-specific configurations
-. "$HOME/.cargo/env"
-export PATH="$(ruby -e 'print Gem.user_dir')/bin:$PATH"
-export DOTNET_ROOT=$HOME/.dotnet
-export PATH=$PATH:$HOME/.dotnet:$HOME/.dotnet/tools
-
-# Perl configuration
-export PATH="/home/m0xu/perl5/bin${PATH:+:${PATH}}"
-export PERL5LIB="/home/m0xu/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"
-export PERL_LOCAL_LIB_ROOT="/home/m0xu/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"
-export PERL_MB_OPT="--install_base \"/home/m0xu/perl5\""
-export PERL_MM_OPT="INSTALL_BASE=/home/m0xu/perl5"
-
 # XDG Base Directory specification
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 
-# Additional paths
-export PATH="$PATH:$HOME/dotfiles/scripts"
-export PATH=$PATH:/var/lib/snapd/snap/bin
-export PATH=$HOME/.tmux/plugins/t-smart-tmux-session-manager/bin:$PATH
-export PATH=$XDG_CONFIG_HOME/tmux/plugins/t-smart-tmux-session-manager/bin:$PATH
-
-# Go paths (use latest version and GOPATH)
+# Path — single consolidated block
 export GOPATH="$HOME/go"
-# asdf golang path disabled - using mise instead
-# export PATH=$HOME/.asdf/installs/golang/1.24.2/packages/bin:$PATH
-export PATH="$GOPATH/bin:$PATH"
+export DOTNET_ROOT="$HOME/.dotnet"
+export FLYCTL_INSTALL="$HOME/.fly"
+export PATH="\
+$HOME/.local/bin:\
+$HOME/.cargo/bin:\
+$HOME/.npm-global/bin:\
+$HOME/.atuin/bin:\
+$HOME/.luarocks/bin:\
+$HOME/.fly/bin:\
+$HOME/.dotnet:$HOME/.dotnet/tools:\
+$HOME/perl5/bin:\
+$HOME/go/bin:\
+$HOME/git-worktree-runner/bin:\
+$HOME/dotfiles/scripts:\
+$HOME/.tmux/plugins/t-smart-tmux-session-manager/bin:\
+$(ruby -e 'print Gem.user_dir' 2>/dev/null)/bin:\
+/var/lib/snapd/snap/bin:\
+/usr/local/bin:/usr/local/sbin:\
+/usr/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:\
+$PATH"
 
-export FLYCTL_INSTALL="/home/m0xu/.fly"
-export PATH="$FLYCTL_INSTALL/bin:$PATH"
+# Cargo env (sets CARGO_HOME etc)
+. "$HOME/.cargo/env"
+
+# Perl configuration
+export PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"
+export PERL_LOCAL_LIB_ROOT="$HOME/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"
+export PERL_MB_OPT="--install_base \"$HOME/perl5\""
+export PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"
 
 # Source additional configurations
 [ -f "$HOME/.secrets" ] && source "$HOME/.secrets"
 if [ -f "$HOME/dotfiles/.env" ]; then
-    export $(grep -v '^#' $HOME/dotfiles/.env | xargs)
+    export $(grep -v '^#' "$HOME/dotfiles/.env" | xargs)
 fi
 
 source ~/dotfiles/scripts/__grep_open.sh
-
-
-
-export PATH="$HOME/git-worktree-runner/bin:$PATH"
 
 # mise (runtime version manager)
 if [ -n "$ZSH_VERSION" ]; then

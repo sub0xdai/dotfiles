@@ -47,6 +47,12 @@ return {
         { "<leader>ot", "<cmd>ObsidianTemplate<cr>", desc = "[O]bsidian [T]emplate" },
         { "<leader>at", "<cmd>lua InsertTemplate()<cr>", desc = "[A]lt [T]emplate" },
         { "<leader>oqs", "<cmd>vsplit | ObsidianQuickSwitch<cr>", desc = "[O]bsidian [Q]uick[S]witch" },
+        { "<leader>og", function()
+            local vault = "sub0x_vault"
+            local file = vim.fn.expand("%:t:r") -- Get filename without extension
+            vim.fn.system("obsidian vault=" .. vault .. " open file='" .. file .. "'")
+            vim.notify("Opened in Obsidian GUI", vim.log.levels.INFO)
+        end, desc = "[O]bsidian [G]UI Open" },
         { "<leader>ofl", "<cmd>ObsidianFollowLink<cr>", desc = "[O]bsidian [F]ollow[L]ink" },
         { "<leader>opi", "<cmd>ObsidianPasteImg<cr>", desc = "[O]bsidian [P]aste[I]mg" },
         { "<leader>oen", "<cmd>ObsidianExtractNote<cr>", desc = "[O]bsidian [E]xtract[N]ote" },
