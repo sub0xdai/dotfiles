@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Vox Scaffold - Setup autonomous AI development in any project
-# Builder + Optimizer dual-loop system
+# Vox Scaffold - Setup autonomous AI development + optimization in any project
+# "God spoke and it was."
 #
 # Usage:
 #   __setup_vox.sh              # Setup in current directory
@@ -26,7 +26,7 @@ FORCE=false
 # --- HELPER FUNCTIONS ---
 
 print_help() {
-    echo "Vox Scaffold - Setup autonomous AI development"
+    echo "Vox Scaffold - Setup autonomous AI development + optimization"
     echo ""
     echo "Usage:"
     echo "  $0              Setup in current directory"
@@ -39,14 +39,13 @@ print_help() {
     echo "  ├── memory/"
     echo "  │   └── constitution.md    # Project standards template"
     echo "  ├── specs/                 # Your specifications go here"
-    echo "  ├── optimize/              # Optimization targets"
-    echo "  ├── IMPLEMENTATION_PLAN.md # Task tracking"
+    echo "  ├── optimize/              # Optimization targets go here"
     echo "  ├── AGENTS.md              # Operational learnings"
     echo "  ├── PROMPT_plan.md         # Planning mode instructions"
     echo "  ├── PROMPT_build.md        # Build mode instructions"
-    echo "  └── PROMPT_optimize.md     # Optimizer instructions"
+    echo "  └── PROMPT_optimize.md     # Optimize mode instructions"
     echo "  scripts/"
-    echo "  ├── vox.sh                 # The autonomous builder loop"
+    echo "  ├── vox.sh                 # The builder loop"
     echo "  └── vox-optimize.sh        # The optimization loop"
     echo ""
     echo "After setup:"
@@ -54,10 +53,8 @@ print_help() {
     echo "  2. Create specs in .specify/specs/<name>/spec.md"
     echo "  3. Run: ./scripts/vox.sh plan <spec-name>"
     echo "  4. Run: ./scripts/vox.sh build <spec-name>"
-    echo ""
-    echo "For optimization:"
-    echo "  1. Create .specify/optimize/<target>/program.md"
-    echo "  2. Run: ./scripts/vox-optimize.sh <target>"
+    echo "  5. Create optimization targets in .specify/optimize/<target>/"
+    echo "  6. Run: ./scripts/vox-optimize.sh <target>"
 }
 
 # --- PARSE ARGUMENTS ---
@@ -81,7 +78,6 @@ done
 
 # --- VALIDATION ---
 
-# Resolve to absolute path (create if doesn't exist)
 if [[ ! -d "$TARGET_DIR" ]]; then
     mkdir -p "$TARGET_DIR"
 fi
@@ -225,45 +221,6 @@ If verification fails for >3 iterations on the same error:
 *Last updated: $(date +%Y-%m-%d)*
 EOF
 
-# --- IMPLEMENTATION_PLAN.md ---
-cat > "$TARGET_DIR/.specify/IMPLEMENTATION_PLAN.md" << 'EOF'
-# Implementation Plan
-
-> Last updated: [date]
-> Current spec: [spec-name]
-> Phase: PLANNING
-
----
-
-## Active Spec: [spec-name]
-
-### Tasks
-
-| ID | Task | Status | Notes |
-|----|------|--------|-------|
-| T1 | [first task] | pending | |
-
-### Discoveries
-
-<!-- Vox will add discoveries here as implementation progresses -->
-
-### Blockers
-
-<!-- Document any blockers encountered -->
-
----
-
-## Completed Specs
-
-| Spec | Completion Date |
-|------|-----------------|
-| | |
-
----
-
-*This file is persistent state. Vox updates it each iteration.*
-EOF
-
 # --- AGENTS.md ---
 cat > "$TARGET_DIR/.specify/AGENTS.md" << 'EOF'
 # Operational Learnings
@@ -332,7 +289,6 @@ Study the specification and codebase to create a detailed implementation plan.
 1. **Constitution**: `.specify/memory/constitution.md`
 2. **Specification**: `.specify/specs/{SPEC_NAME}/spec.md`
 3. **Operational Learnings**: `.specify/AGENTS.md`
-4. **Current Plan**: `.specify/IMPLEMENTATION_PLAN.md`
 
 ---
 
@@ -356,17 +312,18 @@ Study the specification and codebase to create a detailed implementation plan.
 - Order tasks by dependency (what must come first?)
 - Estimate complexity: simple / medium / complex
 
-### Step 4: Update IMPLEMENTATION_PLAN.md
+### Step 4: Write plan.md
+- Create `.specify/specs/{SPEC_NAME}/plan.md` alongside the spec
 - Add tasks with IDs (T1, T2, T3...)
 - Set all new tasks to `pending`
-- Add any discoveries to the Discoveries section
+- Add any discoveries
 - Document blockers if found
 
 ---
 
 ## Output Format
 
-After updating IMPLEMENTATION_PLAN.md, summarize:
+After writing plan.md, summarize:
 
 ```
 PLANNING COMPLETE
@@ -409,15 +366,15 @@ Complete exactly ONE task from the implementation plan, then exit.
 
 1. **Constitution**: `.specify/memory/constitution.md`
 2. **Specification**: `.specify/specs/{SPEC_NAME}/spec.md`
-3. **Operational Learnings**: `.specify/AGENTS.md`
-4. **Implementation Plan**: `.specify/IMPLEMENTATION_PLAN.md`
+3. **Plan**: `.specify/specs/{SPEC_NAME}/plan.md`
+4. **Operational Learnings**: `.specify/AGENTS.md`
 
 ---
 
 ## Build Process
 
 ### Step 1: Identify Your Task
-- Read IMPLEMENTATION_PLAN.md
+- Read `.specify/specs/{SPEC_NAME}/plan.md`
 - Find the first task with status `pending`
 - This is YOUR task. Complete only this task.
 
@@ -438,7 +395,7 @@ Complete exactly ONE task from the implementation plan, then exit.
 - Fix any failures before proceeding
 
 ### Step 5: Update State
-- Mark your task as `complete` in IMPLEMENTATION_PLAN.md
+- Mark your task as `complete` in plan.md
 - Add any discoveries to AGENTS.md
 - Document blockers if encountered
 
@@ -491,7 +448,7 @@ If all tasks complete and validation passes:
 ## When Stuck
 
 If validation fails for >3 attempts on same error:
-1. Document the blocker in IMPLEMENTATION_PLAN.md
+1. Document the blocker in plan.md
 2. Add learnings to AGENTS.md
 3. Exit and let next iteration try fresh
 
@@ -510,12 +467,16 @@ You are Vox, an autonomous developer. You are in OPTIMIZE mode.
 
 Apply exactly ONE experimental improvement to the target file(s), then exit.
 
+---
+
 ## Context Files (Study These First)
 
 1. **Constitution**: `.specify/memory/constitution.md`
 2. **Program**: `.specify/optimize/{TARGET}/program.md`
 3. **Operational Learnings**: `.specify/AGENTS.md`
 4. **Experiment History**: `.specify/optimize/{TARGET}/results.tsv`
+
+---
 
 ## Optimization Process
 
@@ -538,6 +499,7 @@ Apply exactly ONE experimental improvement to the target file(s), then exit.
 - If validation fails, your change is invalid
 
 ### Step 5: Commit
+
 ```bash
 git add -A
 git commit -m "experiment: {description of change}
@@ -547,6 +509,8 @@ Hypothesis: {why this should help}
 Co-Authored-By: Claude <noreply@anthropic.com>"
 ```
 
+---
+
 ## Critical Rules
 
 - ONE change per iteration — small, isolated, testable
@@ -554,13 +518,18 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 - NEVER retry a discarded/failed approach from results.tsv
 - NEVER change test files or benchmarks
 - Capture learnings in AGENTS.md if you discover something useful
+
+---
+
+*Each iteration: one hypothesis, one change, validate, commit, exit.*
 EOF
 
 # --- vox.sh (builder loop) ---
-cat > "$TARGET_DIR/scripts/vox.sh" << 'EOF'
+cat > "$TARGET_DIR/scripts/vox.sh" << 'VOX_BUILD_EOF'
 #!/bin/bash
 #
-# Vox - Autonomous AI Development Loop (Builder)
+# Vox Builder Loop - Autonomous AI Development
+# "God spoke and it was."
 #
 # Usage:
 #   ./scripts/vox.sh plan <spec-name>    # Planning mode (no code)
@@ -572,10 +541,8 @@ set -euo pipefail
 
 # --- CONFIGURATION ---
 SPECS_DIR=".specify/specs"
-MEMORY_DIR=".specify/memory"
 PROMPT_PLAN=".specify/PROMPT_plan.md"
 PROMPT_BUILD=".specify/PROMPT_build.md"
-IMPLEMENTATION_PLAN=".specify/IMPLEMENTATION_PLAN.md"
 AGENTS_MD=".specify/AGENTS.md"
 CONSTITUTION=".specify/memory/constitution.md"
 
@@ -592,7 +559,7 @@ NC='\033[0m'
 # --- HELPER FUNCTIONS ---
 
 print_help() {
-    echo "Vox - Autonomous AI Development (Builder)"
+    echo "Vox Builder Loop - Autonomous AI Development"
     echo ""
     echo "Usage:"
     echo "  $0 plan <spec-name>     Run planning mode (gap analysis, no code)"
@@ -630,7 +597,6 @@ build_context() {
     echo "## Spec: $spec"
     echo ""
 
-    # Include constitution
     if [[ -f "$CONSTITUTION" ]]; then
         echo "---"
         echo "## Constitution"
@@ -639,7 +605,6 @@ build_context() {
         echo ""
     fi
 
-    # Include spec
     if [[ -f "$SPECS_DIR/$spec/spec.md" ]]; then
         echo "---"
         echo "## Specification: $spec"
@@ -648,7 +613,6 @@ build_context() {
         echo ""
     fi
 
-    # Include operational learnings
     if [[ -f "$AGENTS_MD" ]]; then
         echo "---"
         echo "## Operational Learnings"
@@ -657,16 +621,15 @@ build_context() {
         echo ""
     fi
 
-    # Include implementation plan
-    if [[ -f "$IMPLEMENTATION_PLAN" ]]; then
+    local plan_file="$SPECS_DIR/$spec/plan.md"
+    if [[ -f "$plan_file" ]]; then
         echo "---"
         echo "## Implementation Plan"
         echo ""
-        cat "$IMPLEMENTATION_PLAN"
+        cat "$plan_file"
         echo ""
     fi
 
-    # Include mode-specific prompt
     echo "---"
     echo "## Instructions"
     echo ""
@@ -700,10 +663,9 @@ run_planning() {
     fi
 
     echo ""
-    echo -e "${YELLOW}Waking up Vox for planning...${NC}"
+    echo -e "${YELLOW}Vox speaks...${NC}"
     echo ""
 
-    # Build context and pipe to claude
     local output
     output=$(build_context "$spec" "plan" | $AGENT_CMD -p --dangerously-skip-permissions 2>&1) || true
 
@@ -736,15 +698,13 @@ run_building() {
         echo ""
         echo -e "${YELLOW}--- Iteration $iteration of $MAX_ITERATIONS ---${NC}"
         echo ""
-        echo -e "${YELLOW}Waking up Vox...${NC}"
+        echo -e "${YELLOW}Vox speaks...${NC}"
 
-        # Build context and pipe to claude
         local output
         output=$(build_context "$spec" "build" | $AGENT_CMD -p --dangerously-skip-permissions 2>&1) || true
 
         echo "$output"
 
-        # Check for DONE signal
         if check_done_signal "$output"; then
             echo ""
             echo -e "${GREEN}=========================================="
@@ -753,7 +713,6 @@ run_building() {
             return 0
         fi
 
-        # Git safety check
         if [[ -n $(git status --porcelain 2>/dev/null || true) ]]; then
             echo ""
             echo -e "${YELLOW}Uncommitted changes after iteration:${NC}"
@@ -763,7 +722,6 @@ run_building() {
         echo ""
         echo -e "${BLUE}Iteration $iteration complete. Continuing...${NC}"
 
-        # Small delay to avoid rate limiting
         sleep 2
 
     done
@@ -778,7 +736,6 @@ run_building() {
 MODE=""
 SPEC_NAME=""
 
-# Parse arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
         plan|build)
@@ -802,7 +759,6 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Validate arguments
 if [[ -z "$MODE" ]]; then
     echo -e "${RED}ERROR: Mode required (plan or build)${NC}"
     echo ""
@@ -817,7 +773,6 @@ if [[ -z "$SPEC_NAME" ]]; then
     exit 1
 fi
 
-# Check required files exist
 if [[ ! -f "$PROMPT_PLAN" ]]; then
     echo -e "${RED}ERROR: Missing $PROMPT_PLAN${NC}"
     exit 1
@@ -828,8 +783,7 @@ if [[ ! -f "$PROMPT_BUILD" ]]; then
     exit 1
 fi
 
-# Run appropriate mode
-echo "Vox - Autonomous AI Development (Builder)"
+echo "Vox Builder Loop"
 echo "Agent: $AGENT_CMD"
 echo ""
 
@@ -842,18 +796,19 @@ else
     print_help
     exit 1
 fi
-EOF
+VOX_BUILD_EOF
 
 # --- vox-optimize.sh (optimizer loop) ---
-cat > "$TARGET_DIR/scripts/vox-optimize.sh" << 'OPTIMIZE_EOF'
+cat > "$TARGET_DIR/scripts/vox-optimize.sh" << 'VOX_OPT_EOF'
 #!/bin/bash
 #
-# Vox Optimize - Autonomous Optimization Loop
-# Runs sequential experiments in a git worktree with batched human review.
+# Vox Optimizer Loop - Iterative experimentation with batched human review
+# "God spoke and it was."
 #
 # Usage:
-#   ./scripts/vox-optimize.sh <target> [--batch N]
-#   ./scripts/vox-optimize.sh --help
+#   ./scripts/vox-optimize.sh <target>              # Run with default batch size (5)
+#   ./scripts/vox-optimize.sh <target> --batch 3    # Custom batch size
+#   ./scripts/vox-optimize.sh --help                # Show help
 #
 
 set -euo pipefail
@@ -863,8 +818,9 @@ OPTIMIZE_DIR=".specify/optimize"
 CONSTITUTION=".specify/memory/constitution.md"
 AGENTS_MD=".specify/AGENTS.md"
 PROMPT_OPTIMIZE=".specify/PROMPT_optimize.md"
-AGENT_CMD="claude"
+
 BATCH_SIZE=5
+AGENT_CMD="claude"
 
 # --- COLORS ---
 RED='\033[0;31m'
@@ -878,41 +834,46 @@ NC='\033[0m'
 # --- HELPER FUNCTIONS ---
 
 print_help() {
-    echo "Vox Optimize - Autonomous Optimization Loop"
+    echo "Vox Optimizer Loop - Iterative Experimentation"
     echo ""
     echo "Usage:"
-    echo "  $0 <target> [--batch N]   Run optimization (default batch: 5)"
-    echo "  $0 --help                 Show this help"
+    echo "  $0 <target>              Run optimization (default batch: 5)"
+    echo "  $0 <target> --batch N    Set experiments per checkpoint"
+    echo "  $0 --help                Show this help"
     echo ""
-    echo "Prerequisite:"
-    echo "  .specify/optimize/<target>/program.md must exist"
+    echo "Examples:"
+    echo "  $0 matching-engine"
+    echo "  $0 matching-engine --batch 3"
     echo ""
-    echo "Options:"
-    echo "  --batch N    Experiments per checkpoint (default: 5)"
+    echo "Available targets:"
+    list_targets
+    echo ""
+    echo "Create a new target:"
+    echo "  mkdir -p .specify/optimize/<target>"
+    echo "  Write .specify/optimize/<target>/program.md"
+    echo "  Optionally add .specify/optimize/<target>/benchmark.sh"
 }
 
-median() {
-    local -a sorted
-    sorted=($(printf '%s\n' "$@" | sort -n))
-    local n=${#sorted[@]}
-    if [[ $n -eq 0 ]]; then
-        echo ""
-        return
+list_targets() {
+    if [[ -d "$OPTIMIZE_DIR" ]]; then
+        for d in "$OPTIMIZE_DIR"/*/; do
+            [[ -d "$d" ]] || continue
+            if [[ -f "${d}program.md" ]]; then
+                basename "$d"
+            fi
+        done | sort
     fi
-    echo "${sorted[$((n / 2))]}"
 }
 
-run_benchmark() {
-    if [[ "$HAS_BENCHMARK" != true ]]; then
-        echo ""
-        return
-    fi
+# Run benchmark N times, return median
+run_benchmark_median() {
+    local benchmark_script="$1"
+    local runs="${2:-3}"
+    local values=()
 
-    local -a values
-    values=()
-    local i result
-    for ((i = 1; i <= BENCHMARK_RUNS; i++)); do
-        result=$(bash "$BENCHMARK_SH" 2>&1 | tail -1 | grep -oE '[0-9]+\.?[0-9]*' | tail -1) || true
+    for ((i=1; i<=runs; i++)); do
+        local result
+        result=$("$benchmark_script" 2>/dev/null | grep -oP 'METRIC=\K[0-9.]+' || echo "")
         if [[ -n "$result" ]]; then
             values+=("$result")
         fi
@@ -920,150 +881,126 @@ run_benchmark() {
 
     if [[ ${#values[@]} -eq 0 ]]; then
         echo ""
-        return
+        return 1
     fi
 
-    median "${values[@]}"
+    # Sort and pick median
+    IFS=$'\n' sorted=($(sort -g <<<"${values[*]}")); unset IFS
+    local mid=$(( ${#sorted[@]} / 2 ))
+    echo "${sorted[$mid]}"
 }
 
-parse_last_commit() {
-    COMMIT_HASH=$(git log -1 --format="%h")
-    local subject
-    subject=$(git log -1 --format="%s")
-    COMMIT_DESC="${subject#experiment: }"
+# Parse benchmark runs from program.md
+get_benchmark_runs() {
+    local program="$1"
+    grep -oP 'BENCHMARK_RUNS=\K[0-9]+' "$program" 2>/dev/null || echo "3"
 }
 
-run_verification() {
-    if [[ ! -f "$CONSTITUTION" ]]; then
-        return 0
-    fi
-
-    local in_section=false
-    local in_block=false
-
-    while IFS= read -r line; do
-        if [[ "$line" =~ "Verification Commands" ]]; then
-            in_section=true
-            continue
-        fi
-        # Stop at the next section header
-        if [[ "$in_section" == true ]] && [[ "$line" =~ ^##\  ]] && [[ ! "$line" =~ "Verification" ]]; then
-            break
-        fi
-        # Detect code block boundaries
-        if [[ "$in_section" == true ]]; then
-            if [[ "$line" =~ ^\`\`\` ]]; then
-                if [[ "$in_block" == false ]]; then
-                    in_block=true
-                    continue
-                else
-                    break
-                fi
-            fi
-        fi
-        # Execute non-comment, non-empty lines
-        if [[ "$in_block" == true ]] && [[ ! "$line" =~ ^[[:space:]]*# ]] && [[ -n "${line// /}" ]]; then
-            echo -e "  ${CYAN}→ $line${NC}"
-            if ! eval "$line"; then
-                echo -e "  ${RED}✗ Failed: $line${NC}"
-                return 1
-            fi
-        fi
-    done < "$CONSTITUTION"
-
-    return 0
+# Parse metric direction from program.md
+get_metric_direction() {
+    local program="$1"
+    grep -oP 'METRIC_DIRECTION=\K\w+' "$program" 2>/dev/null || echo "MINIMIZE"
 }
 
-append_result() {
-    local ts="$1" batch="$2" eid="$3" hash="$4" desc="$5" metric="$6" bl="$7" status="$8"
+# Extract experiment description from last commit message
+get_experiment_description() {
+    git log -1 --format='%s' | sed 's/^experiment: //'
+}
+
+# Append a row to results.tsv (bash-owned, never written by Claude)
+append_tsv() {
+    local tsv_file="$1"
+    local batch="$2"
+    local exp_id="$3"
+    local commit_hash="$4"
+    local description="$5"
+    local metric="$6"
+    local baseline="$7"
+    local status="$8"
+    local timestamp
+    timestamp=$(date -Iseconds)
 
     # Create header if file doesn't exist
-    if [[ ! -f "$RESULTS_TSV" ]]; then
-        printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" \
-            "timestamp" "batch" "exp_id" "commit_hash" "description" "metric" "baseline" "status" \
-            > "$RESULTS_TSV"
+    if [[ ! -f "$tsv_file" ]]; then
+        printf "timestamp\tbatch\texp_id\tcommit_hash\tdescription\tmetric\tbaseline\tstatus\n" > "$tsv_file"
     fi
 
     printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" \
-        "$ts" "$batch" "$eid" "$hash" "$desc" "$metric" "$bl" "$status" \
-        >> "$RESULTS_TSV"
+        "$timestamp" "$batch" "$exp_id" "$commit_hash" "$description" "$metric" "$baseline" "$status" \
+        >> "$tsv_file"
 }
 
+# Print the scoreboard at checkpoint
 print_scoreboard() {
-    local batch_num="$1"
+    local tsv_file="$1"
+    local batch_num="$2"
+    local baseline_metric="$3"
+    local has_metric="$4"
+    local direction="$5"
 
     echo ""
-    echo -e "${BOLD}╔══════════════════════════════════════════════════════════════╗${NC}"
-    printf "${BOLD}║            OPTIMIZATION SCOREBOARD — Batch %-3s              ║${NC}\n" "$batch_num"
-    echo -e "${BOLD}╚══════════════════════════════════════════════════════════════╝${NC}"
+    echo -e "${BOLD}${CYAN}=======================================================${NC}"
+    echo -e "${BOLD}${CYAN}  CHECKPOINT — Batch $batch_num Results${NC}"
+    echo -e "${BOLD}${CYAN}=======================================================${NC}"
     echo ""
 
-    if [[ "$HAS_BENCHMARK" == true ]] && [[ -n "${BATCH_START_METRIC:-}" ]]; then
-        echo -e "  ${CYAN}Baseline: ${BATCH_START_METRIC}${NC}"
+    if [[ "$has_metric" == "true" ]]; then
+        echo -e "  ${BOLD}Baseline: $baseline_metric${NC}"
         echo ""
     fi
 
-    local i num desc hash metric bl status
-    for ((i = 0; i < ${#BATCH_DESCS[@]}; i++)); do
-        num=$((i + 1))
-        desc="${BATCH_DESCS[$i]}"
-        hash="${BATCH_HASHES[$i]}"
-        metric="${BATCH_METRICS[$i]:-}"
-        bl="${BATCH_BASELINES[$i]:-}"
-        status="${BATCH_STATUSES[$i]}"
+    while IFS=$'\t' read -r ts batch eid hash desc metric bl status; do
+        [[ "$batch" == "$batch_num" ]] || continue
+        [[ "$status" == "failed" ]] && {
+            printf "  ${RED}#%-2s  %-40s  FAILED${NC}\n" "$eid" "$desc"
+            continue
+        }
 
-        if [[ "$status" == "failed" ]]; then
-            printf "  ${RED}#%-2d %-45s  ✗ failed${NC}\n" "$num" "$desc"
-        elif [[ "$HAS_BENCHMARK" == true ]] && [[ -n "$metric" ]] && [[ -n "$bl" ]] && [[ "$bl" != "0" ]]; then
-            local pct is_better pct_str
-            pct=$(awk "BEGIN {printf \"%.1f\", (($metric - $bl) / $bl) * 100}")
-            is_better=false
-            if [[ "$METRIC_DIRECTION" == "MINIMIZE" ]]; then
-                (( $(awk "BEGIN {print ($metric < $bl) ? 1 : 0}") )) && is_better=true
+        if [[ "$has_metric" == "true" && -n "$metric" && "$metric" != "-" && -n "$bl" && "$bl" != "-" ]]; then
+            local delta
+            delta=$(awk "BEGIN { printf \"%.1f\", (($metric - $bl) / $bl) * 100 }")
+
+            # Color based on direction: for MINIMIZE, negative delta = good
+            local sign="" color="$GREEN" marker=""
+            if [[ "$direction" == "MINIMIZE" ]]; then
+                if (( $(awk "BEGIN { print ($delta > 0) }") )); then
+                    sign="+"
+                    color="$RED"
+                    if (( $(awk "BEGIN { print ($delta > 5) }") )); then
+                        marker="  <- regression"
+                    fi
+                fi
             else
-                (( $(awk "BEGIN {print ($metric > $bl) ? 1 : 0}") )) && is_better=true
+                # MAXIMIZE: positive delta = good
+                if (( $(awk "BEGIN { print ($delta < 0) }") )); then
+                    color="$RED"
+                    if (( $(awk "BEGIN { print ($delta < -5) }") )); then
+                        marker="  <- regression"
+                    fi
+                else
+                    sign="+"
+                fi
             fi
-            if (( $(awk "BEGIN {print ($pct >= 0) ? 1 : 0}") )); then
-                pct_str="+${pct}"
-            else
-                pct_str="${pct}"
-            fi
-            if [[ "$is_better" == true ]]; then
-                printf "  ${GREEN}#%-2d %-40s  %s  (%s%%)  %s${NC}\n" "$num" "$desc" "$metric" "$pct_str" "$hash"
-            else
-                printf "  ${RED}#%-2d %-40s  %s  (%s%%)  %s  ← regression${NC}\n" "$num" "$desc" "$metric" "$pct_str" "$hash"
-            fi
+            printf "  ${color}#%-2s  %-40s  %-10s  (%s%s%%)  %s%s${NC}\n" \
+                "$eid" "$desc" "$metric" "$sign" "$delta" "$hash" "$marker"
         else
-            printf "  ${BOLD}#%-2d${NC} %-45s  %s\n" "$num" "$desc" "$hash"
+            printf "  #%-2s  %-40s  %s\n" "$eid" "$desc" "$hash"
         fi
-    done
+    done < <(tail -n +2 "$tsv_file")
 
     echo ""
+    echo -e "${BOLD}${CYAN}=======================================================${NC}"
 }
 
-mark_batch_discarded() {
-    local batch="$1"
-    if [[ -f "$RESULTS_TSV" ]]; then
-        awk -F'\t' -v OFS='\t' -v b="$batch" \
-            'NR==1 {print; next} $2==b && $8!="failed" {$8="discarded"} {print}' \
-            "$RESULTS_TSV" > "${RESULTS_TSV}.tmp" && mv "${RESULTS_TSV}.tmp" "$RESULTS_TSV"
-    fi
-}
-
-mark_after_discarded() {
-    local batch="$1" after="$2"
-    if [[ -f "$RESULTS_TSV" ]]; then
-        awk -F'\t' -v OFS='\t' -v b="$batch" -v a="$after" \
-            'NR==1 {print; next} $2==b && $3>a && $8!="failed" {$8="discarded"} {print}' \
-            "$RESULTS_TSV" > "${RESULTS_TSV}.tmp" && mv "${RESULTS_TSV}.tmp" "$RESULTS_TSV"
-    fi
-}
-
+# Build context for Claude in optimize mode
 build_optimize_context() {
+    local target="$1"
+    local target_dir="$OPTIMIZE_DIR/$target"
+
     echo "# Context for Vox"
     echo ""
     echo "## Mode: OPTIMIZE"
-    echo "## Target: $TARGET"
+    echo "## Target: $target"
     echo ""
 
     if [[ -f "$CONSTITUTION" ]]; then
@@ -1074,11 +1011,11 @@ build_optimize_context() {
         echo ""
     fi
 
-    if [[ -f "$PROGRAM_MD" ]]; then
+    if [[ -f "$target_dir/program.md" ]]; then
         echo "---"
-        echo "## Program"
+        echo "## Optimization Program"
         echo ""
-        cat "$PROGRAM_MD"
+        cat "$target_dir/program.md"
         echo ""
     fi
 
@@ -1090,21 +1027,21 @@ build_optimize_context() {
         echo ""
     fi
 
-    if [[ -f "$RESULTS_TSV" ]]; then
+    if [[ -f "$target_dir/results.tsv" ]]; then
         echo "---"
         echo "## Experiment History"
         echo ""
-        cat "$RESULTS_TSV"
+        cat "$target_dir/results.tsv"
         echo ""
     fi
 
     echo "---"
     echo "## Instructions"
     echo ""
-    sed "s|{TARGET}|$TARGET|g" "$PROMPT_OPTIMIZE"
+    sed "s/{TARGET}/$target/g" "$PROMPT_OPTIMIZE"
 }
 
-# --- PARSE ARGUMENTS ---
+# --- MAIN LOGIC ---
 
 TARGET=""
 
@@ -1127,241 +1064,236 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# --- VALIDATION ---
-
 if [[ -z "$TARGET" ]]; then
-    echo -e "${RED}ERROR: Target required${NC}"
+    echo -e "${RED}ERROR: Target name required${NC}"
     echo ""
     print_help
     exit 1
 fi
 
-PROGRAM_MD="$OPTIMIZE_DIR/$TARGET/program.md"
-if [[ ! -f "$PROGRAM_MD" ]]; then
-    echo -e "${RED}ERROR: Program not found: $PROGRAM_MD${NC}"
-    echo "Create it first, or use /vox-optimize to set up interactively."
+TARGET_DIR_PATH="$OPTIMIZE_DIR/$TARGET"
+PROGRAM_FILE="$TARGET_DIR_PATH/program.md"
+BENCHMARK_SCRIPT="$TARGET_DIR_PATH/benchmark.sh"
+RESULTS_FILE="$TARGET_DIR_PATH/results.tsv"
+
+if [[ ! -f "$PROGRAM_FILE" ]]; then
+    echo -e "${RED}ERROR: program.md not found at $PROGRAM_FILE${NC}"
+    echo ""
+    echo "Create the target first:"
+    echo "  mkdir -p $TARGET_DIR_PATH"
+    echo "  Write $PROGRAM_FILE"
     exit 1
 fi
 
-RESULTS_TSV="$OPTIMIZE_DIR/$TARGET/results.tsv"
-BENCHMARK_SH="$OPTIMIZE_DIR/$TARGET/benchmark.sh"
-
-HAS_BENCHMARK=false
-if [[ -f "$BENCHMARK_SH" ]]; then
-    HAS_BENCHMARK=true
-    chmod +x "$BENCHMARK_SH"
+if [[ ! -f "$PROMPT_OPTIMIZE" ]]; then
+    echo -e "${RED}ERROR: Missing $PROMPT_OPTIMIZE${NC}"
+    exit 1
 fi
 
-# Parse config from program.md
-BENCHMARK_RUNS=$(grep -oP 'BENCHMARK_RUNS=\K\d+' "$PROGRAM_MD" 2>/dev/null || echo "3")
-METRIC_DIRECTION=$(grep -oP 'METRIC_DIRECTION=\K\w+' "$PROGRAM_MD" 2>/dev/null || echo "MINIMIZE")
+# --- DETERMINE BENCHMARK SETTINGS ---
+HAS_BENCHMARK=false
+BENCHMARK_RUNS=3
+METRIC_DIRECTION="MINIMIZE"
 
-# --- WORKTREE SETUP ---
+if [[ -f "$BENCHMARK_SCRIPT" && -x "$BENCHMARK_SCRIPT" ]]; then
+    HAS_BENCHMARK=true
+    BENCHMARK_RUNS=$(get_benchmark_runs "$PROGRAM_FILE")
+    METRIC_DIRECTION=$(get_metric_direction "$PROGRAM_FILE")
+fi
 
-MAIN_DIR="$(pwd)"
-REPO_NAME="$(basename "$MAIN_DIR")"
-WORKTREE_DIR="$(dirname "$MAIN_DIR")/${REPO_NAME}-optimize-${TARGET}"
+# --- SETUP WORKTREE ---
+REPO_ROOT=$(git rev-parse --show-toplevel)
+REPO_NAME=$(basename "$REPO_ROOT")
+WORKTREE_PATH="$(dirname "$REPO_ROOT")/${REPO_NAME}-optimize-${TARGET}"
+BRANCH_NAME="optimize/$TARGET"
 
-if [[ -d "$WORKTREE_DIR" ]]; then
-    echo -e "${YELLOW}Worktree already exists at $WORKTREE_DIR${NC}"
-    echo -e "${YELLOW}Resuming optimization...${NC}"
+echo -e "${BLUE}=========================================="
+echo "Vox: OPTIMIZE MODE"
+echo "Target: $TARGET"
+echo "Batch size: $BATCH_SIZE"
+echo "Benchmark: $(if $HAS_BENCHMARK; then echo "yes ($METRIC_DIRECTION, ${BENCHMARK_RUNS} runs)"; else echo "none (qualitative)"; fi)"
+echo -e "==========================================${NC}"
+echo ""
+
+# Check if worktree already exists
+if [[ -d "$WORKTREE_PATH" ]]; then
+    echo -e "${YELLOW}Worktree already exists at $WORKTREE_PATH${NC}"
+    echo -e "${YELLOW}Resuming optimization session...${NC}"
 else
-    echo -e "${BLUE}Creating worktree at $WORKTREE_DIR${NC}"
-    if git show-ref --verify --quiet "refs/heads/optimize/$TARGET"; then
-        git worktree add "$WORKTREE_DIR" "optimize/$TARGET"
+    echo -e "${YELLOW}Creating worktree at $WORKTREE_PATH${NC}"
+
+    if git show-ref --verify --quiet "refs/heads/$BRANCH_NAME" 2>/dev/null; then
+        git worktree add "$WORKTREE_PATH" "$BRANCH_NAME"
     else
-        git worktree add "$WORKTREE_DIR" -b "optimize/$TARGET"
+        git worktree add "$WORKTREE_PATH" -b "$BRANCH_NAME"
     fi
 fi
 
-cd "$WORKTREE_DIR"
+# Work in the worktree
+cd "$WORKTREE_PATH"
 
-# Ensure .specify/ exists in worktree (handles untracked case)
-if [[ ! -d ".specify" ]]; then
-    cp -r "$MAIN_DIR/.specify/" ".specify/"
-fi
-
-# Ensure optimize target dir and program exist
-mkdir -p "$OPTIMIZE_DIR/$TARGET"
-if [[ ! -f "$PROGRAM_MD" ]]; then
-    cp "$MAIN_DIR/$PROGRAM_MD" "$PROGRAM_MD"
-fi
-if [[ -f "$MAIN_DIR/$BENCHMARK_SH" ]] && [[ ! -f "$BENCHMARK_SH" ]]; then
-    cp "$MAIN_DIR/$BENCHMARK_SH" "$BENCHMARK_SH"
-    chmod +x "$BENCHMARK_SH"
-fi
+echo -e "${GREEN}Working in: $WORKTREE_PATH${NC}"
+echo ""
 
 # --- ESTABLISH BASELINE ---
+BASELINE_METRIC="-"
+BASELINE_COMMIT=$(git rev-parse --short HEAD)
 
-BASELINE_COMMIT=$(git log -1 --format="%H")
-BASELINE_METRIC=""
-
-if [[ "$HAS_BENCHMARK" == true ]]; then
-    echo -e "${YELLOW}Running baseline benchmark ($BENCHMARK_RUNS runs, median)...${NC}"
-    BASELINE_METRIC=$(run_benchmark)
+if $HAS_BENCHMARK; then
+    echo -e "${YELLOW}Running baseline benchmark ($BENCHMARK_RUNS runs)...${NC}"
+    BASELINE_METRIC=$(run_benchmark_median "$BENCHMARK_SCRIPT" "$BENCHMARK_RUNS")
     if [[ -n "$BASELINE_METRIC" ]]; then
-        echo -e "${GREEN}Baseline metric: ${BASELINE_METRIC}${NC}"
+        echo -e "${GREEN}Baseline metric: $BASELINE_METRIC${NC}"
     else
-        echo -e "${RED}WARNING: Benchmark produced no metric — switching to qualitative mode${NC}"
+        echo -e "${RED}WARNING: Benchmark produced no output. Continuing without metrics.${NC}"
         HAS_BENCHMARK=false
     fi
 fi
 
-# --- MAIN LOOP ---
-
-echo ""
-echo -e "${BLUE}Vox Optimize — Target: $TARGET${NC}"
-echo -e "${BLUE}Batch size: $BATCH_SIZE | Benchmark: $HAS_BENCHMARK${NC}"
-echo ""
-
+# --- OPTIMIZATION LOOP ---
 BATCH_NUM=1
 TOTAL_EXPERIMENTS=0
+TOTAL_KEPT=0
 
 while true; do
-    echo -e "${BLUE}=========================================="
-    echo "Vox: OPTIMIZE MODE — Batch $BATCH_NUM"
-    echo "Target: $TARGET"
-    echo -e "==========================================${NC}"
+    echo ""
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${BLUE}  Starting Batch $BATCH_NUM ($BATCH_SIZE experiments)${NC}"
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 
-    BATCH_START_COMMIT=$(git log -1 --format="%H")
-    BATCH_START_METRIC="$BASELINE_METRIC"
+    BATCH_BASELINE_COMMIT=$(git rev-parse --short HEAD)
+    CURRENT_BASELINE="$BASELINE_METRIC"
 
-    # Reset batch tracking arrays
-    BATCH_HASHES=()
-    BATCH_DESCS=()
-    BATCH_METRICS=()
-    BATCH_BASELINES=()
-    BATCH_STATUSES=()
-
-    for ((exp = 1; exp <= BATCH_SIZE; exp++)); do
+    for ((exp=1; exp<=BATCH_SIZE; exp++)); do
         TOTAL_EXPERIMENTS=$((TOTAL_EXPERIMENTS + 1))
 
         echo ""
-        echo -e "${YELLOW}--- Experiment $exp/$BATCH_SIZE (total: $TOTAL_EXPERIMENTS) ---${NC}"
+        echo -e "${YELLOW}--- Experiment $exp of $BATCH_SIZE (total: $TOTAL_EXPERIMENTS) ---${NC}"
+        echo -e "${YELLOW}Vox speaks...${NC}"
 
-        PRE_COMMIT=$(git log -1 --format="%H")
+        # Snapshot commit before Claude runs
+        PRE_COMMIT=$(git rev-parse HEAD)
 
-        # Build context and pipe to Claude
-        build_optimize_context | $AGENT_CMD -p --dangerously-skip-permissions 2>&1 || true
+        # Run Claude with optimization context
+        local_output=$(build_optimize_context "$TARGET" | $AGENT_CMD -p --dangerously-skip-permissions 2>&1) || true
 
-        POST_COMMIT=$(git log -1 --format="%H")
+        echo "$local_output"
 
-        # Check if Claude made a commit
+        # Check if Claude made a new commit
+        POST_COMMIT=$(git rev-parse HEAD)
         if [[ "$PRE_COMMIT" == "$POST_COMMIT" ]]; then
-            echo -e "${RED}No commit made — skipping${NC}"
-            BATCH_HASHES+=("none")
-            BATCH_DESCS+=("(no commit)")
-            BATCH_METRICS+=("")
-            BATCH_BASELINES+=("$BASELINE_METRIC")
-            BATCH_STATUSES+=("failed")
-            append_result "$(date -Iseconds | cut -d+ -f1)" "$BATCH_NUM" "$exp" \
-                "none" "no-commit" "" "$BASELINE_METRIC" "failed"
+            echo -e "${RED}No commit detected — Claude may have failed. Logging as failed.${NC}"
+            append_tsv "$RESULTS_FILE" "$BATCH_NUM" "$exp" "-" "no commit produced" "-" "$CURRENT_BASELINE" "failed"
             continue
         fi
 
-        parse_last_commit
-
-        # Run constitution verification
-        echo -e "${CYAN}Running verification...${NC}"
-        if ! run_verification; then
-            echo -e "${RED}Verification failed — reverting${NC}"
-            git reset --hard HEAD~1
-            BATCH_HASHES+=("$COMMIT_HASH")
-            BATCH_DESCS+=("$COMMIT_DESC")
-            BATCH_METRICS+=("")
-            BATCH_BASELINES+=("$BASELINE_METRIC")
-            BATCH_STATUSES+=("failed")
-            append_result "$(date -Iseconds | cut -d+ -f1)" "$BATCH_NUM" "$exp" \
-                "$COMMIT_HASH" "$COMMIT_DESC" "" "$BASELINE_METRIC" "failed"
-            continue
-        fi
-        echo -e "${GREEN}Verification passed.${NC}"
+        LATEST_COMMIT=$(git rev-parse --short HEAD)
+        DESCRIPTION=$(get_experiment_description)
 
         # Run benchmark if available
-        METRIC=""
-        if [[ "$HAS_BENCHMARK" == true ]]; then
-            echo -e "${YELLOW}Running benchmark ($BENCHMARK_RUNS runs, median)...${NC}"
-            METRIC=$(run_benchmark)
-            if [[ -n "$METRIC" ]]; then
-                echo -e "${CYAN}Metric: $METRIC (baseline: ${BASELINE_METRIC:-n/a})${NC}"
+        EXP_METRIC="-"
+        if $HAS_BENCHMARK; then
+            echo -e "${YELLOW}Running benchmark ($BENCHMARK_RUNS runs)...${NC}"
+            EXP_METRIC=$(run_benchmark_median "$BENCHMARK_SCRIPT" "$BENCHMARK_RUNS")
+            if [[ -z "$EXP_METRIC" ]]; then
+                EXP_METRIC="-"
             fi
+            echo -e "${CYAN}Metric: $EXP_METRIC (baseline: $CURRENT_BASELINE)${NC}"
         fi
 
-        BATCH_HASHES+=("$COMMIT_HASH")
-        BATCH_DESCS+=("$COMMIT_DESC")
-        BATCH_METRICS+=("$METRIC")
-        BATCH_BASELINES+=("$BASELINE_METRIC")
-        BATCH_STATUSES+=("kept")
-        append_result "$(date -Iseconds | cut -d+ -f1)" "$BATCH_NUM" "$exp" \
-            "$COMMIT_HASH" "$COMMIT_DESC" "$METRIC" "$BASELINE_METRIC" "kept"
+        append_tsv "$RESULTS_FILE" "$BATCH_NUM" "$exp" "$LATEST_COMMIT" "$DESCRIPTION" "$EXP_METRIC" "$CURRENT_BASELINE" "pending"
 
-        # Update rolling baseline for next experiment
-        if [[ -n "$METRIC" ]]; then
-            BASELINE_METRIC="$METRIC"
-        fi
+        echo -e "${GREEN}Experiment $exp committed: $LATEST_COMMIT${NC}"
 
         sleep 2
     done
 
     # --- CHECKPOINT ---
-    print_scoreboard "$BATCH_NUM"
+    print_scoreboard "$RESULTS_FILE" "$BATCH_NUM" "$BASELINE_METRIC" "$HAS_BENCHMARK" "$METRIC_DIRECTION"
 
-    echo -n "Keep through which experiment? (#, 'all', or 'none'): "
-    read -r KEEP_CHOICE < /dev/tty
+    echo ""
+    echo -n -e "  ${BOLD}Keep through which experiment? (#, 'all', or 'none'): ${NC}"
+    read -r choice < /dev/tty
 
-    case "$KEEP_CHOICE" in
+    case "$choice" in
         none)
             echo -e "${YELLOW}Reverting all experiments in batch $BATCH_NUM...${NC}"
-            git reset --hard "$BATCH_START_COMMIT"
-            BASELINE_METRIC="$BATCH_START_METRIC"
-            mark_batch_discarded "$BATCH_NUM"
+            git reset --hard "$BATCH_BASELINE_COMMIT" >/dev/null 2>&1
+            # Mark all pending as discarded
+            if [[ -f "$RESULTS_FILE" ]]; then
+                awk -F'\t' -v OFS='\t' -v batch="$BATCH_NUM" '
+                    NR == 1 { print; next }
+                    $2 == batch && $8 == "pending" { $8 = "discarded"; print; next }
+                    { print }
+                ' "$RESULTS_FILE" > "${RESULTS_FILE}.tmp" && mv "${RESULTS_FILE}.tmp" "$RESULTS_FILE"
+            fi
+            echo -e "${GREEN}Reverted to baseline.${NC}"
             ;;
         all)
             echo -e "${GREEN}Keeping all experiments.${NC}"
+            if [[ -f "$RESULTS_FILE" ]]; then
+                awk -F'\t' -v OFS='\t' -v batch="$BATCH_NUM" '
+                    NR == 1 { print; next }
+                    $2 == batch && $8 == "pending" { $8 = "kept"; print; next }
+                    { print }
+                ' "$RESULTS_FILE" > "${RESULTS_FILE}.tmp" && mv "${RESULTS_FILE}.tmp" "$RESULTS_FILE"
+            fi
+            if $HAS_BENCHMARK; then
+                LAST_METRIC=$(tail -1 "$RESULTS_FILE" | cut -f6)
+                if [[ "$LAST_METRIC" != "-" ]]; then
+                    BASELINE_METRIC="$LAST_METRIC"
+                fi
+            fi
+            TOTAL_KEPT=$((TOTAL_KEPT + BATCH_SIZE))
             ;;
         [0-9]*)
-            keep_n="$KEEP_CHOICE"
-            if [[ $keep_n -gt 0 ]] && [[ $keep_n -le ${#BATCH_HASHES[@]} ]]; then
-                # Find last valid commit at or before keep_n
-                target_hash=""
-                for ((k = keep_n - 1; k >= 0; k--)); do
-                    if [[ "${BATCH_STATUSES[$k]}" == "kept" ]]; then
-                        target_hash="${BATCH_HASHES[$k]}"
-                        break
-                    fi
-                done
+            KEEP_THROUGH=$choice
+            echo -e "${YELLOW}Keeping through experiment #$KEEP_THROUGH, discarding rest...${NC}"
 
-                if [[ -n "$target_hash" ]] && [[ "$target_hash" != "none" ]]; then
-                    echo -e "${YELLOW}Keeping through #$keep_n, reverting rest...${NC}"
-                    git reset --hard "$target_hash"
-                    # Restore baseline to the kept experiment's metric
-                    for ((k = keep_n - 1; k >= 0; k--)); do
-                        if [[ -n "${BATCH_METRICS[$k]:-}" ]]; then
-                            BASELINE_METRIC="${BATCH_METRICS[$k]}"
-                            break
-                        fi
-                    done
-                    mark_after_discarded "$BATCH_NUM" "$keep_n"
-                else
-                    echo -e "${RED}No valid experiments at or before #$keep_n — reverting all${NC}"
-                    git reset --hard "$BATCH_START_COMMIT"
-                    BASELINE_METRIC="$BATCH_START_METRIC"
-                    mark_batch_discarded "$BATCH_NUM"
+            KEEP_HASH=$(awk -F'\t' -v batch="$BATCH_NUM" -v eid="$KEEP_THROUGH" \
+                '$2 == batch && $3 == eid { print $4 }' "$RESULTS_FILE")
+
+            if [[ -n "$KEEP_HASH" && "$KEEP_HASH" != "-" ]]; then
+                git reset --hard "$KEEP_HASH" >/dev/null 2>&1
+
+                awk -F'\t' -v OFS='\t' -v batch="$BATCH_NUM" -v keep="$KEEP_THROUGH" '
+                    NR == 1 { print; next }
+                    $2 == batch && $3+0 <= keep+0 && $8 == "pending" { $8 = "kept"; print; next }
+                    $2 == batch && $3+0 > keep+0 && $8 == "pending" { $8 = "discarded"; print; next }
+                    { print }
+                ' "$RESULTS_FILE" > "${RESULTS_FILE}.tmp" && mv "${RESULTS_FILE}.tmp" "$RESULTS_FILE"
+
+                if $HAS_BENCHMARK; then
+                    KEPT_METRIC=$(awk -F'\t' -v batch="$BATCH_NUM" -v eid="$KEEP_THROUGH" \
+                        '$2 == batch && $3 == eid { print $6 }' "$RESULTS_FILE")
+                    if [[ "$KEPT_METRIC" != "-" ]]; then
+                        BASELINE_METRIC="$KEPT_METRIC"
+                    fi
                 fi
+                TOTAL_KEPT=$((TOTAL_KEPT + KEEP_THROUGH))
             else
-                echo -e "${RED}Invalid choice: $keep_n (expected 1-${#BATCH_HASHES[@]})${NC}"
+                echo -e "${RED}Could not find commit for experiment #$KEEP_THROUGH${NC}"
             fi
+
+            echo -e "${GREEN}Done. New baseline: $(git rev-parse --short HEAD)${NC}"
             ;;
         *)
-            echo -e "${RED}Invalid choice: $KEEP_CHOICE${NC}"
+            echo -e "${RED}Invalid choice. Keeping all by default.${NC}"
+            if [[ -f "$RESULTS_FILE" ]]; then
+                awk -F'\t' -v OFS='\t' -v batch="$BATCH_NUM" '
+                    NR == 1 { print; next }
+                    $2 == batch && $8 == "pending" { $8 = "kept"; print; next }
+                    { print }
+                ' "$RESULTS_FILE" > "${RESULTS_FILE}.tmp" && mv "${RESULTS_FILE}.tmp" "$RESULTS_FILE"
+            fi
             ;;
     esac
 
     echo ""
-    echo -n "Continue optimizing? (y/n): "
-    read -r CONTINUE < /dev/tty
+    echo -n -e "  ${BOLD}Continue optimizing? (y/n): ${NC}"
+    read -r continue_choice < /dev/tty
 
-    if [[ "$CONTINUE" != "y" ]]; then
+    if [[ "$continue_choice" != "y" && "$continue_choice" != "Y" ]]; then
         break
     fi
 
@@ -1369,36 +1301,45 @@ while true; do
 done
 
 # --- COMPLETION ---
-
 echo ""
 echo -e "${GREEN}=========================================="
-echo "Optimization complete!"
-echo "Total experiments: $TOTAL_EXPERIMENTS"
-if [[ "$HAS_BENCHMARK" == true ]] && [[ -n "$BASELINE_METRIC" ]]; then
-    echo "Final metric: $BASELINE_METRIC"
+echo "  Vox Optimization Complete"
+echo "==========================================${NC}"
+echo ""
+echo "  Target:      $TARGET"
+echo "  Batches:     $BATCH_NUM"
+echo "  Experiments: $TOTAL_EXPERIMENTS"
+echo "  Kept:        $TOTAL_KEPT"
+if $HAS_BENCHMARK; then
+    echo "  Final metric: $BASELINE_METRIC"
 fi
-echo -e "==========================================${NC}"
+echo "  Worktree:    $WORKTREE_PATH"
+echo "  Branch:      $BRANCH_NAME"
 echo ""
 
-echo -n "Merge optimize/$TARGET to main? (y/n): "
-read -r MERGE < /dev/tty
+echo -n -e "  ${BOLD}Merge worktree branch to main? (y/n): ${NC}"
+read -r merge_choice < /dev/tty
 
-if [[ "$MERGE" == "y" ]]; then
-    cd "$MAIN_DIR"
-    echo -e "${BLUE}Merging optimize/$TARGET...${NC}"
-    git merge "optimize/$TARGET" --no-edit
-    echo -e "${BLUE}Cleaning up worktree...${NC}"
-    git worktree remove "$WORKTREE_DIR" --force
-    git branch -d "optimize/$TARGET" 2>/dev/null || true
+if [[ "$merge_choice" == "y" || "$merge_choice" == "Y" ]]; then
+    cd "$REPO_ROOT"
+    echo -e "${YELLOW}Merging $BRANCH_NAME...${NC}"
+    git merge "$BRANCH_NAME" --no-ff -m "feat: merge optimization results for $TARGET
+
+Experiments: $TOTAL_EXPERIMENTS, Kept: $TOTAL_KEPT
+$(if $HAS_BENCHMARK; then echo "Final metric: $BASELINE_METRIC"; fi)
+
+Co-Authored-By: Claude <noreply@anthropic.com>"
+
+    echo -e "${YELLOW}Cleaning up worktree...${NC}"
+    git worktree remove "$WORKTREE_PATH"
     echo -e "${GREEN}Merged and cleaned up.${NC}"
 else
-    echo -e "${YELLOW}Worktree left at: $WORKTREE_DIR${NC}"
-    echo "To merge later:"
-    echo "  cd $MAIN_DIR"
-    echo "  git merge optimize/$TARGET"
-    echo "  git worktree remove $WORKTREE_DIR"
+    echo ""
+    echo "  Worktree preserved at: $WORKTREE_PATH"
+    echo "  To merge later:  cd $REPO_ROOT && git merge $BRANCH_NAME"
+    echo "  To discard:      git worktree remove $WORKTREE_PATH && git branch -D $BRANCH_NAME"
 fi
-OPTIMIZE_EOF
+VOX_OPT_EOF
 
 # --- MAKE EXECUTABLE ---
 chmod +x "$TARGET_DIR/scripts/vox.sh"
@@ -1416,7 +1357,6 @@ echo "  $TARGET_DIR/.specify/"
 echo "  ├── memory/constitution.md"
 echo "  ├── specs/"
 echo "  ├── optimize/"
-echo "  ├── IMPLEMENTATION_PLAN.md"
 echo "  ├── AGENTS.md"
 echo "  ├── PROMPT_plan.md"
 echo "  ├── PROMPT_build.md"
@@ -1425,15 +1365,15 @@ echo "  $TARGET_DIR/scripts/"
 echo "  ├── vox.sh"
 echo "  └── vox-optimize.sh"
 echo ""
-echo -e "${YELLOW}Builder loop:${NC}"
+echo -e "${YELLOW}Builder workflow:${NC}"
 echo "  1. Edit .specify/memory/constitution.md for your project"
 echo "  2. Create a spec: mkdir -p .specify/specs/001-my-feature"
 echo "  3. Write: .specify/specs/001-my-feature/spec.md"
 echo "  4. Plan: ./scripts/vox.sh plan 001-my-feature"
 echo "  5. Build: ./scripts/vox.sh build 001-my-feature"
 echo ""
-echo -e "${YELLOW}Optimizer loop:${NC}"
-echo "  1. Create: mkdir -p .specify/optimize/my-target"
+echo -e "${YELLOW}Optimizer workflow:${NC}"
+echo "  1. Create a target: mkdir -p .specify/optimize/my-target"
 echo "  2. Write: .specify/optimize/my-target/program.md"
 echo "  3. Optional: .specify/optimize/my-target/benchmark.sh"
-echo "  4. Run: ./scripts/vox-optimize.sh my-target"
+echo "  4. Optimize: ./scripts/vox-optimize.sh my-target"
