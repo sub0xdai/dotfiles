@@ -25,6 +25,7 @@ alias la='eza -a --icons --group-directories-first --color=always'
 alias l='eza -F --icons --group-directories-first --color=always'
 alias l.='eza -a | grep -E "^\." --color=always' # Show only dot files
 alias vim='nvim'
+alias vi='nvim'
 alias nano='nvim'
 alias alert='/home/m0xu/dotfiles/scripts/__alert.sh'
 alias fetch='fastfetch'
@@ -145,7 +146,7 @@ else
     export LS_COLORS='di=38;5;110:ln=38;5;102:so=38;5;244:pi=38;5;244:ex=38;5;96:bd=38;5;110:cd=38;5;110:su=38;5;244:sg=38;5;244:tw=38;5;95:ow=38;5;110'
 fi
 
-# Tmux aliases
+# Tmux aliases (session connect/attach/switch handled by sesh)
 alias trs='tmux rename-session -t'
 alias tls='tmux list-sessions'
 alias tks='tmux kill-session -t'
@@ -153,10 +154,30 @@ alias tsave='tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/save.sh'
 alias trestore='tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/restore.sh'
 alias tsd='tsave && tmux detach'
 alias tds='tmux detach'
-alias tas="tmux attach -t"
-alias ts='tmux switch-client -t'
 alias tm="tmux"
-alias tns="tmux new-session -d -s"
+
+# Session picker — sesh + fzf entry point (works outside tmux)
+# Tokyo Night palette
+t() {
+  sesh connect "$(
+    sesh list -i | fzf \
+      --ansi --no-sort --no-multi \
+      --prompt '  ' \
+      --pointer '▌' \
+      --color 'fg:#a9b1d6,bg:-1,hl:#7aa2f7,fg+:#c0caf5,bg+:#292e42,hl+:#7dcfff' \
+      --color 'info:#e0af68,prompt:#bb9af7,pointer:#7dcfff,marker:#9ece6a,spinner:#bb9af7' \
+      --color 'border:#414868,label:#c0caf5,header:#7aa2f7' \
+      --layout reverse \
+      --height 60% \
+      --border rounded \
+      --border-label ' sesh ' \
+      --border-label-pos 2 \
+      --padding 1 \
+      --margin 1 \
+      --bind 'tab:down,btab:up' \
+      --bind 'esc:abort'
+  )"
+}
 
 
 # Yazi shell wrapper
@@ -384,7 +405,6 @@ $HOME/perl5/bin:\
 $HOME/go/bin:\
 $HOME/git-worktree-runner/bin:\
 $HOME/dotfiles/scripts:\
-$HOME/.tmux/plugins/t-smart-tmux-session-manager/bin:\
 $(ruby -e 'print Gem.user_dir' 2>/dev/null)/bin:\
 /var/lib/snapd/snap/bin:\
 /usr/local/bin:/usr/local/sbin:\
