@@ -12,21 +12,21 @@ $python\
 $character"""
 
 [directory]
-style = "#c1c1c1" # Pinkish grey
+style = "#8ba4b0" # Kanso soft blue
 
 [character]
 # Explicitly control the position with no newline
 format = "$symbol"
 success_symbol = "[λ ](#888888)" # muted gray with space after lambda
-error_symbol = "[λ ](#9b8d7f)"   # warm gray for errors with space after lambda
-vimcmd_symbol = "[λ ](#666666)"  # darker gray for vim with space after lambda
+error_symbol = "[λ ](#c4746e)"   # Kanso coral for errors with space after lambda
+vimcmd_symbol = "[λ ](#8ba4b0)"  # Kanso steel blue for vim with space after lambda
 
 [git_branch]
 format = "[$branch]($style)"
-style = "#9A8481" # Pinkish grey shade
+style = "#8a9a7b" # Kanso sage
 
 [git_status]
-format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)](218) ($ahead_behind$stashed)]($style)"
+format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)](218)( $ahead_behind)]($style)[( $stashed)](#e6c384)"
 style = "#5f8787" # signature teal again for status
 conflicted = ""
 untracked = ""
@@ -41,9 +41,10 @@ format = '\([$state( $progress_current/$progress_total)]($style)\) '
 style = "#666666" # darker gray
 
 [cmd_duration]
-format = "[$duration]($style) "
-style = "#8c7f70" # muted brown
+format = " [$duration]($style) "
+style = "#907aa9" # iris
 
 [python]
 format = "[$virtualenv]($style) "
-style = "#444444" # subtle dark gray
+style = "#c4b28a" # Kanso warm tan
+

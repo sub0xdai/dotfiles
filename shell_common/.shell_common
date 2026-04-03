@@ -1,22 +1,24 @@
-# Black Metal inspired colors for eza
+# Kanso Zen colors for eza
 export EZA_COLORS="\
-da=38;5;110:\
-uu=38;5;244:\
-sn=38;5;102:\
-sb=38;5;102:\
-ur=38;5;103:\
-uw=38;5;95:\
-ux=38;5;96:\
-ue=38;5;96:\
-gr=38;5;103:\
-gw=38;5;95:\
-gx=38;5;96:\
-tr=38;5;103:\
-tw=38;5;95:\
-tx=38;5;96:\
-di=38;5;110:\
+da=38;5;145:\
+uu=38;5;145:\
+sn=38;5;139:\
+sb=38;5;139:\
+ur=38;5;108:\
+uw=38;5;180:\
+ux=38;5;174:\
+ue=38;5;174:\
+gr=38;5;108:\
+gw=38;5;180:\
+gx=38;5;174:\
+tr=38;5;108:\
+tw=38;5;180:\
+tx=38;5;174:\
+di=38;5;109:\
+ln=38;5;103:\
+ex=38;5;174:\
 fi=38;5;251:\
-*.lua=38;5;146"
+*.lua=38;5;179"
 
 # Common aliases
 alias ls='eza --icons --group-directories-first --color=always'
@@ -52,10 +54,10 @@ alias cog-sse='docker run -d -e TRANSPORT_MODE=sse --env-file $HOME/cognee-mcp/.
 alias reset='setxkbmap -layout us' # Reset i3 after this
 alias activate='source .venv/bin/activate'
 alias yz='yazi' 
-alias docker='podman'
 alias note='vim ~/1-projects/vaults/sub0x_vault/scratchpad.md'
 alias gemini='gemini -y'
 alias cc-clean='pkill -f "claude" && echo "cleaned"'
+
 
 # Initialize a new project with your 'Ascended' AI configuration
 alias c-init='cp -rn ~/.claude_template/* . && echo "🚀 Minimalist AI context initialized."'
@@ -142,8 +144,8 @@ if command -v dircolors &> /dev/null; then
 elif [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(/usr/bin/dircolors -b ~/.dircolors)" || eval "$(/usr/bin/dircolors -b)"
 else
-    # Fallback color configuration matching our black metal theme
-    export LS_COLORS='di=38;5;110:ln=38;5;102:so=38;5;244:pi=38;5;244:ex=38;5;96:bd=38;5;110:cd=38;5;110:su=38;5;244:sg=38;5;244:tw=38;5;95:ow=38;5;110'
+    # Fallback color configuration matching Kanso Zen theme
+    export LS_COLORS='di=38;5;109:ln=38;5;103:so=38;5;145:pi=38;5;145:ex=38;5;174:bd=38;5;109:cd=38;5;109:su=38;5;145:sg=38;5;145:tw=38;5;180:ow=38;5;109'
 fi
 
 # Tmux aliases (session connect/attach/switch handled by sesh)
