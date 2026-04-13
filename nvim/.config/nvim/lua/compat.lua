@@ -14,14 +14,32 @@ function M.setup()
     end
   end
 
-  -- Create a compatibility layer for vim.validate which is deprecated and will be removed in Neovim 1.0
+  -- Suppress vim.validate deprecation warnings from plugins using old-style calls
+  -- Old style: vim.validate({ name = { val, "string" } })
+  -- New style: vim.validate("name", val, "string")
   if vim.validate then
     local original_validate = vim.validate
-    vim.validate = function(...)
-      -- Check if we should silence the deprecation warning
-      local args = {...}
-      original_validate(...)
-      return true
+    vim.validate = function(opt, ...)
+      if type(opt) == "table" and select("#", ...) == 0 then
+        -- Old-style call: vim.validate({ name = { val, type } })
+        -- Convert each entry to a new-style call
+        for name, spec in pairs(opt) do
+          if type(spec) == "table" then
+            local val = spec[1]
+            local expected = spec[2]
+            local optional = spec[3]
+            if optional then
+              if val ~= nil then
+                original_validate(name, val, expected)
+              end
+            else
+              original_validate(name, val, expected)
+            end
+          end
+        end
+        return true
+      end
+      return original_validate(opt, ...)
     end
   end
 end

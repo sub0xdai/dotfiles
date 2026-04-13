@@ -170,16 +170,7 @@ return {
 
 					-- Code lens auto-refresh for reference counts
 					if client.server_capabilities.codeLensProvider then
-						vim.api.nvim_create_autocmd(
-							{ "TextChanged", "InsertLeave", "CursorHold", "BufEnter" },
-							{
-								buffer = bufnr,
-								callback = function()
-									vim.lsp.codelens.refresh({ bufnr = bufnr })
-								end,
-							}
-						)
-						vim.lsp.codelens.refresh({ bufnr = bufnr })
+						vim.lsp.codelens.enable(true, { bufnr = bufnr })
 					end
 				end,
 			}
