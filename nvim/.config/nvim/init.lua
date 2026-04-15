@@ -16,7 +16,7 @@ vim.wo.relativenumber = true
 
 -- VimTeX configuration (must be set before plugins load)
 vim.g.maplocalleader = " "
-vim.g.vimtex_view_method = "zathura"
+vim.g.vimtex_view_method = "sioyek"
 vim.g.vimtex_compiler_method = "tectonic"
 vim.g.vimtex_quickfix_mode = 0
 

@@ -375,7 +375,7 @@ export FZF_ALT_C_OPTS="
 # FZF Alias with Enhanced Configuration
 alias fz='fzf \
   --preview "bat --color=always {}" \
-  --bind "enter:execute([[ \$(file --mime-type -b {}) == application/pdf ]] && zathura {} || nvim {})+abort" \
+  --bind "enter:execute([[ \$(file --mime-type -b {}) == application/pdf ]] && sioyek {} || nvim {})+abort" \
   --border rounded \
   --margin 1 \
   --padding 1 \
