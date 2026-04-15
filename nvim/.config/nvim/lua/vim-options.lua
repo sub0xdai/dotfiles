@@ -6,6 +6,7 @@ vim.g.maplocalleader = ' '
 vim.g.background = "light"
 
 vim.opt.swapfile = false
+vim.o.completeopt = "menuone,popup,fuzzy,noinsert"
 vim.opt.clipboard = 'unnamedplus'   -- use system clipboard
 vim.opt.splitbelow = true           -- open new vertical split bottom
 vim.opt.splitright = true           -- open new horizontal splits right
@@ -71,9 +72,9 @@ vim.keymap.set('n', '<Leader>nf', function()
   end)
 end, { noremap = true, silent = true, desc = "Create new file" })
 
--- Key Mappings for Buffer Navigation
-vim.keymap.set('n', '<C-[>', ':bprevious<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<C-]>', ':bnext<CR>', { noremap = true, silent = true })
+-- Buffer Navigation
+vim.keymap.set('n', '[b', ':bprevious<CR>', { noremap = true, silent = true, desc = "Previous buffer" })
+vim.keymap.set('n', ']b', ':bnext<CR>', { noremap = true, silent = true, desc = "Next buffer" })
 
 
 -- Editing Experience

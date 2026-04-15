@@ -15,24 +15,23 @@ function M.setup()
   end
 
   -- Suppress vim.validate deprecation warnings from plugins using old-style calls
-  -- Old style: vim.validate({ name = { val, "string" } })
-  -- New style: vim.validate("name", val, "string")
+  -- Old style: vim.validate({ name = { val, "string" } }) with shorthand types ("s", "f", etc.)
+  -- New style: vim.validate("name", val, "string") with full type names
   if vim.validate then
     local original_validate = vim.validate
+    -- Old API accepted shorthand type names; new API requires full names
+    local type_aliases = {
+      s = "string", t = "table", n = "number",
+      f = "function", b = "boolean", c = "callable",
+    }
     vim.validate = function(opt, ...)
       if type(opt) == "table" and select("#", ...) == 0 then
-        -- Old-style call: vim.validate({ name = { val, type } })
-        -- Convert each entry to a new-style call
         for name, spec in pairs(opt) do
           if type(spec) == "table" then
             local val = spec[1]
-            local expected = spec[2]
+            local expected = type_aliases[spec[2]] or spec[2]
             local optional = spec[3]
-            if optional then
-              if val ~= nil then
-                original_validate(name, val, expected)
-              end
-            else
+            if not optional or val ~= nil then
               original_validate(name, val, expected)
             end
           end

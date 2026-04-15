@@ -35,7 +35,6 @@ return {
     dependencies = {
         "nvim-lua/plenary.nvim",
         "nvim-treesitter/nvim-treesitter",
-        "hrsh7th/nvim-cmp",
         "nvim-telescope/telescope.nvim",
     },
     keys = {
@@ -80,7 +79,7 @@ return {
             preferred_link_style = "wiki",
             wiki_link_func = require("obsidian.util").wiki_link_alias_prefix,
             completion = {
-                nvim_cmp = true,
+                nvim_cmp = false,
                 min_chars = 2,
             },
             templates = {
