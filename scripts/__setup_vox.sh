@@ -39,8 +39,13 @@ print_help() {
     echo "  ├── memory/"
     echo "  │   └── constitution.md    # Project standards template"
     echo "  ├── specs/                 # Your specifications go here"
+    echo "  │   └── <spec>/"
+    echo "  │       ├── spec.md        # Spec doc"
+    echo "  │       ├── plan.md        # Written by /vox plan"
+    echo "  │       └── LEARNINGS.md   # Per-spec, append-only by build iter"
     echo "  ├── optimize/              # Optimization targets go here"
-    echo "  ├── AGENTS.md              # Operational learnings"
+    echo "  ├── AGENTS.md              # Cross-cutting operational rules (human-curated)"
+    echo "  ├── WORKFLOW.md            # Advisor gate protocol"
     echo "  ├── PROMPT_plan.md         # Planning mode instructions"
     echo "  ├── PROMPT_build.md        # Build mode instructions"
     echo "  └── PROMPT_optimize.md     # Optimize mode instructions"
@@ -223,9 +228,20 @@ EOF
 
 # --- AGENTS.md ---
 cat > "$TARGET_DIR/.specify/AGENTS.md" << 'EOF'
-# Operational Learnings
+# Cross-Cutting Operational Rules
 
-> Vox's accumulated knowledge. Loaded each iteration.
+> **Scope:** this file holds ONLY cross-cutting rules that apply to every
+> spec — tech-stack conventions, shared anti-patterns, protocol decisions
+> that transcend individual specs.
+>
+> **Per-spec discoveries live in `.specify/specs/<spec>/LEARNINGS.md`**
+> (append-only by vox build iterations). Vox reads both files on every
+> iteration, but writes only to the per-spec file. Keeping this file
+> curated prevents cross-spec context pollution that grows unboundedly.
+>
+> Rule of thumb: if a learning would apply to an unrelated future spec,
+> lift it here by hand. If it's specific to one spec's architecture or
+> decisions, leave it in the per-spec file.
 
 ---
 
@@ -352,7 +368,7 @@ EOF
 
 # --- PROMPT_build.md ---
 cat > "$TARGET_DIR/.specify/PROMPT_build.md" << 'EOF'
-# Vox - BUILD Mode
+# Vox — BUILD Mode
 
 You are Vox, an autonomous developer. You are in BUILD mode.
 
@@ -366,46 +382,73 @@ Complete exactly ONE task from the implementation plan, then exit.
 
 1. **Constitution**: `.specify/memory/constitution.md`
 2. **Specification**: `.specify/specs/{SPEC_NAME}/spec.md`
-3. **Plan**: `.specify/specs/{SPEC_NAME}/plan.md`
-4. **Operational Learnings**: `.specify/AGENTS.md`
+3. **Cross-cutting operational rules**: `.specify/AGENTS.md` (read-only — do NOT write here)
+4. **Per-spec learnings**: `.specify/specs/{SPEC_NAME}/LEARNINGS.md` (append-only by this loop)
+5. **Plan**: `.specify/specs/{SPEC_NAME}/plan.md` (read-only during iterations — see "Plan File Discipline" below)
 
 ---
 
 ## Build Process
 
 ### Step 1: Identify Your Task
-- Read `.specify/specs/{SPEC_NAME}/plan.md`
-- Find the first task with status `pending`
-- This is YOUR task. Complete only this task.
+
+- Read `plan.md` to understand the full task sequence, file-level scope, and acceptance criteria.
+- Run `git log --oneline -15` in the working tree. **The first task NOT yet represented in the commit log is YOUR task.** The plan file's task-status markers are advisory only; the git log is the source of truth.
+- Example: if the most recent task commit is `feat(spec-x): T4 — ...`, your task is T5.
+- If no prior task commits exist, start at T1.
 
 ### Step 2: Study Before Coding
-- Read relevant existing code
-- Understand the patterns in use
-- Check AGENTS.md for learnings
-- Don't assume - verify
 
-### Step 3: Implement
-- Write clean, idiomatic code
-- Follow constitution standards
-- Use existing patterns from codebase
-- Implement functionality completely
+- Read the relevant existing code for your task's file-level scope.
+- Understand the patterns in use.
+- Read `AGENTS.md` for cross-cutting rules.
+- Read this spec's `LEARNINGS.md` (if present) for discoveries from prior iterations.
+- Don't assume — verify.
+
+### Step 3: Implement (Vertical Slices)
+
+- Write clean, idiomatic code.
+- Follow constitution standards.
+- Use existing patterns from the codebase.
+- Work in **vertical slices**: one end-to-end checkpoint per task, not horizontal layers.
+- Each task must be independently testable. Don't leave half-wired code.
 
 ### Step 4: Validate
-- Run verification commands from constitution
-- Fix any failures before proceeding
 
-### Step 5: Update State
-- Mark your task as `complete` in plan.md
-- Add any discoveries to AGENTS.md
-- Document blockers if encountered
+- Run verification commands from the constitution.
+- Fix any failures before committing.
+
+### Step 5: Record Learnings (Per-Spec Only)
+
+- If you discovered something non-obvious during this task — a subtle code path, a pattern deviation, a shared module gotcha — append a short note to `.specify/specs/{SPEC_NAME}/LEARNINGS.md`. Create the file if it doesn't exist.
+- **Do NOT write to the global `.specify/AGENTS.md`.** That file is reserved for cross-cutting rules curated by humans.
+- Learnings are for future iterations of THIS spec. Keep entries dated and terse (1-3 sentences).
 
 ### Step 6: Commit
+
 ```bash
-git add -A
-git commit -m "feat: {task description}
+git add <specific files you changed>    # NEVER git add -A
+git commit -m "{type}({spec-slug}): T{N} — {task description}
+
+{Optional body explaining non-obvious choices}
 
 Co-Authored-By: Claude <noreply@anthropic.com>"
 ```
+
+- Stage specific files by name, never `git add -A` or `git add .` (avoids sweeping in secrets / cruft).
+- If the spec lives in a submodule, commit in the submodule first, then bump the submodule pointer in the parent in a separate commit.
+
+---
+
+## Plan File Discipline (IMPORTANT)
+
+**DO NOT modify `plan.md` during per-task iterations.**
+
+- Task completion is derived from the git log (see Step 1). Status markers in the plan file are advisory.
+- Mutating the plan file every iteration invalidates the prompt cache for that section and doubles the commit count per spec for zero new information.
+- The FINAL task (T-final / T-N verification + archival) is the ONLY task that updates the plan file — it marks all tasks complete in a single umbrella commit alongside the spec-archive move.
+
+Exception: if you discover a genuinely new task mid-build that the plan missed, you may append it to the plan as `T-{next-N}: pending` and explain in your commit body. Do not rewrite existing task entries.
 
 ---
 
@@ -416,7 +459,7 @@ After completing your task:
 ```
 BUILD ITERATION COMPLETE
 
-Task: T{N} - {description}
+Task: T{N} — {description}
 Status: complete
 Files modified: {list}
 
@@ -424,10 +467,11 @@ Validation:
 - lint: pass/fail
 - tests: pass/fail
 
-Next task: T{N+1} - {description}
+Next task: T{N+1} — {description}
 ```
 
-If all tasks complete and validation passes:
+If all tasks complete and validation passes (T-final):
+
 ```
 <promise>DONE</promise>
 ```
@@ -436,25 +480,126 @@ If all tasks complete and validation passes:
 
 ## Critical Rules
 
-- **One task only** - complete one, then exit
-- **Validate before commit** - no broken commits
-- **Update state files** - plan and learnings
-- **Capture discoveries** - help future iterations
-- **Use parallel subagents** for expensive searches
-- **Only 1 subagent for build/tests** - avoid conflicts
+- **One task per iteration** — complete one, then exit.
+- **Validate before commit** — no broken commits.
+- **Specific `git add`** — never `-A` or `.`.
+- **Plan file is READ-ONLY** during per-task iterations. Final task only writes it.
+- **Learnings go to per-spec `LEARNINGS.md`**, never to global `AGENTS.md`.
+- **Use parallel subagents** for expensive searches.
+- **Only 1 subagent for build/tests** — avoid conflicts.
 
 ---
 
 ## When Stuck
 
-If validation fails for >3 attempts on same error:
-1. Document the blocker in plan.md
-2. Add learnings to AGENTS.md
-3. Exit and let next iteration try fresh
+If validation fails for >3 attempts on the same error:
+
+1. Append a blocker note to `.specify/specs/{SPEC_NAME}/LEARNINGS.md` — include the error signature and what you tried.
+2. Exit (do NOT commit partial work). Let the next iteration try fresh, or let the human intervene.
 
 ---
 
-*Each iteration: one task, validate, commit, exit.*
+*Each iteration: identify → study → implement → validate → record learnings → commit → exit.*
+EOF
+
+# --- WORKFLOW.md (advisor gate protocol) ---
+cat > "$TARGET_DIR/.specify/WORKFLOW.md" << 'EOF'
+# Vox Workflow — Advisor Gate Protocol
+
+> Cheaper to prove the plan is sound for one Opus-advisor turn than to
+> discover a flaw in iteration 12.
+
+---
+
+## The Protocol
+
+```
+/vox plan <spec>                          # Opus (one-shot planner)
+  └─ writes .specify/specs/<spec>/plan.md
+
+advisor()                                 # GATE 1 — review the plan
+  └─ if advisor flags issues: fix plan, re-gate
+  └─ if advisor clears: proceed
+
+/vox build <spec>                         # Sonnet (iterative builder)
+  └─ writes spec code + per-spec LEARNINGS.md
+  └─ halts on <promise>DONE</promise> or max-iterations
+
+advisor()                                 # GATE 2 — review the delivered spec
+  └─ if advisor flags gaps: address as hot-fix commits
+  └─ if advisor clears: archive spec, move to next
+```
+
+**Two advisor turns per spec.** On a 4-spec roadmap, that's 8 advisor turns — negligible next to the cost of one unreviewed flawed plan (up to MAX_ITERATIONS wasted build iterations).
+
+---
+
+## Gate 1 — After Plan, Before Build
+
+**Purpose:** catch plan-level flaws while they're still cheap to fix.
+
+The advisor sees:
+- The full conversation transcript (including any back-and-forth that shaped the spec)
+- The just-written `plan.md`
+- The spec doc itself
+
+**What to ask the advisor to verify:**
+- Does the plan's task decomposition cover every FR in the spec?
+- Are architectural decisions (deviations, chosen patterns) sound?
+- Does the plan honor the spec's explicit contracts (additive-only, byte-for-byte, etc.)?
+- Are there spec-file claims the gap analysis has proven wrong but the plan still assumes?
+- Are shared-code paths touched by the plan? Does the plan guard regressions on adjacent features?
+- Is any CP overscoped / would benefit from splitting?
+
+**Red flags the advisor should catch at Gate 1:**
+- Specs asserting "only X touched" that insert code into shared paths.
+- FR-X that has no task covering it.
+- Plan assumes backend feature-complete when grep would show the opposite (or vice-versa).
+- Task ordering that would produce a working test-passing state before the actual user-facing feature works.
+
+---
+
+## Gate 2 — After Build Complete, Before Archive
+
+**Purpose:** verify the delivered spec actually satisfies acceptance criteria, not just passes tests.
+
+The advisor sees:
+- Full build transcript (every iteration's output, commit messages, validation sweeps)
+- Final commit ladder
+- The original acceptance criteria
+
+**What to ask the advisor to verify:**
+- Every acceptance-criteria checkbox traceable to a commit?
+- Were any deviations silently papered over?
+- Did the baseline hold (pre-existing test count, clippy/lint warning count)?
+- If the spec had a regression-guard FR — was it actually tested, or just asserted?
+- Any iteration that completed suspiciously fast / with vague commit message?
+
+**Red flags the advisor should catch at Gate 2:**
+- Spec archived while some FRs have no traceable commit.
+- Test baselines quietly drifted (e.g., 655 passing yesterday, 653 today — 2 tests missing not fixed).
+- Changes in shared modules that weren't scoped for this spec.
+- Contracts with output-parity tests passing but path-equivalence not enforced.
+
+---
+
+## When to Skip Gates
+
+- **Pure refactors / chores** (submodule bumps, docs fixes) — advisor gate is overkill.
+- **Atomic carves** from an already-advised parent spec — if the parent was gated, its atomic children can share the same gate judgment.
+- **Explicit "time-critical" hot-fix** — skip Gate 1, but NEVER skip Gate 2 (the post-fix verification).
+
+---
+
+## Cost Accounting
+
+A single advisor call (Opus, full context): comparable to 1–2 vox build iterations on Opus.
+A wasted 15-iteration loop on Sonnet: comparable to ~5–7 advisor calls.
+A wasted 15-iteration loop on Opus: comparable to ~30 advisor calls, plus the hot-fix work.
+
+Gate discipline is cheap insurance — especially now that:
+- plan runs on Opus (high leverage for one-shot quality)
+- build runs on Sonnet (cheap per iteration, but not free)
 EOF
 
 # --- PROMPT_optimize.md ---
@@ -546,8 +691,27 @@ PROMPT_BUILD=".specify/PROMPT_build.md"
 AGENTS_MD=".specify/AGENTS.md"
 CONSTITUTION=".specify/memory/constitution.md"
 
-MAX_ITERATIONS=30
-AGENT_CMD="claude"
+MAX_ITERATIONS="${MAX_ITERATIONS:-15}"
+
+# Split defaults by mode:
+#   - plan is a ONE-SHOT call whose output gates every downstream build
+#     iteration; a flawed plan can burn MAX_ITERATIONS iterations. Run on Opus.
+#   - build is mechanical task execution against a fully-specified plan.
+#     Run on Sonnet (~3x cheaper input, ~5x cheaper output).
+#
+# Overrides (in precedence order):
+#   AGENT_MODEL_PLAN=<id>    # plan only
+#   AGENT_MODEL_BUILD=<id>   # build only
+#   AGENT_MODEL=<id>         # legacy — overrides BOTH (e.g. force all-Sonnet)
+AGENT_MODEL_PLAN="${AGENT_MODEL_PLAN:-claude-opus-4-7}"
+AGENT_MODEL_BUILD="${AGENT_MODEL_BUILD:-claude-sonnet-4-6}"
+if [[ -n "${AGENT_MODEL:-}" ]]; then
+    AGENT_MODEL_PLAN="$AGENT_MODEL"
+    AGENT_MODEL_BUILD="$AGENT_MODEL"
+fi
+AGENT_CMD_PLAN="claude --model ${AGENT_MODEL_PLAN}"
+AGENT_CMD_BUILD="claude --model ${AGENT_MODEL_BUILD}"
+SLEEP_INTERVAL="${SLEEP_INTERVAL:-15}"
 
 # --- COLORS ---
 RED='\033[0;31m'
@@ -571,7 +735,14 @@ print_help() {
     echo "  $0 build 001-first-feature"
     echo ""
     echo "Options:"
-    echo "  --max-iterations N      Set max iterations (default: 30)"
+    echo "  --max-iterations N      Set max iterations (default: 15; env MAX_ITERATIONS overrides)"
+    echo ""
+    echo "Env:"
+    echo "  AGENT_MODEL_PLAN=<id>   Plan-mode model (default: claude-opus-4-7)"
+    echo "  AGENT_MODEL_BUILD=<id>  Build-mode model (default: claude-sonnet-4-6)"
+    echo "  AGENT_MODEL=<id>        Legacy — overrides BOTH plan and build"
+    echo "  MAX_ITERATIONS=N        Same as --max-iterations"
+    echo "  SLEEP_INTERVAL=N        Seconds between build iterations (default: 15)"
     echo ""
     echo "Available specs:"
     list_specs
@@ -597,6 +768,22 @@ build_context() {
     echo "## Spec: $spec"
     echo ""
 
+    # Sections ordered by volatility (stable first) so the Anthropic prompt
+    # cache can hit on the prefix across iterations. 5-min TTL — keep
+    # fast-changing content (per-spec LEARNINGS, plan) at the TAIL.
+
+    # 1. Instructions (stable per-project)
+    echo "---"
+    echo "## Instructions"
+    echo ""
+    if [[ "$mode" == "plan" ]]; then
+        cat "$PROMPT_PLAN"
+    else
+        cat "$PROMPT_BUILD"
+    fi
+    echo ""
+
+    # 2. Constitution (stable per-project)
     if [[ -f "$CONSTITUTION" ]]; then
         echo "---"
         echo "## Constitution"
@@ -605,6 +792,7 @@ build_context() {
         echo ""
     fi
 
+    # 3. Specification (stable per-spec)
     if [[ -f "$SPECS_DIR/$spec/spec.md" ]]; then
         echo "---"
         echo "## Specification: $spec"
@@ -613,14 +801,27 @@ build_context() {
         echo ""
     fi
 
+    # 4. Cross-cutting operational rules (curated — stays small + stable)
     if [[ -f "$AGENTS_MD" ]]; then
         echo "---"
-        echo "## Operational Learnings"
+        echo "## Operational Rules (cross-cutting)"
         echo ""
         cat "$AGENTS_MD"
         echo ""
     fi
 
+    # 5. Per-spec learnings (append-only by build iterations; scoped to
+    # this spec only — prevents cross-spec context pollution).
+    local spec_learnings="$SPECS_DIR/$spec/LEARNINGS.md"
+    if [[ -f "$spec_learnings" ]]; then
+        echo "---"
+        echo "## Spec Learnings: $spec"
+        echo ""
+        cat "$spec_learnings"
+        echo ""
+    fi
+
+    # 6. Implementation Plan (most volatile — tail position).
     local plan_file="$SPECS_DIR/$spec/plan.md"
     if [[ -f "$plan_file" ]]; then
         echo "---"
@@ -628,15 +829,6 @@ build_context() {
         echo ""
         cat "$plan_file"
         echo ""
-    fi
-
-    echo "---"
-    echo "## Instructions"
-    echo ""
-    if [[ "$mode" == "plan" ]]; then
-        cat "$PROMPT_PLAN"
-    else
-        cat "$PROMPT_BUILD"
     fi
 }
 
@@ -667,7 +859,7 @@ run_planning() {
     echo ""
 
     local output
-    output=$(build_context "$spec" "plan" | $AGENT_CMD -p --dangerously-skip-permissions 2>&1) || true
+    output=$(build_context "$spec" "plan" | $AGENT_CMD_PLAN -p --dangerously-skip-permissions 2>&1) || true
 
     echo "$output"
 
@@ -701,7 +893,7 @@ run_building() {
         echo -e "${YELLOW}Vox speaks...${NC}"
 
         local output
-        output=$(build_context "$spec" "build" | $AGENT_CMD -p --dangerously-skip-permissions 2>&1) || true
+        output=$(build_context "$spec" "build" | $AGENT_CMD_BUILD -p --dangerously-skip-permissions 2>&1) || true
 
         echo "$output"
 
@@ -722,7 +914,7 @@ run_building() {
         echo ""
         echo -e "${BLUE}Iteration $iteration complete. Continuing...${NC}"
 
-        sleep 2
+        sleep "$SLEEP_INTERVAL"
 
     done
 
@@ -784,7 +976,8 @@ if [[ ! -f "$PROMPT_BUILD" ]]; then
 fi
 
 echo "Vox Builder Loop"
-echo "Agent: $AGENT_CMD"
+echo "Plan agent:  $AGENT_CMD_PLAN"
+echo "Build agent: $AGENT_CMD_BUILD"
 echo ""
 
 if [[ "$MODE" == "plan" ]]; then
@@ -820,7 +1013,12 @@ AGENTS_MD=".specify/AGENTS.md"
 PROMPT_OPTIMIZE=".specify/PROMPT_optimize.md"
 
 BATCH_SIZE=5
-AGENT_CMD="claude"
+
+# Default the optimize agent to Sonnet — experiment iteration is mechanical.
+# Override: AGENT_MODEL=claude-opus-4-7 ./scripts/vox-optimize.sh ...
+AGENT_MODEL="${AGENT_MODEL:-claude-sonnet-4-6}"
+AGENT_CMD="claude --model ${AGENT_MODEL}"
+SLEEP_INTERVAL="${SLEEP_INTERVAL:-15}"
 
 # --- COLORS ---
 RED='\033[0;31m'
@@ -1205,7 +1403,7 @@ while true; do
 
         echo -e "${GREEN}Experiment $exp committed: $LATEST_COMMIT${NC}"
 
-        sleep 2
+        sleep "$SLEEP_INTERVAL"
     done
 
     # --- CHECKPOINT ---
