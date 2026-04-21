@@ -400,10 +400,7 @@ Complete exactly ONE task from the implementation plan, then exit.
 ### Step 2: Study Before Coding
 
 - Read the relevant existing code for your task's file-level scope.
-- Understand the patterns in use.
-- Read `AGENTS.md` for cross-cutting rules.
 - Read this spec's `LEARNINGS.md` (if present) for discoveries from prior iterations.
-- Don't assume — verify.
 
 ### Step 3: Implement (Vertical Slices)
 
@@ -412,6 +409,12 @@ Complete exactly ONE task from the implementation plan, then exit.
 - Use existing patterns from the codebase.
 - Work in **vertical slices**: one end-to-end checkpoint per task, not horizontal layers.
 - Each task must be independently testable. Don't leave half-wired code.
+
+**Sub-agent dispatch rule (4.7-era):** if the task touches **>3 files across
+>1 subsystem**, dispatch one sub-agent per subsystem with explicit scoped file
+paths. Do NOT attempt to hold all subsystems in your own context — Opus 4.7 in
+particular is prone to silent regressions when juggling shared code paths
+across subsystems. One subsystem per sub-agent, synthesise in your own context.
 
 ### Step 4: Validate
 
@@ -538,6 +541,13 @@ advisor()                                 # GATE 2 — review the delivered spec
 
 **Purpose:** catch plan-level flaws while they're still cheap to fix.
 
+**Model:** default to **Sonnet** — the plan is fresh, small, and the check is
+structural (FR coverage, contract honor, shared-code guards). Escalate to Opus
+only if: (a) the spec's contracts are subtle/cross-cutting (byte-for-byte
+regression guards, state-machine invariants), or (b) Sonnet's first pass
+returned "looks fine" on a plan you suspect is flawed. Reserve Opus spend for
+Gate 2, where the delivered diff is larger and judgment matters more.
+
 The advisor sees:
 - The full conversation transcript (including any back-and-forth that shaped the spec)
 - The just-written `plan.md`
@@ -562,6 +572,10 @@ The advisor sees:
 ## Gate 2 — After Build Complete, Before Archive
 
 **Purpose:** verify the delivered spec actually satisfies acceptance criteria, not just passes tests.
+
+**Model:** default to **Opus** — the transcript is long, the diff spans many
+files, and catching silent deviations (path-equivalence failures, baseline
+test drift, scope leak) pays off. This is where the advisor earns its keep.
 
 The advisor sees:
 - Full build transcript (every iteration's output, commit messages, validation sweeps)
