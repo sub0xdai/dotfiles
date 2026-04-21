@@ -723,8 +723,20 @@ if [[ -n "${AGENT_MODEL:-}" ]]; then
     AGENT_MODEL_PLAN="$AGENT_MODEL"
     AGENT_MODEL_BUILD="$AGENT_MODEL"
 fi
+
+# Effort defaults:
+#   - plan: Opus doesn't need the boost; leave unset so it runs at its default.
+#   - build: Sonnet benefits from high effort — cheap input/output rates, the
+#     extra thinking tokens lift code quality where it matters most.
+AGENT_EFFORT_PLAN="${AGENT_EFFORT_PLAN:-}"
+AGENT_EFFORT_BUILD="${AGENT_EFFORT_BUILD:-high}"
+
 AGENT_CMD_PLAN="claude --model ${AGENT_MODEL_PLAN}"
+[[ -n "$AGENT_EFFORT_PLAN" ]] && AGENT_CMD_PLAN="$AGENT_CMD_PLAN --effort ${AGENT_EFFORT_PLAN}"
+
 AGENT_CMD_BUILD="claude --model ${AGENT_MODEL_BUILD}"
+[[ -n "$AGENT_EFFORT_BUILD" ]] && AGENT_CMD_BUILD="$AGENT_CMD_BUILD --effort ${AGENT_EFFORT_BUILD}"
+
 SLEEP_INTERVAL="${SLEEP_INTERVAL:-15}"
 
 # --- COLORS ---
@@ -755,6 +767,8 @@ print_help() {
     echo "  AGENT_MODEL_PLAN=<id>   Plan-mode model (default: claude-opus-4-7)"
     echo "  AGENT_MODEL_BUILD=<id>  Build-mode model (default: claude-sonnet-4-6)"
     echo "  AGENT_MODEL=<id>        Legacy — overrides BOTH plan and build"
+    echo "  AGENT_EFFORT_PLAN=<lvl> Plan effort (low/medium/high/xhigh/max; default: unset)"
+    echo "  AGENT_EFFORT_BUILD=<lvl> Build effort (default: high — lifts Sonnet code quality)"
     echo "  MAX_ITERATIONS=N        Same as --max-iterations"
     echo "  SLEEP_INTERVAL=N        Seconds between build iterations (default: 15)"
     echo ""
