@@ -1,0 +1,7 @@
+[package]
+name = "sub0x-catppuccin"
+version = "0.1.0"
+entrypoint = "lib.typ"
+authors = ["sub0xdai"]
+license = "MIT"
+description = "Personal Catppuccin Mocha theme with show rules"
