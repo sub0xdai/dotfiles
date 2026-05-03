@@ -195,7 +195,14 @@ return {
 				filetypes = { "nim" },
 			})
 
-			-- Markdown (PKM-focused LSP for Obsidian-style vaults)
+			-- Typst
+		vim.lsp.config("tinymist", {
+			cmd = { "tinymist" },
+			filetypes = { "typst" },
+			single_file_support = true,
+		})
+
+		-- Markdown (PKM-focused LSP for Obsidian-style vaults)
 			vim.lsp.config("markdown_oxide", {
 				cmd = { "markdown-oxide" },
 				filetypes = { "markdown" },
@@ -217,6 +224,7 @@ return {
 
 			-- Enable all servers
 			vim.lsp.enable({
+				"tinymist",
 				"bashls",
 				"lua_ls",
 				"gopls",

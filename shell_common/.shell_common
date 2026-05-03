@@ -107,6 +107,21 @@ peel() {
     fi
 }
 
+# New typst doc — scaffolds a math note with Catppuccin template
+# Usage: typnote [dir-name]  (defaults to current dir)
+typnote() {
+  local dir="${1:-.}"
+  mkdir -p "$dir"
+  cp ~/.config/typst/templates/catppuccin.typ "$dir/"
+  cat > "$dir/main.typ" << 'EOF'
+#import "catppuccin.typ": apply
+#import "@preview/catppuccin": flavors
+#show: apply.with(flavors.mocha)
+
+= 
+EOF
+  nvim "$dir/main.typ"
+}
 
 # Git remote set functions
 git_sub0x() {

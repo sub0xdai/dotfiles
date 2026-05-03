@@ -11,6 +11,7 @@ return {
       markdown = true,
       latex = true,
       text = true,
+      typst = true,
     },
     create_keymaps = false,
   },

@@ -19,6 +19,7 @@ return {
           json = { "prettier" },
           yaml = { "prettier" },
           markdown = { "prettier" },
+          typst = { "typstyle" },
           ruby = { "rubocop" },
           eruby = { "rubocop" },
         },
