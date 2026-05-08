@@ -410,11 +410,11 @@ Complete exactly ONE task from the implementation plan, then exit.
 - Work in **vertical slices**: one end-to-end checkpoint per task, not horizontal layers.
 - Each task must be independently testable. Don't leave half-wired code.
 
-**Sub-agent dispatch rule (4.7-era):** if the task touches **>3 files across
+**Sub-agent dispatch rule:** if the task touches **>3 files across
 >1 subsystem**, dispatch one sub-agent per subsystem with explicit scoped file
-paths. Do NOT attempt to hold all subsystems in your own context — Opus 4.7 in
-particular is prone to silent regressions when juggling shared code paths
-across subsystems. One subsystem per sub-agent, synthesise in your own context.
+paths. Do NOT attempt to hold all subsystems in your own context — some models
+are prone to silent regressions when juggling shared code paths across
+subsystems. One subsystem per sub-agent, synthesise in your own context.
 
 ### Step 4: Validate
 
@@ -509,7 +509,7 @@ EOF
 cat > "$TARGET_DIR/.specify/WORKFLOW.md" << 'EOF'
 # Vox Workflow — Advisor Gate Protocol
 
-> Cheaper to prove the plan is sound for one Opus-advisor turn than to
+> Cheaper to prove the plan is sound for one advisor turn than to
 > discover a flaw in iteration 12.
 
 ---
@@ -517,14 +517,14 @@ cat > "$TARGET_DIR/.specify/WORKFLOW.md" << 'EOF'
 ## The Protocol
 
 ```
-/vox plan <spec>                          # Opus (one-shot planner)
+/vox plan <spec>                          # one-shot planner (strong model)
   └─ writes .specify/specs/<spec>/plan.md
 
 advisor()                                 # GATE 1 — review the plan
   └─ if advisor flags issues: fix plan, re-gate
   └─ if advisor clears: proceed
 
-/vox build <spec>                         # Sonnet (iterative builder)
+/vox build <spec>                         # iterative builder (fast model)
   └─ writes spec code + per-spec LEARNINGS.md
   └─ halts on <promise>DONE</promise> or max-iterations
 
@@ -541,12 +541,13 @@ advisor()                                 # GATE 2 — review the delivered spec
 
 **Purpose:** catch plan-level flaws while they're still cheap to fix.
 
-**Model:** default to **Sonnet** — the plan is fresh, small, and the check is
-structural (FR coverage, contract honor, shared-code guards). Escalate to Opus
-only if: (a) the spec's contracts are subtle/cross-cutting (byte-for-byte
-regression guards, state-machine invariants), or (b) Sonnet's first pass
-returned "looks fine" on a plan you suspect is flawed. Reserve Opus spend for
-Gate 2, where the delivered diff is larger and judgment matters more.
+**Model:** default to a **fast model** — the plan is fresh, small, and the check
+is structural (FR coverage, contract honor, shared-code guards). Escalate to a
+**strong model** only if: (a) the spec's contracts are subtle/cross-cutting
+(byte-for-byte regression guards, state-machine invariants), or (b) the fast
+model's first pass returned "looks fine" on a plan you suspect is flawed.
+Reserve the strong model for Gate 2, where the delivered diff is larger and
+judgment matters more.
 
 The advisor sees:
 - The full conversation transcript (including any back-and-forth that shaped the spec)
@@ -573,8 +574,8 @@ The advisor sees:
 
 **Purpose:** verify the delivered spec actually satisfies acceptance criteria, not just passes tests.
 
-**Model:** default to **Opus** — the transcript is long, the diff spans many
-files, and catching silent deviations (path-equivalence failures, baseline
+**Model:** default to a **strong model** — the transcript is long, the diff spans
+many files, and catching silent deviations (path-equivalence failures, baseline
 test drift, scope leak) pays off. This is where the advisor earns its keep.
 
 The advisor sees:
@@ -607,13 +608,14 @@ The advisor sees:
 
 ## Cost Accounting
 
-A single advisor call (Opus, full context): comparable to 1–2 vox build iterations on Opus.
-A wasted 15-iteration loop on Sonnet: comparable to ~5–7 advisor calls.
-A wasted 15-iteration loop on Opus: comparable to ~30 advisor calls, plus the hot-fix work.
+A single advisor call (strong model, full context): comparable to 1–2 vox build
+iterations on a strong model. A wasted 15-iteration loop on a fast model:
+comparable to ~5–7 advisor calls. A wasted 15-iteration loop on a strong model:
+comparable to ~30 advisor calls, plus the hot-fix work.
 
-Gate discipline is cheap insurance — especially now that:
-- plan runs on Opus (high leverage for one-shot quality)
-- build runs on Sonnet (cheap per iteration, but not free)
+Gate discipline is cheap insurance — especially when:
+- plan runs on a strong model (high leverage for one-shot quality)
+- build runs on a fast model (cheap per iteration, but not free)
 EOF
 
 # --- PROMPT_optimize.md ---
@@ -707,35 +709,32 @@ CONSTITUTION=".specify/memory/constitution.md"
 
 MAX_ITERATIONS="${MAX_ITERATIONS:-15}"
 
-# Split defaults by mode:
-#   - plan is a ONE-SHOT call whose output gates every downstream build
-#     iteration; a flawed plan can burn MAX_ITERATIONS iterations. Run on Opus.
-#   - build is mechanical task execution against a fully-specified plan.
-#     Run on Sonnet (~3x cheaper input, ~5x cheaper output).
-#
-# Overrides (in precedence order):
-#   AGENT_MODEL_PLAN=<id>    # plan only
-#   AGENT_MODEL_BUILD=<id>   # build only
-#   AGENT_MODEL=<id>         # legacy — overrides BOTH (e.g. force all-Sonnet)
-AGENT_MODEL_PLAN="${AGENT_MODEL_PLAN:-claude-opus-4-7}"
-AGENT_MODEL_BUILD="${AGENT_MODEL_BUILD:-claude-sonnet-4-6}"
+# Plan and build can use different models or the same one.
+# Default: both use pi with its configured model. Override per-mode:
+#   AGENT_BIN=<path>            # agent binary (default: pi)
+#   AGENT_MODEL_PLAN=<id>       # plan-mode model (default: pi's configured model)
+#   AGENT_MODEL_BUILD=<id>      # build-mode model (default: pi's configured model)
+#   AGENT_MODEL=<id>            # legacy — overrides BOTH plan and build
+#   AGENT_ARGS_PLAN="<args>"     # extra args for plan agent (e.g. --thinking high)
+#   AGENT_ARGS_BUILD="<args>"    # extra args for build agent
+AGENT_BIN="${AGENT_BIN:-pi}"
+AGENT_MODEL_PLAN="${AGENT_MODEL_PLAN:-}"
+AGENT_MODEL_BUILD="${AGENT_MODEL_BUILD:-}"
 if [[ -n "${AGENT_MODEL:-}" ]]; then
     AGENT_MODEL_PLAN="$AGENT_MODEL"
     AGENT_MODEL_BUILD="$AGENT_MODEL"
 fi
 
-# Effort defaults:
-#   - plan: Opus doesn't need the boost; leave unset so it runs at its default.
-#   - build: Sonnet benefits from high effort — cheap input/output rates, the
-#     extra thinking tokens lift code quality where it matters most.
-AGENT_EFFORT_PLAN="${AGENT_EFFORT_PLAN:-}"
-AGENT_EFFORT_BUILD="${AGENT_EFFORT_BUILD:-high}"
+AGENT_ARGS_PLAN="${AGENT_ARGS_PLAN:-}"
+AGENT_ARGS_BUILD="${AGENT_ARGS_BUILD:-}"
 
-AGENT_CMD_PLAN="claude --model ${AGENT_MODEL_PLAN}"
-[[ -n "$AGENT_EFFORT_PLAN" ]] && AGENT_CMD_PLAN="$AGENT_CMD_PLAN --effort ${AGENT_EFFORT_PLAN}"
+AGENT_CMD_PLAN="$AGENT_BIN"
+[[ -n "$AGENT_MODEL_PLAN" ]] && AGENT_CMD_PLAN="$AGENT_CMD_PLAN --model $AGENT_MODEL_PLAN"
+[[ -n "$AGENT_ARGS_PLAN" ]] && AGENT_CMD_PLAN="$AGENT_CMD_PLAN $AGENT_ARGS_PLAN"
 
-AGENT_CMD_BUILD="claude --model ${AGENT_MODEL_BUILD}"
-[[ -n "$AGENT_EFFORT_BUILD" ]] && AGENT_CMD_BUILD="$AGENT_CMD_BUILD --effort ${AGENT_EFFORT_BUILD}"
+AGENT_CMD_BUILD="$AGENT_BIN"
+[[ -n "$AGENT_MODEL_BUILD" ]] && AGENT_CMD_BUILD="$AGENT_CMD_BUILD --model $AGENT_MODEL_BUILD"
+[[ -n "$AGENT_ARGS_BUILD" ]] && AGENT_CMD_BUILD="$AGENT_CMD_BUILD $AGENT_ARGS_BUILD"
 
 SLEEP_INTERVAL="${SLEEP_INTERVAL:-15}"
 
@@ -764,11 +763,12 @@ print_help() {
     echo "  --max-iterations N      Set max iterations (default: 15; env MAX_ITERATIONS overrides)"
     echo ""
     echo "Env:"
-    echo "  AGENT_MODEL_PLAN=<id>   Plan-mode model (default: claude-opus-4-7)"
-    echo "  AGENT_MODEL_BUILD=<id>  Build-mode model (default: claude-sonnet-4-6)"
-    echo "  AGENT_MODEL=<id>        Legacy — overrides BOTH plan and build"
-    echo "  AGENT_EFFORT_PLAN=<lvl> Plan effort (low/medium/high/xhigh/max; default: unset)"
-    echo "  AGENT_EFFORT_BUILD=<lvl> Build effort (default: high — lifts Sonnet code quality)"
+    echo "  AGENT_BIN=<path>         Agent binary (default: pi)"
+    echo "  AGENT_MODEL_PLAN=<id>    Plan-mode model (default: pi's configured model)"
+    echo "  AGENT_MODEL_BUILD=<id>   Build-mode model (default: pi's configured model)"
+    echo "  AGENT_MODEL=<id>         Legacy — overrides BOTH plan and build"
+    echo "  AGENT_ARGS_PLAN='...'    Extra args for plan agent"
+    echo "  AGENT_ARGS_BUILD='...'   Extra args for build agent"
     echo "  MAX_ITERATIONS=N        Same as --max-iterations"
     echo "  SLEEP_INTERVAL=N        Seconds between build iterations (default: 15)"
     echo ""
@@ -887,7 +887,7 @@ run_planning() {
     echo ""
 
     local output
-    output=$(build_context "$spec" "plan" | $AGENT_CMD_PLAN -p --dangerously-skip-permissions 2>&1) || true
+    output=$(build_context "$spec" "plan" | $AGENT_CMD_PLAN -p 2>&1) || true
 
     echo "$output"
 
@@ -921,7 +921,7 @@ run_building() {
         echo -e "${YELLOW}Vox speaks...${NC}"
 
         local output
-        output=$(build_context "$spec" "build" | $AGENT_CMD_BUILD -p --dangerously-skip-permissions 2>&1) || true
+        output=$(build_context "$spec" "build" | $AGENT_CMD_BUILD -p 2>&1) || true
 
         echo "$output"
 
@@ -1042,10 +1042,16 @@ PROMPT_OPTIMIZE=".specify/PROMPT_optimize.md"
 
 BATCH_SIZE=5
 
-# Default the optimize agent to Sonnet — experiment iteration is mechanical.
-# Override: AGENT_MODEL=claude-opus-4-7 ./scripts/vox-optimize.sh ...
-AGENT_MODEL="${AGENT_MODEL:-claude-sonnet-4-6}"
-AGENT_CMD="claude --model ${AGENT_MODEL}"
+# Default: use pi with its configured model. Override:
+#   AGENT_BIN=<path>       # agent binary (default: pi)
+#   AGENT_MODEL=<id>       # model for optimize runs
+#   AGENT_ARGS="<args>"     # extra args (e.g. --thinking high)
+AGENT_BIN="${AGENT_BIN:-pi}"
+AGENT_MODEL="${AGENT_MODEL:-}"
+AGENT_ARGS="${AGENT_ARGS:-}"
+AGENT_CMD="$AGENT_BIN"
+[[ -n "$AGENT_MODEL" ]] && AGENT_CMD="$AGENT_CMD --model $AGENT_MODEL"
+[[ -n "$AGENT_ARGS" ]] && AGENT_CMD="$AGENT_CMD $AGENT_ARGS"
 SLEEP_INTERVAL="${SLEEP_INTERVAL:-15}"
 
 # --- COLORS ---
@@ -1133,7 +1139,7 @@ get_experiment_description() {
     git log -1 --format='%s' | sed 's/^experiment: //'
 }
 
-# Append a row to results.tsv (bash-owned, never written by Claude)
+# Append a row to results.tsv (bash-owned, never written by the agent)
 append_tsv() {
     local tsv_file="$1"
     local batch="$2"
@@ -1218,7 +1224,7 @@ print_scoreboard() {
     echo -e "${BOLD}${CYAN}=======================================================${NC}"
 }
 
-# Build context for Claude in optimize mode
+# Build context for the agent in optimize mode
 build_optimize_context() {
     local target="$1"
     local target_dir="$OPTIMIZE_DIR/$target"
@@ -1397,18 +1403,18 @@ while true; do
         echo -e "${YELLOW}--- Experiment $exp of $BATCH_SIZE (total: $TOTAL_EXPERIMENTS) ---${NC}"
         echo -e "${YELLOW}Vox speaks...${NC}"
 
-        # Snapshot commit before Claude runs
+        # Snapshot commit before agent runs
         PRE_COMMIT=$(git rev-parse HEAD)
 
-        # Run Claude with optimization context
-        local_output=$(build_optimize_context "$TARGET" | $AGENT_CMD -p --dangerously-skip-permissions 2>&1) || true
+        # Run agent with optimization context
+        local_output=$(build_optimize_context "$TARGET" | $AGENT_CMD -p 2>&1) || true
 
         echo "$local_output"
 
-        # Check if Claude made a new commit
+        # Check if agent made a new commit
         POST_COMMIT=$(git rev-parse HEAD)
         if [[ "$PRE_COMMIT" == "$POST_COMMIT" ]]; then
-            echo -e "${RED}No commit detected — Claude may have failed. Logging as failed.${NC}"
+            echo -e "${RED}No commit detected — agent may have failed. Logging as failed.${NC}"
             append_tsv "$RESULTS_FILE" "$BATCH_NUM" "$exp" "-" "no commit produced" "-" "$CURRENT_BASELINE" "failed"
             continue
         fi
