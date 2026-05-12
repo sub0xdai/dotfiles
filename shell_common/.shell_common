@@ -20,6 +20,9 @@ ex=38;5;174:\
 fi=38;5;251:\
 *.lua=38;5;179"
 
+
+
+
 # Common aliases
 alias ls='eza --icons --group-directories-first --color=always'
 alias ll='eza -lah --icons --group-directories-first --color=always'
@@ -69,8 +72,6 @@ alias sysm='sysmaint'  # Alternative short form
 
 alias kebab='$HOME/dotfiles/scripts/__kebab_case.sh'
 
-bindkey -s '^Xgc' 'git commit -m ""\C-b'
-
 # Function to find the project root and copy project_index.md
 cpi() {
     # Find the root of the git repository
@@ -107,22 +108,23 @@ peel() {
     fi
 }
 
-# New typst doc — scaffolds a math note with Catppuccin template
-# Usage: typnote [dir-name]  (defaults to current dir)
+# New typst doc — scaffolds a math note using the @local Catppuccin package
+# Usage: typnote [filename]  (defaults to main.typ)
+# Theme lives at ~/.local/share/typst/packages/local/sub0x-catppuccin/0.1.0/
 typnote() {
-  local dir="${1:-.}"
-  mkdir -p "$dir"
-  cp ~/.config/typst/templates/catppuccin.typ "$dir/"
-  cat > "$dir/main.typ" << 'EOF'
-#import "catppuccin.typ": apply
-#import "@preview/catppuccin": flavors
+  local filename="${1:-main.typ}"
+  [[ "$filename" != *.typ ]] && filename="${filename}.typ"
+
+  if [[ ! -f "$filename" ]]; then
+    cat > "$filename" << 'EOF'
+#import "@local/sub0x-catppuccin:0.1.0": apply, flavors
 #show: apply.with(flavors.mocha)
 
-= 
+=
 EOF
-  nvim "$dir/main.typ"
+  fi
+  nvim "$filename"
 }
-
 # Git remote set functions
 git_sub0x() {
     REPO=${1:-$(basename $(pwd))}
@@ -209,24 +211,12 @@ function y() {
 
 # Reload shell configuration files
 reload() {
+    # exec replaces current shell process — no hook duplication, pristine state
     if [ -n "$ZSH_VERSION" ]; then
-        # If using Zsh, source .zshrc and shell_common
-        if [ -f ~/.zshrc ]; then
-            source ~/.zshrc
-        fi
-        if [ -f ~/.shell_common ]; then
-            source ~/.shell_common
-        fi
+        exec zsh -l
     else
-        # If not using Zsh (assuming Bash), source .bashrc and shell_common
-        if [ -f ~/.bashrc ]; then
-            source ~/.bashrc
-        fi
-        if [ -f ~/.shell_common ]; then
-            source ~/.shell_common
-        fi
+        exec bash -l
     fi
-
 }
 
 # Shows installed packages in order of newest to oldest
@@ -407,10 +397,19 @@ export FZF_TMUX_OPTS="-p 90%,70% -w 90% -h 70%"
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 
 # Path — single consolidated block
+# Lazy cache ruby gem path (avoids subprocess on every shell init)
+_gem_cache="$HOME/.cache/gem_user_dir"
+if [[ ! -f "$_gem_cache" ]]; then
+  mkdir -p "$HOME/.cache"
+  ruby -e 'print Gem.user_dir' > "$_gem_cache" 2>/dev/null
+fi
+GEM_USER_DIR=$(<"$_gem_cache")
+
 export GOPATH="$HOME/go"
 export DOTNET_ROOT="$HOME/.dotnet"
 export FLYCTL_INSTALL="$HOME/.fly"
 export PATH="\
+$HOME/.local/share/mise/shims:\
 $HOME/.local/bin:\
 $HOME/.cargo/bin:\
 $HOME/.npm-global/bin:\
@@ -422,7 +421,7 @@ $HOME/perl5/bin:\
 $HOME/go/bin:\
 $HOME/git-worktree-runner/bin:\
 $HOME/dotfiles/scripts:\
-$(ruby -e 'print Gem.user_dir' 2>/dev/null)/bin:\
+$GEM_USER_DIR/bin:\
 /var/lib/snapd/snap/bin:\
 /usr/local/bin:/usr/local/sbin:\
 /usr/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:\
@@ -445,9 +444,4 @@ fi
 
 source ~/dotfiles/scripts/__grep_open.sh
 
-# mise (runtime version manager)
-if [ -n "$ZSH_VERSION" ]; then
-    eval "$(mise activate zsh)"
-else
-    eval "$(mise activate bash)"
-fi
+# mise: shims injected directly into PATH above (no eval subprocess)
