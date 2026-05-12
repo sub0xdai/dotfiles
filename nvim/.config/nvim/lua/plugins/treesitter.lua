@@ -6,8 +6,11 @@ return {
     config = function()
       require("nvim-treesitter").setup({
         ensure_installed = {
+          "lua",
           "typst",
         },
+        auto_install = true,
+        highlight = { enable = true },
       })
     end
   }

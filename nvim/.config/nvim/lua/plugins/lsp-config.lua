@@ -12,7 +12,7 @@ return {
 		-- Each server needs cmd + filetypes since 0.12 ships no built-in defaults
 		name = "native-lsp",
 		dir = vim.fn.stdpath("config"),
-		dependencies = { "williamboman/mason.nvim" },
+		dependencies = { "williamboman/mason.nvim", "saghen/blink.cmp" },
 		config = function()
 			local function get_python_path()
 				local venv_path = os.getenv("VIRTUAL_ENV")
@@ -24,6 +24,7 @@ return {
 
 			vim.lsp.config("*", {
 				root_markers = { ".git" },
+				capabilities = require("blink.cmp").get_lsp_capabilities(),
 			})
 
 			-- Shell
@@ -252,15 +253,7 @@ return {
 				"markdown_oxide",
 			})
 
-			-- Native completion on LspAttach
-			vim.api.nvim_create_autocmd("LspAttach", {
-				callback = function(args)
-					local client = vim.lsp.get_client_by_id(args.data.client_id)
-					if client and client:supports_method("textDocument/completion") then
-						vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
-					end
-				end,
-			})
+			-- Completion is handled by blink.cmp (LSP source)
 		end,
 	},
 }
