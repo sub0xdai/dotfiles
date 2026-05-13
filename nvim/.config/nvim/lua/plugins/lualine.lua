@@ -42,7 +42,6 @@ return {
         'quickfix',
         'nvim-dap-ui',
         'man',
-        'oil',
         'mason',
       }
     })

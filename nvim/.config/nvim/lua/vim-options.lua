@@ -104,6 +104,10 @@ vim.keymap.set(
 )
 
 
+-- Minifiles - to open 
+vim.keymap.set("n", "-", function()
+  require("mini.files").open(vim.api.nvim_buf_get_name(0), true)
+end, { desc = "Open mini.files" })
 
 
 -- Highlight when yanking
