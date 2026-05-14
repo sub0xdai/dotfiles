@@ -1,5 +1,18 @@
 return {
 	{
+		"zenbones-theme/zenbones.nvim",
+		dependencies = "rktjmp/lush.nvim",
+		-- Not set as active — switch manually with :colorscheme zenbones (or any variant)
+		-- Available: zenbones, zenwritten, neobones, vimbones, rosebones, forestbones,
+		--            nordbones, tokyobones, seoulbones, duckbones, zenburned, kanagawabones
+		lazy = true,
+		config = function()
+			vim.g.zenbones_compat = 1 -- optional: skip lush dependency
+			-- vim.g.zenbones_darken_comments = 45
+			-- vim.g.zenbones_lightness = "dim" -- bright | dim | stark | warm
+		end,
+	},
+	{
 		"vague2k/vague.nvim",
 		config = function()
 			require("vague").setup({
