@@ -14,6 +14,9 @@ vim.opt.splitkeep = "cursor"
 vim.wo.number = true
 
 
+-- Suppress LSP log (was 209 MB from debug-level logging)
+vim.lsp.log_level = "OFF"
+
 -- Window/Tmux navigation handled by nvim-tmux-navigation
 -- (C-h/j/k/l navigate nvim splits internally, cross tmux panes at edges)
 
@@ -74,10 +77,12 @@ vim.keymap.set('n', '[b', ':bprevious<CR>', { noremap = true, silent = true, des
 vim.keymap.set('n', ']b', ':bnext<CR>', { noremap = true, silent = true, desc = "Next buffer" })
 
 
+vim.opt.showtabline = 0 -- suppress tabline bar at top (lualine handles statusline at bottom)
+
 -- Editing Experience
 vim.opt.backspace = {'indent', 'eol', 'start'}
 vim.opt.showcmd = true
-vim.opt.laststatus = 2
+vim.opt.laststatus = 0 -- tpipeline puts status in tmux bar (top), no nvim statusline
 vim.opt.autowrite = true
 vim.opt.cursorline = false
 vim.opt.autoread = true

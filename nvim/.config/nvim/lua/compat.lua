@@ -41,6 +41,12 @@ function M.setup()
       return original_validate(opt, ...)
     end
   end
+
+  -- vim.tbl_flatten deprecated in 0.12; override with new API to suppress startup flash
+  -- nvim-colorizer.lua and others still call the old function
+  vim.tbl_flatten = function(t)
+    return vim.iter(t):flatten(math.huge):totable()
+  end
 end
 
 return M
