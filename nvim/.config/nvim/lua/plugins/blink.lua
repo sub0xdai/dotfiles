@@ -57,6 +57,8 @@ return {
       -- Source priority: LSP > snippets > path > buffer
       sources = {
         default = { "lsp", "snippets", "path", "buffer" },
+        -- Only suggest words ≥3 chars to avoid noise
+        min_keyword_length = 3,
         per_filetype = {
           -- SQL: buffer words first (dadbod queries reuse keywords), then LSP
           sql = { "lsp", "buffer", "snippets" },
@@ -90,10 +92,6 @@ return {
             name = "Buffer",
             module = "blink.cmp.sources.buffer",
             score_offset = -10,
-            opts = {
-              -- Only suggest words ≥3 chars to avoid noise
-              min_keyword_length = 3,
-            },
           },
         },
       },

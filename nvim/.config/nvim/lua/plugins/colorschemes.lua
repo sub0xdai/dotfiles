@@ -7,7 +7,13 @@ return {
 		--            nordbones, tokyobones, seoulbones, duckbones, zenburned, kanagawabones
 		lazy = true,
 		config = function()
-			vim.g.zenbones_compat = 1 -- optional: skip lush dependency
+			-- Every variant needs its own transparent_background set
+			local variants = { "zenbones", "zenwritten", "neobones", "vimbones",
+				"rosebones", "forestbones", "nordbones", "tokyobones",
+				"seoulbones", "duckbones", "zenburned", "kanagawabones" }
+			for _, v in ipairs(variants) do
+				vim.g[v .. "_transparent_background"] = true
+			end
 			-- vim.g.zenbones_darken_comments = 45
 			-- vim.g.zenbones_lightness = "dim" -- bright | dim | stark | warm
 		end,

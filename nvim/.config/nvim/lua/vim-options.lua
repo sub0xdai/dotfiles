@@ -14,11 +14,8 @@ vim.opt.splitkeep = "cursor"
 vim.wo.number = true
 
 
--- Window navigation
-vim.keymap.set('n', '<c-k>', '<cmd>wincmd k<CR>', { silent = true })
-vim.keymap.set('n', '<c-j>', '<cmd>wincmd j<CR>', { silent = true })
-vim.keymap.set('n', '<c-h>', '<cmd>wincmd h<CR>', { silent = true })
-vim.keymap.set('n', '<c-l>', '<cmd>wincmd l<CR>', { silent = true })
+-- Window/Tmux navigation handled by nvim-tmux-navigation
+-- (C-h/j/k/l navigate nvim splits internally, cross tmux panes at edges)
 
 -- Clear search highlight
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>', { silent = true })
