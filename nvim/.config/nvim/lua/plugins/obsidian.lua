@@ -1,29 +1,21 @@
-local function generateUUID()
-    return string.gsub("xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx", "[xy]", function(c)
-        local r = math.random(0, 15)
-        local v = (c == "x") and r or (r % 4 + 8)
-        return string.format("%x", v)
-    end)
-end
-
 local function InsertTemplate()
-    local telescope = require('telescope.builtin')
-    local templates_dir = vim.fn.expand('~/1-projects/vaults/sub0x_vault/6-templates')
+    local telescope = require("telescope.builtin")
+    local templates_dir = vim.fn.expand("~/1-projects/vaults/sub0x_vault/6-templates")
     telescope.find_files({
         prompt_title = "Insert Template",
         cwd = templates_dir,
         attach_mappings = function(prompt_bufnr, map)
-            local actions = require('telescope.actions')
-            local actions_state = require('telescope.actions.state')
-            map('i', '<CR>', function()
+            local actions = require("telescope.actions")
+            local actions_state = require("telescope.actions.state")
+            map("i", "<CR>", function()
                 local selected_entry = actions_state.get_selected_entry()
                 local filename = selected_entry.value
-                local file_content = vim.fn.readfile(templates_dir .. '/' .. filename)
-                vim.api.nvim_put(file_content, '', true, true)
+                local file_content = vim.fn.readfile(templates_dir .. "/" .. filename)
+                vim.api.nvim_put(file_content, "", true, true)
                 actions.close(prompt_bufnr)
             end)
             return true
-        end
+        end,
     })
 end
 
@@ -32,10 +24,33 @@ return {
     version = "*",
     lazy = true,
     ft = "markdown",
+    cmd = {
+        "ObsidianBacklinks",
+        "ObsidianDailies",
+        "ObsidianExtractNote",
+        "ObsidianFollowLink",
+        "ObsidianLink",
+        "ObsidianLinkNew",
+        "ObsidianLinks",
+        "ObsidianNew",
+        "ObsidianNewFromTemplate",
+        "ObsidianOpen",
+        "ObsidianPasteImg",
+        "ObsidianQuickSwitch",
+        "ObsidianRename",
+        "ObsidianSearch",
+        "ObsidianTags",
+        "ObsidianTemplate",
+        "ObsidianToday",
+        "ObsidianToggleCheckbox",
+        "ObsidianTomorrow",
+        "ObsidianTOC",
+        "ObsidianYesterday",
+    },
     dependencies = {
         "nvim-lua/plenary.nvim",
-        "nvim-treesitter/nvim-treesitter",
         "nvim-telescope/telescope.nvim",
+        "hrsh7th/nvim-cmp",
     },
     keys = {
         { "<leader>otd", "<cmd>ObsidianToday<cr>", desc = "[O]bsidian [t]o[d]ay" },
@@ -49,62 +64,27 @@ return {
         { "<leader>ofl", "<cmd>ObsidianFollowLink<cr>", desc = "[O]bsidian [F]ollow[L]ink" },
         { "<leader>opi", "<cmd>ObsidianPasteImg<cr>", desc = "[O]bsidian [P]aste[I]mg" },
         { "<leader>oen", "<cmd>ObsidianExtractNote<cr>", desc = "[O]bsidian [E]xtract[N]ote" },
+        { "<leader>ol", "<cmd>ObsidianLinks<cr>", desc = "[O]bsidian [L]inks" },
+        { "<leader>oc", "<cmd>ObsidianToggleCheckbox<cr>", desc = "[O]bsidian toggle [c]heckbox" },
     },
-
-    config = function()
-        math.randomseed(os.time())
+    init = function()
         _G.InsertTemplate = InsertTemplate
 
-        local obsidian = require("obsidian")
-        obsidian.setup({
-            workspaces = {
-                {
-                    name = "sub0x_vault",
-                    path = "~/1-projects/vaults/sub0x_vault",
-                },
-            },
-            note_id_func = function(title)
-              return title and title:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", ""):lower() or generateUUID()
-              end,
-            note_frontmatter_func = function(note)
-                local out = {
-                    id = generateUUID(),
-                    title = note.title,
-                    desc = "",
-                    tags = note.tags,
-                    alias = note.aliases,
-                }
-                return out
+        local group = vim.api.nvim_create_augroup("sub0x-obsidian-markdown", { clear = true })
+
+        vim.api.nvim_create_autocmd("FileType", {
+            group = group,
+            pattern = "markdown",
+            callback = function(args)
+                require("sub0x.core.obsidian").setup_markdown_buffer(args.buf)
             end,
-            preferred_link_style = "wiki",
-            wiki_link_func = require("obsidian.util").wiki_link_alias_prefix,
-            completion = {
-                nvim_cmp = false,
-                min_chars = 2,
-            },
-            templates = {
-                folder = "6-templates",
-                date_format = "%Y-%m-%d",
-                time_format = "%H:%M:%S",
-                substitutions = {
-                    yesterday = function()
-                        return os.date("%Y-%m-%d", os.time() - 86400)
-                    end,
-                },
-            },
-            attachments = {
-                img_folder = "3-resource/assets",
-            },
-            notes_subdir = "0-zettel",
-            ui = {
-                enable = false,
-            },
-            picker = {
-                name = "telescope.nvim",
-            },
-            sort_by = "modified",
-            sort_reversed = true,
-            open_notes_in = "current",
         })
+    end,
+    opts = function()
+        return require("sub0x.core.obsidian").opts()
+    end,
+    config = function(_, opts)
+        require("obsidian").setup(opts)
+        require("sub0x.core.obsidian").patch_template_substitutions()
     end,
 }

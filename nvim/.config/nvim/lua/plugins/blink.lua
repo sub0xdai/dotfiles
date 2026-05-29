@@ -9,11 +9,7 @@ return {
     opts = {
       keymap = {
         preset = "default",
-        -- Tab: select next → jump snippet forward → fallback (literal Tab)
-        -- S-Tab: select prev → jump snippet backward → fallback
-        -- CR: accept completion → fallback (newline)
-        ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
-        -- Home-row cycling (vim muscle memory: j = down, k = up)
+        -- Home-row cycling (in addition to default <C-n>/<C-p>)
         ["<C-j>"] = { "select_next", "snippet_forward", "fallback" },
         ["<C-k>"] = { "select_prev", "snippet_backward", "fallback" },
       },

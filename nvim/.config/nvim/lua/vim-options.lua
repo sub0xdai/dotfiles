@@ -82,7 +82,7 @@ vim.opt.showtabline = 0 -- suppress tabline bar at top (lualine handles statusli
 -- Editing Experience
 vim.opt.backspace = {'indent', 'eol', 'start'}
 vim.opt.showcmd = true
-vim.opt.laststatus = 0 -- tpipeline puts status in tmux bar (top), no nvim statusline
+-- laststatus managed by lualine (globalstatus=true sets it to 3)
 vim.opt.autowrite = true
 vim.opt.cursorline = false
 vim.opt.autoread = true

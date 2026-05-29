@@ -3,7 +3,8 @@ font-family = JetBrainsMono Nerd Font
 font-size = 14
 
 # Terminal settings
-term = xterm-256color
+# Let tmux handle TERM — Ghostty auto-detects correctly
+# term = xterm-256color
 
 # Window settings
 background-opacity = 0.9

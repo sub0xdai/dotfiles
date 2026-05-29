@@ -1,16 +1,17 @@
 return {
   {
     "numToStr/Comment.nvim",
-    event = "VeryLazy",
-    opts = {
-      -- treesitter-aware commenting; gc/gb work across all languages
-      padding = true,
-      sticky = true,
-      ignore = "^$",
-      toggler = {
-        line = "gcc",
-        block = "gbc",
-      },
-    },
+    lazy = false,
+    config = function()
+      require("Comment").setup({
+        padding = true,
+        sticky = true,
+        ignore = "^$",
+        toggler = {
+          line = "gcc",
+          block = "gbc",
+        },
+      })
+    end,
   },
 }

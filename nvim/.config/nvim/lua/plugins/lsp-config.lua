@@ -86,6 +86,18 @@ return {
 			vim.lsp.config("eslint", {
 				cmd = { "vscode-eslint-language-server", "--stdio" },
 				filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+				root_markers = {
+					"eslint.config.js",
+					"eslint.config.mjs",
+					"eslint.config.cjs",
+					"eslint.config.ts",
+					".eslintrc",
+					".eslintrc.js",
+					".eslintrc.cjs",
+					".eslintrc.json",
+					".eslintrc.yaml",
+					".eslintrc.yml",
+				},
 			})
 
 			-- Web
@@ -232,7 +244,6 @@ return {
 				"clangd",
 				"pylsp",
 				"ts_ls",
-				"eslint",
 				"html",
 				"cssls",
 				"htmx",

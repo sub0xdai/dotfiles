@@ -14,6 +14,13 @@ return {
             -- Enable anti-conceal feature
             anti_conceal = { enabled = true },
 
+            -- Don't hide HTML comments (used by Comment.nvim for markdown)
+            html = {
+                comment = {
+                    conceal = false,
+                },
+            },
+
             -- Set maximum file size to render (in MB)
             max_file_size = 10.0,
 
