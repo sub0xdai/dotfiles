@@ -1,0 +1,301 @@
+[
+  // ════════════════════════════════════════════════════════════════════════
+  // Vim Mode Enhancements
+  // ════════════════════════════════════════════════════════════════════════
+
+  // Subword motion (camelCase/Snake_case navigation) — like nvim's w/b/e
+  {
+    "context": "VimControl && !menu && vim_mode != operator",
+    "bindings": {
+      "w": "vim::NextSubwordStart",
+      "b": "vim::PreviousSubwordStart",
+      "e": "vim::NextSubwordEnd",
+      "g e": "vim::PreviousSubwordEnd"
+    }
+  },
+
+  // jk → Escape (insert mode)
+  {
+    "context": "vim_mode == insert",
+    "bindings": {
+      "j k": ["workspace::SendKeystrokes", "escape"]
+    }
+  },
+
+  // Visual mode: S adds surrounds, X for vim-exchange
+  {
+    "context": "vim_mode == visual",
+    "bindings": {
+      "shift-s": "vim::PushAddSurrounds",
+      "shift-x": "vim::Exchange"
+    }
+  },
+
+  // AnyQuotes / AnyBrackets (ciq, ciB etc.)
+  {
+    "context": "vim_operator == a || vim_operator == i || vim_operator == cs",
+    "bindings": {
+      "q": "vim::AnyQuotes",
+      "b": "vim::AnyBrackets",
+      "Q": "vim::MiniQuotes",
+      "B": "vim::MiniBrackets"
+    }
+  },
+
+  // Buffer navigation — matches nvim's [b / ]b
+  {
+    "context": "VimControl && !menu",
+    "bindings": {
+      "[ b": "pane::ActivatePreviousItem",
+      "] b": "pane::ActivateNextItem",
+      "[ c": "editor::GoToPreviousHunk",
+      "] c": "editor::GoToHunk",
+      "[ d": "editor::GoToPreviousDiagnostic",
+      "] d": "editor::GoToDiagnostic"
+    }
+  },
+
+  // ════════════════════════════════════════════════════════════════════════
+  // Space Leader — matches nvim muscle memory (<leader> = space)
+  // NOTE: space alone has a 1s fallback delay because it's also motion "l"
+  // ════════════════════════════════════════════════════════════════════════
+
+  {
+    "context": "VimControl && !menu",
+    "bindings": {
+      // ── File Finding (Telescope equivalents) ──
+      "space space": "file_finder::Toggle",
+      "space f f": "file_finder::Toggle",
+      "space f g": "pane::DeploySearch",
+      "space f b": "tab_switcher::Toggle",
+      "space f z": "project_symbols::Toggle",
+      "space f h": "command_palette::Toggle",
+      "space f k": "zed::OpenKeymap",
+      "space f r": "editor::FindAllReferences",
+      "space f s": "outline::Toggle",
+      "space f m": "editor::OpenContextMenu",
+      "space f o": "zed::OpenRecent",
+      "space f p": "editor::CopyPath",
+      "space f c": "editor::CopyRelativePath",
+
+      // ── Git ──
+      "space g p": "editor::ToggleSelectedDiffHunks",
+      "space g t": "git::Blame",
+      "space g b": "git::OpenModifiedFiles",
+      "space g r": "git::ReviewDiff",
+      "space g g": "git_panel::ToggleFocus",
+      "space g s": "git::StageAndNext",
+      "space g u": "git::UnstageAndNext",
+      "space g d": "editor::ExpandAllDiffHunks",
+
+      // ── Editing ──
+      "space l": "editor::Format",
+      "space c a": "editor::ToggleCodeActions",
+      "space c r": "editor::Rename",
+      "space c f": "editor::Format",
+      "space c p": "editor::CopyPath",
+      "space c f p": "editor::CopyPath",
+      "space c r p": "editor::CopyRelativePath",
+      "space x": ["task::Spawn", { "task_name": "make executable", "reveal_target": "never" }],
+
+      // ── AI / Agent ──
+      "space a a": "agent::ToggleFocus",
+      "space a n": "agent::NewThread",
+      "space a c": ["workspace::SendKeystrokes", "ctrl-enter"],
+      "space a s": "agent::AddSelectionToThread",
+      "space a f": "agent::AcceptAllChanges",
+      "space a r": "agent::RejectAllChanges",
+      "space a d": "agent::OpenAgentDiff",
+
+      // ── DAP / Debug (F-keys already mapped by Zed default) ──
+      "space d b": "editor::ToggleBreakpoint",
+      "space d s": "debugger::Start",
+      "space d S": "debugger::Stop",
+      "space d c": "debugger::Continue",
+      "space d i": "debugger::StepInto",
+      "space d o": "debugger::StepOver",
+      "space d u": "debugger::StepOut",
+      "space d r": "debugger::Rerun",
+      "space d e": "editor::OpenLogBreakpoint",
+
+      // ── Splits & Windows ──
+      "space v": "pane::SplitRight",
+      "space s": "pane::SplitDown",
+      "space w": ["pane::CloseActiveItem", { "close_pinned": false }],
+      "space W": "workspace::CloseInactiveTabsAndPanes",
+      "space q": "workspace::CloseWindow",
+
+      // ── Buffer / File ──
+      "space n f": "workspace::NewFile",
+      "space n w": "workspace::NewWindow",
+      "space b d": ["pane::CloseActiveItem", { "close_pinned": false }],
+      "space r": "workspace::OpenRecent",
+      "space y": "editor::Copy",
+      "space p": "editor::Paste",
+
+      // ── Docks & Panels ──
+      "space z": "workspace::ToggleZoom",
+      "space o": "project_panel::ToggleFocus",
+      "space T": "workspace::NewTerminal",
+
+      // ── Tasks ──
+      "space j": "task::Spawn",
+      "space J": ["task::Rerun", { "reevaluate_context": false }],
+      "space k": "task::Rerun",
+
+      // ── Diags & Problems ──
+      "space D": "diagnostics::Deploy",
+      "space h": "editor::Hover"
+    }
+  },
+
+  // ── Space leader again in EmptyPane (no editor open) ──
+  {
+    "context": "EmptyPane || SharedScreen",
+    "bindings": {
+      "space space": "file_finder::Toggle",
+      "space f f": "file_finder::Toggle",
+      "space o": "project_panel::ToggleFocus",
+      "space r": "workspace::OpenRecent",
+      "space n f": "workspace::NewFile"
+    }
+  },
+
+  // ════════════════════════════════════════════════════════════════════════
+  // Dock toggles
+  // alt+[  → left dock  (project, outline, collab, git)
+  // alt+]  → right dock (agent)
+  // ctrl+` → bottom dock / terminal  (VS Code muscle memory)
+  // ===========================================================================
+  {
+    "context": "Workspace",
+    "bindings": {
+      "alt-[": "workspace::ToggleLeftDock",
+      "alt-]": "workspace::ToggleRightDock",
+      "ctrl-`": "workspace::ToggleBottomDock"
+    }
+  },
+
+  // - → toggle project panel (mini.files replacement)
+  {
+    "context": "VimControl && !menu",
+    "bindings": {
+      "-": "project_panel::ToggleFocus"
+    }
+  },
+
+  // C-h/j/k/l navigate splits (like nvim-tmux-navigation)
+  {
+    "context": "VimControl && !menu",
+    "bindings": {
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-l": "workspace::ActivatePaneRight",
+      "ctrl-k": "workspace::ActivatePaneUp",
+      "ctrl-j": "workspace::ActivatePaneDown"
+    }
+  },
+
+  // Same split navigation in Docks
+  {
+    "context": "Dock",
+    "bindings": {
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-l": "workspace::ActivatePaneRight",
+      "ctrl-k": "workspace::ActivatePaneUp",
+      "ctrl-j": "workspace::ActivatePaneDown"
+    }
+  },
+
+  // ════════════════════════════════════════════════════════════════════════
+  // Edit Prediction Superpowers
+  // ════════════════════════════════════════════════════════════════════════
+
+  {
+    "context": "Editor && vim_mode == insert && edit_prediction",
+    "bindings": {
+      "alt-]": "editor::NextEditPrediction",
+      "alt-[": "editor::PreviousEditPrediction"
+    }
+  },
+
+  // ════════════════════════════════════════════════════════════════════════
+  // Terminal: forward C-n to shell (so fish/zsh C-n works)
+  // ════════════════════════════════════════════════════════════════════════
+
+  {
+    "context": "Terminal",
+    "bindings": {
+      "ctrl-n": ["terminal::SendKeystroke", "ctrl-n"],
+      "ctrl-p": ["terminal::SendKeystroke", "ctrl-p"]
+    }
+  },
+
+  // ════════════════════════════════════════════════════════════════════════
+  // Agent Panel Shortcuts (AcpThread = agent chat panel)
+  // ════════════════════════════════════════════════════════════════════════
+
+  {
+    "context": "AcpThread > Editor",
+    "use_key_equivalents": true,
+    "bindings": {
+      "ctrl-enter": "agent::ChatWithFollow"
+    }
+  },
+
+  // ════════════════════════════════════════════════════════════════════════
+  // Composed Actions (action::Sequence)
+  // ════════════════════════════════════════════════════════════════════════
+
+  // Focus mode: close everything, center layout (great for writing/presenting)
+  {
+    "context": "Workspace",
+    "bindings": {
+      "ctrl-alt-shift-z": [
+        "action::Sequence",
+        [
+          "workspace::CloseAllDocks",
+          "workspace::CloseInactiveTabsAndPanes",
+          "workspace::ToggleCenteredLayout"
+        ]
+      ]
+    }
+  },
+
+  // Restore layout: open left dock, toggle centered off, focus editor
+  {
+    "context": "Workspace",
+    "bindings": {
+      "ctrl-alt-shift-x": [
+        "action::Sequence",
+        [
+          "workspace::ToggleCenteredLayout",
+          "workspace::ToggleLeftDock"
+        ]
+      ]
+    }
+  },
+
+  // ════════════════════════════════════════════════════════════════════════
+  // Profile quick-switcher (presenting, coding, prose, etc.)
+  // ════════════════════════════════════════════════════════════════════════
+
+  {
+    "context": "Workspace",
+    "bindings": {
+      "ctrl-alt-p": "settings_profile_selector::Toggle"
+    }
+  },
+
+  // ════════════════════════════════════════════════════════════════════════
+  // Task bindings — Go / Rust / Zig command runners
+  // ════════════════════════════════════════════════════════════════════════
+
+  {
+    "context": "Workspace",
+    "bindings": {
+      "alt-shift-t": "task::Spawn",
+      "alt-t": ["task::Rerun", { "reevaluate_context": false }],
+      "ctrl-alt-t": ["task::Rerun", { "reevaluate_context": true }]
+    }
+  }
+]

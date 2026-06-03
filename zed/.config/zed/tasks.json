@@ -1,0 +1,140 @@
+[
+  // ════════════════════════════════════════════════════════════════════════
+  // Go Tasks
+  // ════════════════════════════════════════════════════════════════════════
+  {
+    "label": "go: build",
+    "command": "go build ./...",
+    "tags": ["go-task"],
+    "hide": "on_success"
+  },
+  {
+    "label": "go: test",
+    "command": "go test -v ./...",
+    "tags": ["go-test"],
+    "hide": "never"
+  },
+  {
+    "label": "go: run",
+    "command": "go run .",
+    "tags": ["go-run"]
+  },
+  {
+    "label": "go: vet",
+    "command": "go vet ./...",
+    "hide": "on_success"
+  },
+  {
+    "label": "go: lint",
+    "command": "golangci-lint run ./...",
+    "hide": "never"
+  },
+  {
+    "label": "go: mod tidy",
+    "command": "go mod tidy",
+    "hide": "on_success"
+  },
+  {
+    "label": "go: generate",
+    "command": "go generate ./...",
+    "hide": "on_success"
+  },
+  {
+    "label": "go: coverage",
+    "command": "go test -coverprofile=coverage.out ./... && go tool cover -html=coverage.out",
+    "hide": "never"
+  },
+  {
+    "label": "go: modernize",
+    "command": "go run golang.org/x/tools/gopls/internal/analysis/modernize/cmd/modernize@latest -fix \"$ZED_FILE\"",
+    "hide": "on_success"
+  },
+
+  // ════════════════════════════════════════════════════════════════════════
+  // Rust Tasks
+  // ════════════════════════════════════════════════════════════════════════
+  {
+    "label": "cargo: build",
+    "command": "cargo build",
+    "tags": ["rust-test"],
+    "hide": "on_success"
+  },
+  {
+    "label": "cargo: build release",
+    "command": "cargo build --release",
+    "hide": "on_success"
+  },
+  {
+    "label": "cargo: test",
+    "command": "cargo test",
+    "hide": "never"
+  },
+  {
+    "label": "cargo: run",
+    "command": "cargo run",
+    "hide": "never"
+  },
+  {
+    "label": "cargo: check",
+    "command": "cargo check",
+    "hide": "on_success"
+  },
+  {
+    "label": "cargo: clippy",
+    "command": "cargo clippy",
+    "hide": "never"
+  },
+  {
+    "label": "cargo: fmt",
+    "command": "cargo fmt",
+    "hide": "on_success"
+  },
+  {
+    "label": "cargo: doc --open",
+    "command": "cargo doc --open",
+    "hide": "never"
+  },
+
+  // ════════════════════════════════════════════════════════════════════════
+  // Zig Tasks
+  // ════════════════════════════════════════════════════════════════════════
+  {
+    "label": "zig: build",
+    "command": "zig build",
+    "hide": "on_success"
+  },
+  {
+    "label": "zig: test",
+    "command": "zig build test",
+    "hide": "never"
+  },
+  {
+    "label": "zig: run",
+    "command": "zig build run",
+    "hide": "never"
+  },
+  {
+    "label": "zig: fmt",
+    "command": "zig fmt \"$ZED_FILE\"",
+    "hide": "on_success"
+  },
+  {
+    "label": "zig: fmt all",
+    "command": "zig fmt .",
+    "hide": "on_success"
+  },
+
+  // ════════════════════════════════════════════════════════════════════════
+  // General Utility Tasks
+  // ════════════════════════════════════════════════════════════════════════
+  {
+    "label": "make executable",
+    "command": "chmod +x \"$ZED_FILE\"",
+    "hide": "always"
+  },
+  {
+    "label": "open in file manager",
+    "command": "xdg-open \"$ZED_DIRNAME\"",
+    "hide": "always"
+  }
+]

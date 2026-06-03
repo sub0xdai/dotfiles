@@ -1,0 +1,78 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "project_panel": {
+    "dock": "left"
+  },
+  "outline_panel": {
+    "dock": "left"
+  },
+  "collaboration_panel": {
+    "dock": "left"
+  },
+  "git_panel": {
+    "dock": "left"
+  },
+  "agent": {
+    "default_profile": "ask",
+    "dock": "right",
+    "default_model": {
+      "provider": "deepseek",
+      "model": "deepseek-chat",
+      "enable_thinking": false
+    },
+    "favorite_models": [],
+    "model_parameters": []
+  },
+  "icon_theme": "Zed (Default)",
+  "context_servers": {
+    "mcp-server-context7": {
+      "enabled": true,
+      "settings": {
+        "context7_api_key": "REDACTED"
+      }
+    }
+  },
+  "vim_mode": true,
+  "ui_font_size": 16,
+  "buffer_font_size": 15,
+  "relative_line_numbers": "enabled",
+  "theme": {
+    "mode": "dark",
+    "light": "Catppuccin Mocha",
+    "dark": "Carbonfox - blurred"
+  },
+  "vim": {
+    "toggle_relative_line_numbers": true,
+    "use_smartcase_find": true,
+    "highlight_on_yank_duration": 150
+  },
+  "command_aliases": {
+    "zlog": "zed::OpenLog",
+    "diff": "editor::ToggleSelectedDiffHunks",
+    "crp": "editor::CopyRelativePath",
+    "cpp": "editor::CopyPath",
+    "reveal": "editor::RevealInFileManager",
+    "clank": "editor::CancelLanguageServerWork",
+    "fmt": "editor::Format"
+  },
+  "profiles": {
+    "Presenting": {
+      "buffer_font_size": 18.0,
+      "ui_font_size": 18.0,
+      "theme": { "mode": "dark", "dark": "One Dark" }
+    },
+    "Writing (Prose)": {
+      "buffer_font_size": 17.0,
+      "ui_font_size": 17.0,
+      "soft_wrap": "editor_width",
+      "centered_layout": { "left_padding": 0.2, "right_padding": 0.2 }
+    }
+  }
+}
