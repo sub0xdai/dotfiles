@@ -103,8 +103,8 @@
       "space a n": "agent::NewThread",
       "space a c": ["workspace::SendKeystrokes", "ctrl-enter"],
       "space a s": "agent::AddSelectionToThread",
-      "space a f": "assistant::AcceptInlineAssist",
-      "space a r": "assistant::RejectInlineAssist",
+      "space a f": "agent::KeepAll",
+      "space a r": "agent::RejectAll",
       "space a d": "agent::OpenAgentDiff",
 
       // ── DAP / Debug (F-keys already mapped by Zed default) ──
