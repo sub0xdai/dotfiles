@@ -45,7 +45,7 @@
   "relative_line_numbers": "enabled",
   "theme": {
     "mode": "dark",
-    "light": "Catppuccin Mocha",
+    "light": "Catppuccin",
     "dark": "Carbonfox - blurred"
   },
   "vim": {
