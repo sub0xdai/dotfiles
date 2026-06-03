@@ -43,11 +43,6 @@
   "ui_font_size": 16,
   "buffer_font_size": 15,
   "relative_line_numbers": "enabled",
-  "theme": {
-    "mode": "dark",
-    "light": "Catppuccin",
-    "dark": "Carbonfox - blurred"
-  },
   "vim": {
     "toggle_relative_line_numbers": true,
     "use_smartcase_find": true,
@@ -65,8 +60,7 @@
   "profiles": {
     "Presenting": {
       "buffer_font_size": 18.0,
-      "ui_font_size": 18.0,
-      "theme": { "mode": "dark", "dark": "One Dark" }
+      "ui_font_size": 18.0
     },
     "Writing (Prose)": {
       "buffer_font_size": 17.0,
