@@ -19,5 +19,24 @@ return {
       { '<leader>tr', '<cmd>TypstPreviewStop<cr><cmd>TypstPreview<cr>', desc = 'Typst: Restart preview' },
       { '<leader>ts', '<cmd>TypstPreviewSyncCursor<cr>',  desc = 'Typst: Sync cursor ↔ preview' },
     },
+    -- Skeleton: auto-inject #import/#show template on new .typ files
+    -- Runs at startup (ft=typst defers the *plugin*; init always runs immediately).
+    init = function()
+      vim.api.nvim_create_autocmd('BufNewFile', {
+        pattern = '*.typ',
+        group = vim.api.nvim_create_augroup('TypstSkeleton', { clear = true }),
+        callback = function()
+          local template = {
+            '#import "@local/stoic:1.0.0": stoic-doc',
+            '#show: stoic-doc',
+            '',
+            '= ',
+            '',
+          }
+          vim.api.nvim_buf_set_lines(0, 0, -1, false, template)
+          vim.api.nvim_win_set_cursor(0, { 4, 2 })
+        end,
+      })
+    end,
   },
 }
