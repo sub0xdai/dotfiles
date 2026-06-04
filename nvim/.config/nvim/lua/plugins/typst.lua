@@ -13,11 +13,15 @@ return {
       invert_colors = 'never',
     },
     keys = {
+      -- HTML live preview (tinymist)
       { '<leader>tp', '<cmd>TypstPreview<cr>',        desc = 'Typst: Start preview' },
       { '<leader>tk', '<cmd>TypstPreviewStop<cr>',       desc = 'Typst: Stop preview' },
       { '<leader>tt', '<cmd>TypstPreviewToggle<cr>',      desc = 'Typst: Toggle preview' },
       { '<leader>tr', '<cmd>TypstPreviewStop<cr><cmd>TypstPreview<cr>', desc = 'Typst: Restart preview' },
       { '<leader>ts', '<cmd>TypstPreviewSyncCursor<cr>',  desc = 'Typst: Sync cursor ↔ preview' },
+      -- PDF pipeline → Sioyek (run `typst watch file.typ file.pdf` in a terminal first)
+      { '<leader>tc', '<cmd>!typst compile % %:r.pdf<cr>',        desc = 'Typst: Compile once → PDF' },
+      { '<leader>to', '<cmd>!sioyek %:r.pdf &>/dev/null &<cr>',   desc = 'Typst: Open PDF in Sioyek' },
     },
     -- Skeleton: auto-inject #import/#show template on new .typ files
     -- Runs at startup (ft=typst defers the *plugin*; init always runs immediately).
