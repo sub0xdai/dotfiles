@@ -111,14 +111,17 @@ peel() {
 # New typst doc — scaffolds a math note using the @local Catppuccin package
 # Usage: typnote [filename]  (defaults to main.typ)
 # Theme lives at ~/.local/share/typst/packages/local/sub0x-catppuccin/0.1.0/
+# New typst doc — scaffolds a math note using the @local stoic AMOLED template
+# Usage: typnote [filename]  (defaults to main.typ)
+# Theme lives at ~/.cache/typst/packages/local/stoic/1.0.0/
 typnote() {
   local filename="${1:-main.typ}"
   [[ "$filename" != *.typ ]] && filename="${filename}.typ"
 
   if [[ ! -f "$filename" ]]; then
     cat > "$filename" << 'EOF'
-#import "@local/sub0x-catppuccin:0.1.0": apply, flavors
-#show: apply.with(flavors.mocha)
+#import "@local/stoic:1.0.0": stoic-doc
+#show: stoic-doc
 
 =
 EOF
