@@ -84,7 +84,12 @@ vim.opt.backspace = {'indent', 'eol', 'start'}
 vim.opt.showcmd = true
 -- laststatus managed by lualine (globalstatus=true sets it to 3)
 vim.opt.autowrite = true
-vim.opt.cursorline = false
+vim.opt.cursorline = true
+vim.opt.cursorlineopt = "both"
+
+-- Styling the line number and background highlight groups
+vim.api.nvim_set_hl(0, "CursorLine", { bg = "#222530" })
+vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#e1e4ea", bold = true })
 vim.opt.autoread = true
 vim.opt.termguicolors = true
 vim.opt.scrolloff = 8

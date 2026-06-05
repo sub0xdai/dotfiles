@@ -37,6 +37,11 @@
       "enabled": true
     }
   },
+  "current_line_highlight": "all",
+  "experimental.theme_overrides": {
+    "editor.active_line.background": "#222530",
+    "editor.active_line_number": "#e1e4ea"
+  },
   "vim_mode": true,
   "ui_font_size": 16,
   "buffer_font_size": 15,

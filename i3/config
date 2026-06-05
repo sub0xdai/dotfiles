@@ -107,7 +107,6 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 # Application launchers
 bindsym $mod+Return exec ghostty
 bindsym $mod+Shift+o exec obsidian
-#bindsym $mod+Mod1+l exec --no-startup-id ~/dotfiles/scripts/betterlock_single_display.sh
 bindsym $mod+Mod1+l exec --no-startup-id i3lock -n -f -e -c 000000 --radius 120 --ring-color=ffffff3e --inside-color=00000000 --line-color=ffffff00 --keyhl-color=ffffff80 --ringver-color=ffffff3e --insidever-color=ffffff1c
 bindsym $mod+Shift+s exec --no-startup-id ~/dotfiles/scripts/__custom_flameshot.sh 
 bindsym $mod+d exec --no-startup-id dmenu_run
@@ -115,6 +114,7 @@ bindsym $mod+e exec pcmanfm
 bindsym $mod+p exec rofi -show combi
 bindsym $mod+w exec zen-browser
 bindsym $mod+Mod1+t exec planify
+bindsym $mod+Shift+z exec --no-startup-id /home/m0xu/.local/bin/zed
 
 # Window management
 bindsym $mod+q kill

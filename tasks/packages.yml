@@ -6,10 +6,11 @@
       - micro
       - bash
       - neovim
-      - neofetch
+      - fastfetch
       - tmux
       - rofi
-      
+      - zed
+      -  
         
       
      
