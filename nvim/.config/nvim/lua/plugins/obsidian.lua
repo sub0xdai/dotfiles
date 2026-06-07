@@ -1,20 +1,14 @@
 local function InsertTemplate()
-    local telescope = require("telescope.builtin")
     local templates_dir = vim.fn.expand("~/1-projects/vaults/sub0x_vault/6-templates")
-    telescope.find_files({
-        prompt_title = "Insert Template",
+    Snacks.picker.files({
+        title = "Insert Template",
         cwd = templates_dir,
-        attach_mappings = function(prompt_bufnr, map)
-            local actions = require("telescope.actions")
-            local actions_state = require("telescope.actions.state")
-            map("i", "<CR>", function()
-                local selected_entry = actions_state.get_selected_entry()
-                local filename = selected_entry.value
-                local file_content = vim.fn.readfile(templates_dir .. "/" .. filename)
+        confirm = function(picker, item)
+            if item and item.file then
+                local file_content = vim.fn.readfile(item.file)
                 vim.api.nvim_put(file_content, "", true, true)
-                actions.close(prompt_bufnr)
-            end)
-            return true
+            end
+            picker:close()
         end,
     })
 end
@@ -49,8 +43,6 @@ return {
     },
     dependencies = {
         "nvim-lua/plenary.nvim",
-        "nvim-telescope/telescope.nvim",
-        "hrsh7th/nvim-cmp",
     },
     keys = {
         { "<leader>otd", "<cmd>ObsidianToday<cr>", desc = "[O]bsidian [t]o[d]ay" },

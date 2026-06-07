@@ -40,7 +40,6 @@ return {
       extensions = {
         'fugitive',
         'quickfix',
-        'nvim-dap-ui',
         'man',
         'mason',
       }

@@ -34,9 +34,9 @@ return {
 		dashboard.section.buttons.val = {
 			-- dashboard.button("e", "  > New file", ":ene <BAR> startinsert <CR>"),
 			dashboard.button("b", "  > Browse files", function() require("mini.files").open() end),
-			dashboard.button("z", "  > Browse Directories", ":Telescope zoxide list<CR>"),
-			dashboard.button("f", "󰈞  > Find file", ":Telescope find_files<CR>"),
-			dashboard.button("r", "  > Recent", ":Telescope oldfiles<CR>"),
+			dashboard.button("z", "  > Browse Directories", function() Snacks.picker.zoxide() end),
+			dashboard.button("f", "󰈞  > Find file", function() Snacks.picker.files({ hidden = true }) end),
+			dashboard.button("r", "  > Recent", function() Snacks.picker.recent() end),
 		}
 
 		alpha.setup(dashboard.opts)

@@ -22,7 +22,7 @@ return {
       -- LSP status in the corner, not a distraction
       integration = {
         ["nvim-tree"] = { enable = false },
-        ["telescope"] = { enable = false },
+        ["telescope"] = { enable = false },  -- no-op (telescope removed; harmless)
       },
     },
   },

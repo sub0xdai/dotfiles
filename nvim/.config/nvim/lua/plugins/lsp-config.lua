@@ -83,21 +83,10 @@ return {
 				filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
 			})
 
-			vim.lsp.config("eslint", {
-				cmd = { "vscode-eslint-language-server", "--stdio" },
-				filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
-				root_markers = {
-					"eslint.config.js",
-					"eslint.config.mjs",
-					"eslint.config.cjs",
-					"eslint.config.ts",
-					".eslintrc",
-					".eslintrc.js",
-					".eslintrc.cjs",
-					".eslintrc.json",
-					".eslintrc.yaml",
-					".eslintrc.yml",
-				},
+			vim.lsp.config("biome", {
+				cmd = { "biome", "lsp-proxy" },
+				filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "json", "jsonc", "css" },
+				root_markers = { "biome.json", "biome.jsonc" },
 			})
 
 			-- Web
@@ -244,6 +233,7 @@ return {
 				"clangd",
 				"pylsp",
 				"ts_ls",
+				"biome",
 				"html",
 				"cssls",
 				"htmx",

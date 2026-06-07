@@ -17,6 +17,22 @@ vim.wo.number = true
 -- Suppress LSP log (was 209 MB from debug-level logging)
 vim.lsp.log_level = "OFF"
 
+-- Diagnostics: virtual text on by default, signs always visible
+vim.diagnostic.config({
+  virtual_text = true,
+  signs = true,
+  underline = true,
+  update_in_insert = false,
+  severity_sort = true,
+})
+
+-- Toggle diagnostic virtual text while keeping sign column indicators
+vim.keymap.set("n", "<leader>lx", function()
+  local current = vim.diagnostic.config().virtual_text
+  vim.diagnostic.config({ virtual_text = not current })
+  vim.notify("Diagnostic virtual text: " .. (not current and "ON" or "OFF"))
+end, { desc = "Toggle diagnostic virtual text" })
+
 -- Window/Tmux navigation handled by nvim-tmux-navigation
 -- (C-h/j/k/l navigate nvim splits internally, cross tmux panes at edges)
 
@@ -102,12 +118,12 @@ vim.opt.wildignore:append({"*/node_modules/*"})
 
 
 
--- Telescope buffer explorer
+-- Snacks buffer picker
 vim.keymap.set(
   "n",
   "<S-h>",
-  "<cmd>Telescope buffers sort_mru=true sort_lastused=true initial_mode=normal theme=ivy<cr>",
-  { desc = "[P]Open telescope buffers" }
+  function() Snacks.picker.buffers() end,
+  { desc = "Open buffers picker" }
 )
 
 

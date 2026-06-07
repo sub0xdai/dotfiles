@@ -65,44 +65,6 @@ local function detect_vault_root()
     return nil
 end
 
-local function disable_markdown_treesitter()
-    if vim.g.sub0x_disable_markdown_treesitter then
-        return
-    end
-
-    vim.g.sub0x_disable_markdown_treesitter = true
-
-    local original_start = vim.treesitter.start
-
-    vim.treesitter.start = function(bufnr, lang)
-        local buffer = bufnr
-
-        if type(buffer) ~= "number" or buffer == 0 then
-            buffer = vim.api.nvim_get_current_buf()
-        end
-
-        local language = lang
-
-        if type(language) ~= "string" or language == "" then
-            if vim.api.nvim_buf_is_valid(buffer) then
-                language = vim.bo[buffer].filetype
-            end
-        end
-
-        local filetype = nil
-
-        if vim.api.nvim_buf_is_valid(buffer) then
-            filetype = vim.bo[buffer].filetype
-        end
-
-        if language == "markdown" or language == "markdown_inline" or filetype == "markdown" then
-            return false
-        end
-
-        return original_start(bufnr, lang)
-    end
-end
-
 local function slugify(text)
     local slug = text:lower()
     slug = slug:gsub("[^a-z0-9%s-]", "")
@@ -236,8 +198,6 @@ function M.patch_template_substitutions()
 end
 
 function M.setup_markdown_buffer(bufnr)
-    disable_markdown_treesitter()
-
     local opt = vim.opt_local
 
     opt.wrap = true
@@ -246,8 +206,6 @@ function M.setup_markdown_buffer(bufnr)
     opt.concealcursor = ""
     opt.spell = false
     opt.textwidth = 100
-
-    pcall(vim.treesitter.stop, bufnr)
 
     vim.api.nvim_buf_call(bufnr, function()
         vim.opt_local.formatoptions:append({ "n", "2" })
@@ -389,7 +347,7 @@ function M.opts()
             },
         },
         picker = {
-            name = "telescope.nvim",
+            name = nil,
             note_mappings = {
                 new = "<C-x>",
                 insert_link = "<C-l>",

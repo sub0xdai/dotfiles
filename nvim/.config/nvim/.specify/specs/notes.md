@@ -1,0 +1,5 @@
+   1. gitsigns-dedup        (~5 min, 2 file ops)
+   2. diagnostic-config     (~5 min, 1 file, 20 lines)
+   3. plugin-purge          (~15 min, 5 files)
+   4. treesitter-explicit   (~15 min, 2 files)
+   5. telescope-migration   (~1 hr, 7 files). gitsigns-dedup        (~5 min, 2 file ops)
