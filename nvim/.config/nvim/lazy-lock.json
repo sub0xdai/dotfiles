@@ -25,6 +25,7 @@
   "mason.nvim": { "branch": "main", "commit": "16ba83bfc8a25f52bb545134f5bee082b195c460" },
   "mini.files": { "branch": "main", "commit": "02874bc653fbecf2bee2c65441d0ebd09110f011" },
   "mini.icons": { "branch": "main", "commit": "520995f1d75da0e4cc901ee95080b1ff2bc46b94" },
+  "mini.pick": { "branch": "main", "commit": "1ffba38c7221669d3da7792d4bbe1c9761075f4d" },
   "mini.surround": { "branch": "main", "commit": "9fd5ebef2b34cc4ac3c0f1811a6726ea6d92fa91" },
   "neoscroll.nvim": { "branch": "master", "commit": "c8d29979cb0cb3a2437a8e0ae683fd82f340d3b8" },
   "nvim-autopairs": { "branch": "master", "commit": "7b9923abad60b903ece7c52940e1321d39eccc79" },

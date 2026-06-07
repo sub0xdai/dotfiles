@@ -276,7 +276,7 @@ function M.opts()
         sort_reversed = true,
         open_notes_in = "current",
         completion = {
-            nvim_cmp = true,
+            blink = true,
             min_chars = 2,
         },
         daily_notes = {
@@ -347,7 +347,7 @@ function M.opts()
             },
         },
         picker = {
-            name = nil,
+            name = "mini.pick",
             note_mappings = {
                 new = "<C-x>",
                 insert_link = "<C-l>",
