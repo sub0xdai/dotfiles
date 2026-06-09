@@ -62,7 +62,7 @@ configuration {
 	window-thumbnail: false;
 
 	/*---------- Combi settings ----------*/
-	combi-modi: "window,run,drun";
+	combi-modi: "drun,window";
 	combi-hide-mode-prefix: false;
 
 	/*---------- History and Sorting ----------*/
