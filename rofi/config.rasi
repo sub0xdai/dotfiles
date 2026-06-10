@@ -36,7 +36,7 @@ configuration {
 	drun-display-format: "{name} [<span weight='light' size='small'><i>({generic})</i></span>]";
 	drun-show-actions: false;
 	drun-url-launcher: "xdg-open";
-	drun-use-desktop-cache: false;
+	drun-use-desktop-cache: true;
 	drun-reload-desktop-cache: false;
 	drun {
 		/** Parse user desktop files. */
@@ -63,7 +63,7 @@ configuration {
 
 	/*---------- Combi settings ----------*/
 	combi-modi: "drun,window";
-	combi-hide-mode-prefix: false;
+	combi-hide-mode-prefix: true;
 
 	/*---------- History and Sorting ----------*/
 	disable-history: false;

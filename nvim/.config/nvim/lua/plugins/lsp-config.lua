@@ -66,7 +66,7 @@ return {
 				},
 				filetypes = { "c", "cpp", "objc", "objcpp" },
 				root_markers = { "src" },
-				init_options = { fallbackFlags = { "-std=c++2a" } },
+	
 				single_file_support = true,
 			})
 
