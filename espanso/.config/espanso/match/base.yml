@@ -17,6 +17,9 @@ matches:
   - trigger: ":email"
     replace: "sub0xdai@proton.me"
 
+  - trigger: ":gmail"
+    replace: "danielpalazzolo4@gmail.com"
+
   - trigger: ":gh"
     replace: "github.com/sub0xdai"
 
