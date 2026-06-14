@@ -1,0 +1,123 @@
+# espanso match file
+
+# For a complete introduction, visit the official docs at: https://espanso.org/docs/
+
+# You can use this file to define the base matches (aka snippets)
+# that will be available in every application when using espanso.
+
+# Matches are substitution rules: when you type the "trigger" string
+# it gets replaced by the "replace" string.
+
+# yaml-language-server: $schema=https://raw.githubusercontent.com/espanso/espanso/dev/schemas/match.schema.json
+
+matches:
+
+  # ── Identity ──────────────────────────────────────────────
+
+  - trigger: ":email"
+    replace: "sub0xdai@proton.me"
+
+  - trigger: ":gh"
+    replace: "github.com/sub0xdai"
+
+  # ── Agent Prompts: Code Quality ───────────────────────────
+
+  - trigger: ":audit"
+    replace: "Audit this code with an adversarial deep review. Check types, API contracts, data consistency, auth, pagination, edge cases, error handling, and anything suspicious. Then give a standard second-pass review. Flag every concern."
+
+  - trigger: ":refactor"
+    replace: "Refactor this code without changing behavior. Extract methods, reduce nesting, improve naming, remove duplication. Keep the changes minimal and safe."
+
+  # ── Agent Prompts: Understanding & Design ─────────────────
+
+  - trigger: ":explain"
+    replace: "Explain how this code works in detail. Walk through the control flow, data transformations, and any design patterns used. Point out non-obvious decisions."
+
+  - trigger: ":design"
+    replace: "I need to design a solution for: [describe problem]. Consider trade-offs between approaches, data flow, failure modes, and rollback. Propose 2-3 approaches with reasoning, and recommend one."
+
+  # ── Agent Prompts: Security, Docs, Tests ──────────────────
+
+  - trigger: ":vuln"
+    replace: "Review this code for security vulnerabilities. Check for injection attacks, authentication bypass, data leaks, misconfigurations, insecure dependencies, and privilege escalation paths."
+
+  - trigger: ":docs"
+    replace: "Document this code. Explain the architecture, data flow, public API, and any non-obvious design decisions. Write clear, concise documentation suitable for other developers."
+
+  - trigger: ":test"
+    replace: "Write comprehensive tests for this code. Cover happy path, edge cases, error states, boundary conditions, and regression scenarios. Follow existing test patterns."
+
+  # ── Agent Prompts: Existing ───────────────────────────────
+
+  - trigger: ":junior"
+    replace: "Explain this thing you're working on as you would explain to a junior developer, and then write a plan for the junior developer to build that."
+
+  - trigger: ":spawn"
+    replace: "Spawn multiple agents to execute this task."
+
+  - trigger: ":pr"
+    replace: "Push a PR towards that branch with the things I'm working on."
+
+  - trigger: ":sync"
+    replace: "Take this branch that I'm working on, pull from the most recent main branch, check everything that matches, cherry-pick the working elements, and then implement them."
+
+  - trigger: ":debug"
+    replace: "Review the recent code we've written. Look for potential bugs, regressions, edge cases, and side effects. List all the risks."
+
+  - trigger: ":absorb"
+    replace: "Absorb this code deeply. Sort all the features in the code."
+
+  # ── Dynamic ───────────────────────────────────────────────
+
+  - trigger: ":date"
+    replace: "{{mydate}}"
+    vars:
+      - name: mydate
+        type: date
+        params:
+          format: "%Y/%m/%d"
+
+  - trigger: ":now"
+    replace: "{{now}}"
+    vars:
+      - name: now
+        type: date
+        params:
+          format: "%H:%M:%S"
+
+  - trigger: ":branch"
+    replace: "{{output}}"
+    vars:
+      - name: output
+        type: shell
+        params:
+          cmd: "git branch --show-current 2>/dev/null || echo 'not a git repo'"
+
+  - trigger: ":uuid"
+    replace: "{{output}}"
+    vars:
+      - name: output
+        type: shell
+        params:
+          cmd: "uuidgen | tr '[:upper:]' '[:lower:]'"
+
+  - trigger: ":ts"
+    replace: "{{ts}}"
+    vars:
+      - name: ts
+        type: date
+        params:
+          format: "%s"
+
+  - trigger: ":shell"
+    replace: "{{output}}"
+    vars:
+      - name: output
+        type: shell
+        params:
+          cmd: "echo 'Hello from your shell'"
+
+  # ── Test ──────────────────────────────────────────────────
+
+  - trigger: ":espanso"
+    replace: "Hi there!"

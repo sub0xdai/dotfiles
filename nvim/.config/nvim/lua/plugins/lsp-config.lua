@@ -197,6 +197,13 @@ return {
 				filetypes = { "nim" },
 			})
 
+			-- Odin
+			vim.lsp.config("ols", {
+				cmd = { "ols" },
+				filetypes = { "odin" },
+				single_file_support = true,
+			})
+
 			-- Typst
 		vim.lsp.config("tinymist", {
 			cmd = { "tinymist" },
@@ -251,6 +258,7 @@ return {
 				"wgsl_analyzer",
 				"gleam",
 				"nim_langserver",
+				"ols",
 				"markdown_oxide",
 			})
 

@@ -32,6 +32,7 @@ return {
         "gleam",
         "nim",
         "wgsl",
+        "odin",
       })
 
       -- Enable treesitter highlighting per filetype via autocommand
@@ -40,7 +41,7 @@ return {
           "lua", "typst", "go", "rust", "python", "javascript",
           "typescript", "c", "cpp", "bash", "zig", "haskell",
           "latex", "json", "yaml", "toml", "html", "css", "sql",
-          "prisma", "gleam", "nim", "wgsl",
+          "prisma", "gleam", "nim", "wgsl", "odin",
           "markdown", "markdown_inline", "vim",
         },
         callback = function()

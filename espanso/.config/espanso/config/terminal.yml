@@ -1,0 +1,4 @@
+# Ghostty terminal — Espanso fix
+# Source: https://github.com/ghostty-org/ghostty/discussions/6975
+filter_class: "com.mitchellh.ghostty"
+disable_x11_fast_inject: true

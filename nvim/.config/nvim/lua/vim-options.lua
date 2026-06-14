@@ -12,6 +12,7 @@ vim.opt.splitbelow = true           -- open new vertical split bottom
 vim.opt.splitright = true           -- open new horizontal splits right
 vim.opt.splitkeep = "cursor"
 vim.wo.number = true
+vim.opt.exrc = true -- load per-project .nvim.lua (odin.nvim overrides, etc.)
 
 
 -- Suppress LSP log (was 209 MB from debug-level logging)

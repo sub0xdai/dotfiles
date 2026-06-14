@@ -19,6 +19,7 @@ return {
           json = { "biome" },
           yaml = { "biome" },
           markdown = { "biome" },
+          odin = { "odinfmt" },
           typst = { "typstyle" },
         },
       })
