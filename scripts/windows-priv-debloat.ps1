@@ -11,12 +11,11 @@
     log and a summary of errors/warnings at completion.
     Reboot after execution for all changes to take effect.
 .NOTES
-    Tested on Windows 10 22H2 / Windows 11 23H2+. Some Copilot/AI keys are
+    Tested on Windows 11 23H2+. Some Copilot/AI keys are
     gated behind build 22631+ and silently skipped on older builds.
 #>
 
-# =============================================================================
-# Phase 0 — safety net, user detection, version gating
+# safety net, user detection, version gating
 # =============================================================================
 
 $ErrorActionPreference = 'Continue'
@@ -63,8 +62,7 @@ $WinBuild   = [Environment]::OSVersion.Version.Build
 $IsWin11_23H2 = $WinBuild -ge 22631
 Write-Host "Windows build: $WinBuild  |  Win11 23H2+ AI keys: $IsWin11_23H2" -ForegroundColor DarkGray
 
-# =============================================================================
-# Phase 1 — backup current registry state (paths we will mutate)
+# backup current registry state (paths we will mutate)
 # =============================================================================
 
 Write-Host "`n=== Phase 1: Registry backup ===" -ForegroundColor Cyan
@@ -109,8 +107,7 @@ foreach ($p in $pathsToBackup) {
 }
 Write-Host "Backup saved to: $BackupDir" -ForegroundColor DarkGray
 
-# =============================================================================
-# Phase 2 — remove provisioned & installed packages
+# remove provisioned & installed packages
 # =============================================================================
 
 Write-Host "`n=== Phase 2: Package removal ===" -ForegroundColor Cyan
@@ -134,7 +131,7 @@ $JunkApps = @(
     'Microsoft.549981C3F5F10'
 )
 
-# 2a — Remove provisioned packages (system image, affects future users)
+# Remove provisioned packages (system image, affects future users)
 Write-Host "Provisioned packages:" -ForegroundColor Yellow
 $provPkgs = Get-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
 foreach ($App in $JunkApps) {
@@ -151,7 +148,7 @@ foreach ($App in $JunkApps) {
     }
 }
 
-# 2b — Remove installed packages (all users)
+# Remove installed packages (all users)
 Write-Host "Installed packages (all users):" -ForegroundColor Yellow
 $instPkgs = Get-AppxPackage -AllUsers -ErrorAction SilentlyContinue
 foreach ($App in $JunkApps) {
@@ -168,8 +165,7 @@ foreach ($App in $JunkApps) {
     }
 }
 
-# =============================================================================
-# Phase 3 — registry policy writes
+# registry policy writes
 # =============================================================================
 
 Write-Host "`n=== Phase 3: Registry policy ===" -ForegroundColor Cyan
@@ -313,8 +309,7 @@ foreach ($Path in $RegistryStates.Keys) {
     }
 }
 
-# =============================================================================
-# Phase 4 — services: stop + disable
+# services: stop + disable
 # =============================================================================
 
 Write-Host "`n=== Phase 4: Services ===" -ForegroundColor Cyan
@@ -356,8 +351,7 @@ foreach ($svc in $Services) {
     }
 }
 
-# =============================================================================
-# Phase 5 — scheduled tasks
+# scheduled tasks
 # =============================================================================
 
 Write-Host "`n=== Phase 5: Scheduled tasks ===" -ForegroundColor Cyan
@@ -386,7 +380,6 @@ foreach ($taskPath in $ScheduledTasks) {
     }
 }
 
-# =============================================================================
 # Summary
 # =============================================================================
 
