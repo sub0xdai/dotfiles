@@ -4,10 +4,10 @@
 # Based on: https://github.com/ghuntley/how-to-ralph-wiggum
 #
 # Usage:
-#   __setup_ralph.sh              # Setup in current directory
-#   __setup_ralph.sh <path>       # Setup in specific path
-#   __setup_ralph.sh --force      # Overwrite existing .specify/
-#   __setup_ralph.sh --help       # Show help
+#   setup_ralph.sh              # Setup in current directory
+#   setup_ralph.sh <path>       # Setup in specific path
+#   setup_ralph.sh --force      # Overwrite existing .specify/
+#   setup_ralph.sh --help       # Show help
 #
 
 set -euo pipefail

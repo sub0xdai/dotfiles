@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# __lattice_index.sh — Regenerate the Entry Points index in lattice.md.
+# lattice_index.sh — Regenerate the Entry Points index in lattice.md.
 # Idempotent. Reads the filesystem and rewrites the <!-- INDEX_START --> block.
 # Invoked by: agent (on discovery failure) or human (after creating a SKILL.md).
 
@@ -22,7 +22,7 @@ if [[ -d "$SKILLS_DIR" ]]; then
             desc=$(head -5 "$skill_md" | grep -i '^description:' | head -1 | sed 's/^[^:]*:\s*//' | sed 's/^"//;s/"$//')
             [[ -z "$desc" ]] && desc="(no description)"
             # Find companion scripts
-            scripts=$(find "$HOME/dotfiles/scripts" -maxdepth 1 -name "__${skill_name}*.sh" -printf '%f ' 2>/dev/null || true)
+            scripts=$(find "$HOME/dotfiles/scripts" -maxdepth 1 -name "${skill_name}*.sh" -printf '%f ' 2>/dev/null || true)
             [[ -z "$scripts" ]] && scripts="(none)"
             skill_entries+="| \`/${skill_name}\` | Skill | ${desc} | ${scripts} |"$'\n'
         fi

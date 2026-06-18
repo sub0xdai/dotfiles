@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Bootstrap an n0x-content video project scaffold at the given directory.
-# Usage: __n0x_bootstrap.sh <target-dir>
+# Usage: n0x_bootstrap.sh <target-dir>
 #
 # Copies the template directory (audio/, prompts/, raw_footage/, overlays/,
 # output/, config.json, README.md) from n0x-content into <target-dir>.
@@ -8,7 +8,7 @@ set -euo pipefail
 
 TARGET="${1:-}"
 if [ -z "$TARGET" ]; then
-    echo "Usage: __n0x_bootstrap.sh <target-dir>"
+    echo "Usage: n0x_bootstrap.sh <target-dir>"
     echo "  Creates an n0x-content video project scaffold at <target-dir>"
     exit 1
 fi

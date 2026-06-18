@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Run n0x-content asset ingestion for a video project.
-# Usage: __n0x_ingest.sh <project-dir> [--audio-query ...] [--ia-id ...] [flags]
+# Usage: n0x_ingest.sh <project-dir> [--audio-query ...] [--ia-id ...] [flags]
 #
 # Thin wrapper — delegates to n0x-content/ingest.sh.
 # Automatically bootstraps the project if the directory doesn't exist.
@@ -10,7 +10,7 @@ N0X_CONTENT="$HOME/1-projects/n0x-content"
 
 PROJECT="${1:-}"
 if [ -z "$PROJECT" ]; then
-    echo "Usage: __n0x_ingest.sh <project-dir> [options]"
+    echo "Usage: n0x_ingest.sh <project-dir> [options]"
     echo ""
     echo "Options (passed through to ingest.sh):"
     echo "  --audio-query STR   Search query for yt-dlp royalty-free audio"
@@ -28,7 +28,7 @@ shift
 if [ ! -d "$PROJECT" ]; then
     echo "=== Project not found, bootstrapping ==="
     SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-    "$SCRIPT_DIR/__n0x_bootstrap.sh" "$PROJECT"
+    "$SCRIPT_DIR/n0x_bootstrap.sh" "$PROJECT"
 fi
 
 exec "$N0X_CONTENT/ingest.sh" "$PROJECT" "$@"

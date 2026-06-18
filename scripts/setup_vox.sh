@@ -4,10 +4,10 @@
 # "God spoke and it was."
 #
 # Usage:
-#   __setup_vox.sh              # Setup in current directory
-#   __setup_vox.sh <path>       # Setup in specific path
-#   __setup_vox.sh --force      # Overwrite existing .specify/
-#   __setup_vox.sh --help       # Show help
+#   setup_vox.sh              # Setup in current directory
+#   setup_vox.sh <path>       # Setup in specific path
+#   setup_vox.sh --force      # Overwrite existing .specify/
+#   setup_vox.sh --help       # Show help
 #
 
 set -euo pipefail

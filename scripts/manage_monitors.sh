@@ -1,5 +1,5 @@
 #!/bin/bash
-# ~/.config/i3/scripts/__manage_monitors.sh
+# ~/.config/i3/scripts/manage_monitors.sh
 # Detects monitor configuration and sets up workspaces accordingly
 sleep 1
 

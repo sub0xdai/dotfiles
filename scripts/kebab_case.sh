@@ -2,7 +2,7 @@
 
 # Kebab Case File Renamer for Obsidian Vault
 # Recursively finds files with spaces and converts them to kebab-case
-# Usage: ./__kebab_case.sh [target_directory]
+# Usage: ./kebab_case.sh [target_directory]
 
 set -euo pipefail
 
