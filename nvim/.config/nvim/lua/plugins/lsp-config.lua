@@ -107,12 +107,12 @@ return {
 
 			vim.lsp.config("emmet_language_server", {
 				cmd = { "emmet-language-server", "--stdio" },
-				filetypes = { "html", "templ", "css", "php", "javascriptreact", "typescriptreact", "javascript", "typescript", "markdown" },
+				filetypes = { "html", "templ", "css", "svelte", "php", "javascriptreact", "typescriptreact", "javascript", "typescript", "markdown" },
 			})
 
 			vim.lsp.config("tailwindcss", {
 				cmd = { "tailwindcss-language-server", "--stdio" },
-				filetypes = { "html", "templ", "css", "javascriptreact", "typescriptreact", "javascript", "typescript" },
+				filetypes = { "html", "templ", "css", "svelte", "javascriptreact", "typescriptreact", "javascript", "typescript" },
 				root_markers = {
 					"tailwind.config.js",
 					"tailwind.config.cjs",
@@ -197,6 +197,12 @@ return {
 				filetypes = { "nim" },
 			})
 
+			-- Svelte
+			vim.lsp.config("svelte", {
+				cmd = { "svelteserver", "--stdio" },
+				filetypes = { "svelte" },
+			})
+
 			-- Odin
 			vim.lsp.config("ols", {
 				cmd = { "ols" },
@@ -259,6 +265,7 @@ return {
 				"gleam",
 				"nim_langserver",
 				"ols",
+				"svelte",
 				"markdown_oxide",
 			})
 

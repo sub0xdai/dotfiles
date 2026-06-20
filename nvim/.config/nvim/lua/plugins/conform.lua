@@ -14,6 +14,7 @@ return {
           typescript = { "biome" },
           javascriptreact = { "biome" },
           typescriptreact = { "biome" },
+          svelte = { "biome" },
           css = { "biome" },
           html = { "biome" },
           json = { "biome" },

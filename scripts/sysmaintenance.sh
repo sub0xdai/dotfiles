@@ -41,8 +41,13 @@ main() {
     disk_before=$(df --output=used / | tail -1)
 
     # --- System update ---
-    log_action "Updating system packages"
-    yay -Syu --noconfirm || log_action "Update failed (continuing)"
+    log_action "Updating core system packages (signed)"
+    run_sudo pacman -Syu --noconfirm || log_action "Core update failed (continuing)"
+
+    log_action "Initiating AUR package review (interactive)"
+    # ponytail: --noconfirm prohibited — AUR PKGBUILDs are unsigned, must review.
+    # If running via cron/systemd timer, remove this line and update AUR manually.
+    yay -Sua || log_action "AUR update failed or aborted"
 
     # --- Pacman cache (keep last 2 versions) ---
     log_action "Cleaning pacman cache"

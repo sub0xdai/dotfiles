@@ -70,6 +70,12 @@ matches:
   - trigger: ":absorb"
     replace: "Absorb this code deeply. Sort all the features in the code."
 
+
+
+  # ---- Tmp -------------------
+  - trigger: ":love"
+    replace: "pkill -f 'bun run dev'; sleep 1; rm -rf node_modules/.vite .svelte-kit; cd ~/1-projects/LoveByCartiana && bun run dev"
+
   # ── Dynamic ───────────────────────────────────────────────
 
   - trigger: ":date"
@@ -78,7 +84,7 @@ matches:
       - name: mydate
         type: date
         params:
-          format: "%Y/%m/%d"
+          format: "%Y-%m-%d"
 
   - trigger: ":now"
     replace: "{{now}}"

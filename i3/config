@@ -38,7 +38,7 @@ client.urgent           #36454f #36454f #36454f #36454f
 #====================
 
 # Configure monitors and cursor
-exec_always --no-startup-id ~/dotfiles/scripts/__manage_monitors.sh
+exec_always --no-startup-id ~/dotfiles/scripts/manage_monitors.sh
 exec_always --no-startup-id xsetroot -cursor_name left_ptr
 exec_always --no-startup-id echo "Xcursor.size: 24" > ~/.Xresources
 exec_always --no-startup-id xrdb -merge ~/.Xresources
@@ -53,6 +53,7 @@ exec_always --no-startup-id xset r rate 200 40
 # Moved this to script- exec_always --no-startup-id feh --randomize --bg-scale ~/Pictures/Wallpapers/*
 exec --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh
 exec --no-startup-id dbus-update-activation-environment --systemd DISPLAY
+exec --no-startup-id flameshot
 
 #  floating
 for_window [class="gnome-calculator"] floating enable
@@ -108,7 +109,7 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 bindsym $mod+Return exec ghostty
 bindsym $mod+Shift+o exec obsidian
 bindsym $mod+Mod1+l exec --no-startup-id i3lock -n -f -e -c 000000 --radius 120 --ring-color=ffffff3e --inside-color=00000000 --line-color=ffffff00 --keyhl-color=ffffff80 --ringver-color=ffffff3e --insidever-color=ffffff1c
-bindsym $mod+Shift+s exec --no-startup-id ~/dotfiles/scripts/__custom_flameshot.sh 
+bindsym $mod+Shift+s exec --no-startup-id ~/dotfiles/scripts/custom_flameshot.sh 
 bindsym $mod+d exec --no-startup-id dmenu_run
 bindsym $mod+e exec pcmanfm
 bindsym $mod+p exec rofi -show combi
@@ -140,7 +141,7 @@ bindsym $mod+t layout toggle split
 bindsym $mod+Shift+space floating toggle
 bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
-bindsym $mod+m exec --no-startup-id ~/dotfiles/scripts/__manage_monitors.sh
+bindsym $mod+m exec --no-startup-id ~/dotfiles/scripts/manage_monitors.sh
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
