@@ -70,6 +70,8 @@ matches:
   - trigger: ":absorb"
     replace: "Absorb this code deeply. Sort all the features in the code."
 
+  - trigger: ":worked"
+    replace: "Give me a worked-example (ie. steps broken down, worked, like a math problem) for "
 
 
   # ---- Tmp -------------------
