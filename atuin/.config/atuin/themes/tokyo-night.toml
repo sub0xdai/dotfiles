@@ -1,0 +1,7 @@
+AlertInfo = "#9ece6a"
+AlertWarn = "#e0af68"
+AlertError = "#f7768e"
+Annotation = "#565f89"
+Base = "#c0caf5"
+Guidance = "#7dcfff"
+Important = "#bb9af7"
