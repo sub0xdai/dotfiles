@@ -1,0 +1,1 @@
+/home/m0xu/.pi/agent/scripts/__check.sh
