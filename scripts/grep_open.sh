@@ -1,4 +1,3 @@
-
 #!/usr/bin/env bash
 
 gif() {
@@ -19,9 +18,6 @@ Controls:
   Ctrl+g      Search file contents
   Ctrl+d      Search directories
 
-Environment Variables:
-  NVIM_SEARCH_REGISTRY    Set to the search query, allowing Neovim to highlight matches
-
 Example:
   gif             # Run the normal search and open
   gif --debug     # Run with debug output
@@ -35,10 +31,11 @@ EOF
   get_fzf_output() {
     local RG_BIND="ctrl-g:reload:rg --line-number --no-heading --color=always --smart-case --glob '!**/.git/**' --glob '!node_modules/**' '' 2>/dev/null || true"
     local FILE_BIND="ctrl-f:reload:rg --files --glob '!**/.git/**' --glob '!node_modules/**' 2>/dev/null || true"
+    local DIR_BIND
     if command -v fd &>/dev/null; then
       DIR_BIND="ctrl-d:change-prompt(directory> )+reload(cd $HOME && echo $HOME; fd --type d --hidden --absolute-path --color never --exclude .git --exclude node_modules)"
     else
-      DIR_BIND="ctrl-d:change-prompt(directory> )+reload(cd $HOME && find ~+ -type d -name node_modules -prune -o -name .git -prune -o -type d -print)"
+      DIR_BIND="ctrl-d:change-prompt(directory> )+reload(cd $HOME && find $PWD -type d -name node_modules -prune -o -name .git -prune -o -type d -print)"
     fi
 
     rg --line-number --no-heading --color=always --smart-case --glob '!**/.git/**' --glob '!node_modules/**' '' 2>/dev/null | \
@@ -137,13 +134,16 @@ EOF
     for index in "${file_indices[@]}"; do
       nvim_cmd+=" +${lines[$index]} ${files[$index]}"
     done
-    nvim_cmd+=" -c 'let @/=\"$NVIM_SEARCH_REGISTRY\"'"
+    # Escape special chars in search query for nvim's :let assignment
+    local escaped_query="${NVIM_SEARCH_REGISTRY//\\/\\\\}"
+    escaped_query="${escaped_query//\"/\\\"}"
+    nvim_cmd+=" -c 'let @/=\"${escaped_query}\"'"
     debug "Running command in pane $pane: $nvim_cmd"
     tmux send-keys -t "$pane" "$nvim_cmd" C-m
   }
   if (( $count == 1 )); then
     debug "Opening single file"
-    open_files_in_nvim "$(tmux display-message -p '#P')" 1
+    open_files_in_nvim "$(tmux display-message -p '#P')" 0
   else
     debug "Opening multiple files"
     local window_name="gif-$(date +%s)"
@@ -152,26 +152,26 @@ EOF
       2)
         debug "Opening 2 files side-by-side"
         tmux split-window -t "$window_name" -h -p 50
-        open_files_in_nvim "$window_name.1" 1
-        open_files_in_nvim "$window_name.2" 2
+        open_files_in_nvim "$window_name.1" 0
+        open_files_in_nvim "$window_name.2" 1
         tmux select-pane -t "$window_name.1"
         ;;
       3)
         debug "Opening 3 files"
         tmux split-window -t "$window_name" -h -p 50
         tmux split-window -t "$window_name.2" -v -p 50
-        open_files_in_nvim "$window_name.1" 1
-        open_files_in_nvim "$window_name.2" 2
-        open_files_in_nvim "$window_name.3" 3
+        open_files_in_nvim "$window_name.1" 0
+        open_files_in_nvim "$window_name.2" 1
+        open_files_in_nvim "$window_name.3" 2
         ;;
       *)
         debug "Opening 4 or more files"
         tmux split-window -t "$window_name" -h -p 50
         tmux split-window -t "$window_name.1" -v -p 50
         tmux split-window -t "$window_name.3" -v -p 50
-        open_files_in_nvim "$window_name.1" 1
-        open_files_in_nvim "$window_name.2" 2
-        open_files_in_nvim "$window_name.3" 3
+        open_files_in_nvim "$window_name.1" 0
+        open_files_in_nvim "$window_name.2" 1
+        open_files_in_nvim "$window_name.3" 2
         local remaining_indices=("${!files[@]:3}")
         open_files_in_nvim "$window_name.4" "${remaining_indices[@]}"
         ;;

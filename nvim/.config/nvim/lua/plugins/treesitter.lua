@@ -5,7 +5,9 @@ return {
     lazy = false,
     build = ":TSUpdate",
     config = function()
-      require("nvim-treesitter").setup()
+      require("nvim-treesitter").setup({
+        indent = { enable = true },
+      })
 
       -- Install parsers (async, no-op if already installed)
       require("nvim-treesitter").install({

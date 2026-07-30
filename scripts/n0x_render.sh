@@ -25,4 +25,4 @@ N0X_CONTENT="$HOME/1-projects/n0x-content"
 
 # Delegate to n0x-content render.sh with all args
 cd "$N0X_CONTENT"
-exec podman run --rm -v "$(pwd):/app:Z" kinetic-renderer --project "$PROJECT" "${@:2}"
+exec podman run --rm -v "$(pwd):/app:Z" -v "$PROJECT:$PROJECT:Z" kinetic-renderer --project "$PROJECT" "${@:2}"

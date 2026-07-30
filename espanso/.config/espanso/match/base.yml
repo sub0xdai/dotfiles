@@ -39,6 +39,9 @@ matches:
   - trigger: ":design"
     replace: "I need to design a solution for: [describe problem]. Consider trade-offs between approaches, data flow, failure modes, and rollback. Propose 2-3 approaches with reasoning, and recommend one."
 
+  - trigger: ":entropy"
+    replace: "Act as a systems architect. We are evaluating a change to [System Component]. I require a response optimized for 'low-entropy density"
+
   # ── Agent Prompts: Security, Docs, Tests ──────────────────
 
   - trigger: ":vuln"

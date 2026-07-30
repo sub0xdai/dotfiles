@@ -1,0 +1,76 @@
+onboarding = false
+
+[theme]
+name = "tokyo-night"
+auto_switch = false
+
+[terminal]
+# New panes/tabs inherit the source pane's cwd (matches tmux: bind c new-window -c)
+new_cwd = "follow"
+
+[ui]
+# Match tmux: mouse_scroll_lines = 3 (WheelUpPane -N 3)
+mouse_scroll_lines = 3
+# Match tmux: no confirmation on pane kill
+confirm_close = false
+# Keep pane borders (tmux has them)
+pane_borders = true
+
+[ui.toast]
+delivery = "system"
+
+# ── Keybindings: tmux muscle memory ──────────────────────────────────
+[keys]
+# Tmux uses F4 instead of ctrl+b
+prefix = "f4"
+
+# ── Pane splits ──
+# tmux: bind \\ split-window -h
+split_vertical = "prefix+\\"
+# tmux: bind - split-window -v
+split_horizontal = "prefix+-"
+
+# ── Pane navigation (vim keys) ──
+# tmux: bind h/j/k/l select-pane
+focus_pane_left = "prefix+h"
+focus_pane_down = "prefix+j"
+focus_pane_up = "prefix+k"
+focus_pane_right = "prefix+l"
+
+# ── Pane lifecycle ──
+# tmux: bind x kill-pane (no prompt)
+close_pane = "prefix+x"
+
+# ── Tab management ──
+# tmux: bind c new-window -c '#{pane_current_path}'
+new_tab = "prefix+c"
+# Direct tab switching (tmux base-index 1)
+switch_tab = "prefix+1..9"
+# Close tab (no tmux equivalent, sensible default)
+close_tab = "prefix+shift+x"
+
+# ── Session/workspace management ──
+# tmux: bind a → sesh+fzf session picker
+workspace_picker = "prefix+a"
+# tmux: bind Q kill-session
+close_workspace = "prefix+shift+q"
+# Detach (no tmux equivalent, keep herdr default)
+detach = "prefix+q"
+
+# ── Config ──
+# tmux: bind r source-file ~/.tmux.conf
+reload_config = "prefix+r"
+# Resize mode moved here from prefix+r to make room for reload
+resize_mode = "prefix+shift+r"
+
+# ── Navigation (herdr extras, no tmux equivalent) ──
+zoom = "prefix+z"
+toggle_sidebar = "prefix+b"
+edit_scrollback = "prefix+e"
+cycle_pane_next = "prefix+tab"
+cycle_pane_previous = "prefix+shift+tab"
+previous_tab = "prefix+p"
+next_tab = "prefix+n"
+
+# Goto (sidebar fuzzy-nav): prefix+g, h/j/k/l inside
+# navigate_* are local keys while goto is open (defaults work)

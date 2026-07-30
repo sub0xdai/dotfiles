@@ -306,8 +306,15 @@ function M.opts()
             return generate_uuid()
         end,
         note_frontmatter_func = function(note)
-            if note.title then
+            -- skip auto-alias and extra metadata for resume vault
+            local is_resume = vim.fn.getcwd():find("resume_vault") ~= nil
+
+            if note.title and not is_resume then
                 note:add_alias(note.title)
+            end
+
+            if is_resume then
+                return { title = note.title }
             end
 
             local out = {
