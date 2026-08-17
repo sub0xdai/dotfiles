@@ -1,4 +1,3 @@
-@@ -0,0 +1,40 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 # Source common configurations
@@ -30,3 +29,6 @@ eval "$(atuin init bash)"
 export PATH=$(clean_path "$PATH")
 
 alias claude-mem='bun "/home/m0xu/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
+
+# secrets — non-version-controlled, keep at bottom
+[ -f ~/.secrets.sh ] && source ~/.secrets.sh

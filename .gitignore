@@ -6,3 +6,4 @@ nvim/.config/nvim/undo/*
 *.tmp
 *.swp
 .env*
+art/

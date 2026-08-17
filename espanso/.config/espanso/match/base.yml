@@ -75,6 +75,10 @@ matches:
 
   - trigger: ":worked"
     replace: "Give me a worked-example (ie. steps broken down, worked, like a math problem) for "
+    
+
+  - trigger: ":commit"
+    replace: "Evaluate all staged changes. Generate a strict Conventional Commit message (type(scope): subject) optimized for low-entropy density. Execute the commit using this message, then immediately push the branch to the remote origin. Output only the execution confirmations; zero conversational filler."
 
 
   # ---- Tmp -------------------
