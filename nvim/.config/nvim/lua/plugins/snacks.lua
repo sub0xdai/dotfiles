@@ -13,8 +13,6 @@ return {
     },
     keys = {
       { "<leader><leader>", function() Snacks.picker.smart() end, desc = "Smart Find" },
-      { "<leader>ff", function() Snacks.picker.files({ hidden = true }) end, desc = "Find Files" },
-      { "<leader>fg", function() Snacks.picker.grep() end, desc = "Grep" },
       { "<leader>of", function() Snacks.picker.recent() end, desc = "Recent" },
       { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },
       { "<leader>fz", function() Snacks.picker.lines() end, desc = "Current Buffer" },

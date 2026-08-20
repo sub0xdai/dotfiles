@@ -27,6 +27,11 @@ return {
 				capabilities = require("blink.cmp").get_lsp_capabilities(),
 			})
 
+			-- LSP goto keymaps (LazyVim standard set)
+			vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Goto Definition" })
+			vim.keymap.set("n", "gr", vim.lsp.buf.references, { desc = "Goto References" })
+			vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { desc = "Goto Implementation" })
+
 			-- Shell
 			vim.lsp.config("bashls", {
 				cmd = { "bash-language-server", "start" },
