@@ -74,11 +74,9 @@ return {
 	},
 	{
 		"webhooked/kanso.nvim",
-		lazy = false,
-		priority = 1000,
+		-- Not active - switch manually with :colorscheme kanso-ink
+		-- variants: kanso-zen, kanso-ink, kanso-mist (dark) | kanso-pearl (light)
 		config = function()
-			vim.opt.termguicolors = true
-			-- variants: kanso-zen, kanso-ink, kanso-mist (dark) | kanso-pearl (light)
 			require("kanso").setup({
 				transparent = true,
 				commentStyle = {},
@@ -91,7 +89,86 @@ return {
 					light = "pearl",
 				},
 			})
-			vim.cmd("colorscheme kanso-ink")
+		end,
+	},
+	{
+		"oskarnurm/koda.nvim",
+		-- variants: koda (auto dark/light), koda-dark, koda-light, koda-moss, koda-glade
+		lazy = false,
+		priority = 1000,
+		config = function()
+			require("koda").setup({ transparent = true })
+			-- Persisted pick from <leader>tc; fallback default below.
+			-- Change this line to set a new startup default theme.
+			local theme_file = vim.fn.stdpath("data") .. "/base_theme.txt"
+			local fh = io.open(theme_file, "r")
+			local saved = fh and fh:read("*l") or nil
+			if fh then
+				fh:close()
+			end
+			-- boundary parse: only accept a sane colorscheme name
+			local base_theme = saved and saved:match("^[%w_%-]+$") or "koda"
+			if not pcall(vim.cmd, "colorscheme " .. base_theme) then
+				base_theme = "koda"
+				vim.cmd("colorscheme koda")
+			end
+
+			-- Monochrome markdown: switch to zenwritten (monochrome zenbones)
+			-- for markdown buffers, back to base_theme elsewhere. Toggle <leader>tm.
+			local md_mono = true
+			local current = base_theme
+			local function set_scheme(name)
+				if current ~= name then
+					vim.cmd("colorscheme " .. name)
+					current = name
+				end
+			end
+
+			vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
+				callback = function()
+					-- schedule: lazy.nvim's colorscheme autoload isn't active
+					-- during startup buffer events
+					vim.schedule(function()
+						if vim.bo.filetype == "markdown" then
+							if md_mono then
+								set_scheme("zenwritten")
+							end
+						elseif current == "zenwritten" then
+							set_scheme(base_theme)
+						end
+					end)
+				end,
+			})
+
+			vim.keymap.set("n", "<leader>tm", function()
+				md_mono = not md_mono
+				if vim.bo.filetype == "markdown" then
+					set_scheme(md_mono and "zenwritten" or base_theme)
+				end
+			end, { desc = "Toggle monochrome (zenwritten) markdown theme" })
+
+			-- Theme selector: pick any installed colorscheme with live preview.
+			-- The pick becomes the base theme for the markdown swap too.
+			vim.keymap.set("n", "<leader>tc", function()
+				Snacks.picker.colorschemes({
+					confirm = function(picker, item)
+						picker:close()
+						if item then
+							picker.preview.state.colorscheme = nil
+							vim.schedule(function()
+								vim.cmd("colorscheme " .. item.text)
+								base_theme = item.text
+								current = item.text
+								local f = io.open(theme_file, "w")
+								if f then
+									f:write(item.text)
+									f:close()
+								end
+							end)
+						end
+					end,
+				})
+			end, { desc = "Theme picker (colorscheme selector)" })
 		end,
 	},
 }
