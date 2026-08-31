@@ -76,6 +76,9 @@ vim.keymap.set('n', '<leader>dl', ':DBUILastQueryInfo<CR>', { noremap = true })
 vim.keymap.set('n', '<leader>de', ':DB<CR>', { noremap = true })
 -- Execute the entire buffer as a query
 vim.keymap.set('n', '<leader>da', ':w !DB<CR>', { noremap = true })
+-- Center after big down or up 
+vim.keymap.set("n", "<C-u>", "<C-u>zz")
+vim.keymap.set("n", "<C-d>", "<C-d>zz")
 
 -- Create a new file with prompt for filename
 vim.keymap.set('n', '<Leader>nf', function()
