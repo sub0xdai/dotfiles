@@ -88,7 +88,7 @@ notify_view() {
 
 # Copy screenshot to clipboard
 copy_shot () {
-	tee "$file" | xclip -selection clipboard -t image/png
+	tee "$file" | copyq copy image/png -
 }
 
 # countdown

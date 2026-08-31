@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
-# Run n0x-content asset ingestion for a video project.
-# Usage: n0x_ingest.sh <project-dir> [--audio-query ...] [--ia-id ...] [flags]
+# Run scythe asset ingestion for a video project.
+# Usage: scythe_ingest.sh <project-dir> [--audio-query ...] [--ia-id ...] [flags]
 #
-# Thin wrapper — delegates to n0x-content/ingest.sh.
+# Thin wrapper — delegates to scythe/ingest.sh.
 # Automatically bootstraps the project if the directory doesn't exist.
 set -euo pipefail
 
-N0X_CONTENT="$HOME/1-projects/n0x-content"
+SCYTHE_HOME="$HOME/1-projects/scythe"
 
 PROJECT="${1:-}"
 if [ -z "$PROJECT" ]; then
-    echo "Usage: n0x_ingest.sh <project-dir> [options]"
+    echo "Usage: scythe_ingest.sh <project-dir> [options]"
     echo ""
     echo "Options (passed through to ingest.sh):"
     echo "  --audio-query STR   Search query for yt-dlp royalty-free audio"
@@ -28,7 +28,7 @@ shift
 if [ ! -d "$PROJECT" ]; then
     echo "=== Project not found, bootstrapping ==="
     SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-    "$SCRIPT_DIR/n0x_bootstrap.sh" "$PROJECT"
+    "$SCRIPT_DIR/scythe_bootstrap.sh" "$PROJECT"
 fi
 
-exec "$N0X_CONTENT/ingest.sh" "$PROJECT" "$@"
+exec "$SCYTHE_HOME/ingest.sh" "$PROJECT" "$@"

@@ -92,7 +92,7 @@ cpi() {
     fi
 
     # Copy the file's content to the clipboard
-    cat "$index_file" | xclip -selection clipboard
+    copyq copy - < "$index_file"
     echo "✅ project_index.md copied to clipboard."
 }
 
