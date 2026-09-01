@@ -16,7 +16,7 @@ window-padding-y = 4
 mouse-hide-while-typing = true
 
 # Theme
-theme = "Kanso Zen"
+config-file = ?auto/theme.ghostty
 cursor-style = "underline"
 
 
