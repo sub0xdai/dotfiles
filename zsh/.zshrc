@@ -31,6 +31,13 @@ plugins=(
 )
 source $ZSH/oh-my-zsh.sh
 
+# ─── Restore eza aliases (Oh My Zsh overrides ls with plain ls --color=tty) ───
+alias ls='eza --icons --group-directories-first --color=always'
+alias ll='eza -lah --icons --group-directories-first --color=always'
+alias la='eza -a --icons --group-directories-first --color=always'
+alias l='eza -F --icons --group-directories-first --color=always'
+alias l.='eza -a | grep -E "^\." --color=always'
+
 # ─── Completion delegated to Oh My Zsh (native 24h dump invalidation, ZSH_COMPDUMP-aware) ───
 
 # ─── Zsh options ───
@@ -71,6 +78,7 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 [ -s "/home/m0xu/.bun/_bun" ] && source "/home/m0xu/.bun/_bun"
 
+
 # Pixi, Turso, Fly
 export PATH="/home/m0xu/.pixi/bin:$PATH"
 export PATH="$PATH:/home/m0xu/.turso"
@@ -97,3 +105,24 @@ fi
 
 # ─── Aliases ───
 alias claude-mem='bun "/home/m0xu/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
+
+# ─── copyparty quick-share ───
+share() {
+  local dst=~/inbox url="http://$(ip -4 -br addr show scope global | head -1 | awk '{print $3}' | cut -d/ -f1):3923"
+  for f in "$@"; do
+    cp -r "$f" "$dst/" && echo "$url/$(basename "$f")"
+  done
+}
+
+# ─── pi wrapper: restore powerline theme.json after updates ───
+pi() {
+  local src="$HOME/.pi/agent/extensions/powerline-footer/theme.json"
+  local dst="$HOME/.npm-global/lib/node_modules/pi-powerline-footer/theme.json"
+  command pi "$@"
+  if [[ "$1" == update || "$1" == up* ]]; then
+    if [[ -f "$src" ]]; then
+      cp "$src" "$dst" 2>/dev/null
+    fi
+  fi
+}
+
