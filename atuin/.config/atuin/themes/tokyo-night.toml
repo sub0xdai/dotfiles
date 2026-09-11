@@ -1,3 +1,7 @@
+[theme]
+name = "tokyo-night"
+
+[colors]
 AlertInfo = "#9ece6a"
 AlertWarn = "#e0af68"
 AlertError = "#f7768e"

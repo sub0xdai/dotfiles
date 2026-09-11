@@ -7,7 +7,7 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
-  "theme": "Catppuccin Espresso (Blur)",
+  "theme": "Catppuccin Latte",
   "project_panel": {
     "dock": "left"
   },
