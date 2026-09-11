@@ -24,6 +24,7 @@ fi=38;5;251:\
 
 
 # Common aliases
+alias cls="clear"
 alias ls='eza --icons --group-directories-first --color=always'
 alias ll='eza -lah --icons --group-directories-first --color=always'
 alias la='eza -a --icons --group-directories-first --color=always'
@@ -32,7 +33,7 @@ alias l.='eza -a | grep -E "^\." --color=always' # Show only dot files
 alias vim='nvim'
 alias vi='nvim'
 alias nano='nvim'
-alias alert='/home/m0xu/dotfiles/scripts/__alert.sh'
+alias alert='/home/m0xu/dotfiles/scripts/alert.sh'
 alias fetch='fastfetch'
 alias shutdown='sync; shutdown -h now'
 alias tor='cd ~/Documents/tor-browser && ./start-tor-browser.desktop'
@@ -43,15 +44,15 @@ alias weather='curl wttr.in/melbourne'
 alias fman='print -rl -- ${(ko)commands} | fzf | xargs man'
 alias speed='speedtest-cli --simple'
 alias pomo='pomo start -t'
-alias goproj='~/dotfiles/scripts/__setup_go.sh'
-alias installed='~/dotfiles/scripts/__installed.sh'
+alias goproj='~/dotfiles/scripts/setup_go.sh'
+alias installed='~/dotfiles/scripts/installed.sh'
 alias i3-msg='i3-msg -s $(ls /run/user/1000/i3/ipc-socket.*)'
-alias sysinfo='~/dotfiles/scripts/__my_system.sh'
+alias sysinfo='~/dotfiles/scripts/my_system.sh'
 alias lg='lazygit'
 alias gs='git status --short'
 alias wiki="wikiman"
-alias burpsuite="$HOME/dotfiles/scripts/__run-burpsuite.sh"
-alias wireshark="$HOME/dotfiles/scripts/__run-wireshark.sh"
+alias burpsuite="$HOME/dotfiles/scripts/run-burpsuite.sh"
+alias wireshark="$HOME/dotfiles/scripts/run-wireshark.sh"
 alias C='claude --dangerously-skip-permissions'
 alias cog-sse='docker run -d -e TRANSPORT_MODE=sse --env-file $HOME/cognee-mcp/.env -p 8000:8000 -v cognee_data:/app/.venv/lib/python3.12/site-packages/cognee/.cognee_system cognee/cognee-mcp:main'
 alias reset='setxkbmap -layout us' # Reset i3 after this
@@ -60,17 +61,23 @@ alias yz='yazi'
 alias note='vim ~/1-projects/vaults/sub0x_vault/scratchpad.md'
 alias gemini='gemini -y'
 alias cc-clean='pkill -f "claude" && echo "cleaned"'
-
+alias cp='cp -i'
+alias mv='mv -i'
+alias mkdir='mkdir -p'
+alias rm=' rm -I --preserve-root'
+alias yayf="yay -Slq | fzf --multi --preview 'yay -Sii {1}' --preview-window=down:75% \
+  | xargs -ro yay -S"
+alias sio="sioyek"
 
 # Initialize a new project with your 'Ascended' AI configuration
 alias c-init='cp -rn ~/.claude_template/* . && echo "🚀 Minimalist AI context initialized."'
 
 # System maintenance aliases with path expansion
-alias sysmaint='$HOME/dotfiles/scripts/__sysmaintenance.sh'
+alias sysmaint='$HOME/dotfiles/scripts/sysmaintenance.sh'
 alias sm='sysmaint'
 alias sysm='sysmaint'  # Alternative short form
 
-alias kebab='$HOME/dotfiles/scripts/__kebab_case.sh'
+alias kebab='$HOME/dotfiles/scripts/kebab_case.sh'
 
 # Function to find the project root and copy project_index.md
 cpi() {
@@ -108,9 +115,6 @@ peel() {
     fi
 }
 
-# New typst doc — scaffolds a math note using the @local Catppuccin package
-# Usage: typnote [filename]  (defaults to main.typ)
-# Theme lives at ~/.local/share/typst/packages/local/sub0x-catppuccin/0.1.0/
 # New typst doc — scaffolds a math note using the @local stoic AMOLED template
 # Usage: typnote [filename]  (defaults to main.typ)
 # Theme lives at ~/.cache/typst/packages/local/stoic/1.0.0/
@@ -242,101 +246,69 @@ zk() {
     nvim ~/1-projects/vaults/sub0x_vault/0-zettel/"$filename".md
 }
 
-zkl() {
+# Daily note path under 5-journal/YYYY/; renders 6-templates/daily.md when missing.
+_znote() {
     local vault=~/1-projects/vaults/sub0x_vault
     local year=$(date +%Y)
     local today=$(date +%Y-%m-%d)
-    local note="$vault/journal/$year/$today.md"
-    mkdir -p "$vault/journal/$year"
+    local note="$vault/5-journal/$year/$today.md"
+    local tpl="$vault/6-templates/daily.md"
+
+    if [ ! -f "$note" ] && [ -f "$tpl" ]; then
+        local moment_re="<% moment(tp.file.title, 'YYYY-MM-DD').format(\"dddd, DD MMMM YYYY\") %>"
+        local uuid=$(uuidgen 2>/dev/null || cat /proc/sys/kernel/random/uuid)
+        mkdir -p "$vault/5-journal/$year"
+        sed -e "s|<% tp.file.title %>|$today|g" \
+            -e "s|$moment_re|$(date +'%A, %d %B %Y')|" \
+            -e "s|<% tp.date.now(\"YYYY-MM-DD\", -1) %>|$(date -d yesterday +%F)|" \
+            -e "s|<% tp.date.now(\"YYYY-MM-DD\", +1) %>|$(date -d tomorrow +%F)|" \
+            -e "s|^id: *$|id: $uuid|" \
+            "$tpl" > "$note"
+        if [ ! -s "$note" ]; then
+            command rm -f "$note"
+            echo "❌ Template render failed: $tpl" >&2
+            return 1
+        fi
+    fi
+
+    printf '%s' "$note"
+}
+
+# Insert bullet $3 under the first line equal to $2; drop a bare placeholder below it.
+_zbullet() {
+    local note="$1" header="$2" bullet="$3"
+
+    if ! grep -qF "$header" "$note" 2>/dev/null; then
+        echo "❌ No '$header' callout in $note" >&2
+        return 1
+    fi
+
+    awk -v hdr="$header" -v bullet="$bullet" '
+        found { if ($0 == "- " || $0 == "- [ ] ") next; found = 0 }
+        { print }
+        $0 == hdr && !done { print bullet; done = 1; found = 1 }
+    ' "$note" > "$note.tmp" && command mv -- "$note.tmp" "$note" || return 1
+
+    echo "✅ Added to $(basename "$note")"
+}
+
+zkl() {
     echo -n "Log: "
-    read log_entry
-    echo "- $log_entry" >> "$note"
-    echo "✅ Entry added to $today"
+    read -r log_entry
+    _zbullet "$(_znote)" '> [!NOTE] Log' "- $log_entry"
 }
 
 zkt() {
-    local vault=~/1-projects/vaults/sub0x_vault
-    local year=$(date +%Y)
-    local today=$(date +%Y-%m-%d)
-    local note="$vault/journal/$year/$today.md"
-    mkdir -p "$vault/journal/$year"
     echo -n "Task: "
-    read task_item
-    echo "- [ ] $task_item" >> "$note"
-    echo "✅ Task added to $today"
+    read -r task_item
+    _zbullet "$(_znote)" '> [!tldr] Task' "- [ ] $task_item"
 }
-
 
 create_daily_note() {
-    local vault=~/1-projects/vaults/sub0x_vault
-    local year=$(date +%Y)
-    local today=$(date +%Y-%m-%d)
-    local todays_note="$vault/journal/$year/$today.md"
-    local yesterday=$(date -d "yesterday" +%Y-%m-%d)
-    local tomorrow=$(date -d "tomorrow" +%Y-%m-%d)
-    local display_date=$(date +"%A, %d %B %Y")
-
-    mkdir -p "$vault/journal/$year"
-
-    if [ -f "$todays_note" ]; then
-        echo "Daily note already exists: $today"
-        nvim "$todays_note"
-        return
-    fi
-
-    cat << EOF > "$todays_note"
----
-id: $(uuidgen 2>/dev/null || cat /proc/sys/kernel/random/uuid)
-title: $today
-desc: daily log with tasks
-tags: [journal]
----
----
-# $display_date
-
->  [[$yesterday]] <=> [[$tomorrow]]
----
-
-> [!NOTE] Log
--
-
----
-
-> [!tldr] Task
-- [ ]
-
----
-
-> [!warning] Backlog
-
-\`\`\`dataviewjs
-// Get dates for last 5 days
-const dates = [];
-for (let i = 0; i < 5; i++) {
-    const d = dv.date("today").minus({days: i});
-    dates.push(d.toFormat("yyyy-MM-dd"));
+    nvim "$(_znote)"
 }
 
-const pattern = dates.map(d => d.replace(/-/g, "-")).join("|");
 
-const query = \`
-not done
-hide backlinks
-path regex matches /\${pattern}/
-description regex does not match /^$/
-sort by created
-short mode
-\`;
-
-dv.paragraph("\`\`\`tasks\\n" + query + "\\n\`\`\`");
-\`\`\`
-
----
-> [[5-notes]]
-EOF
-    echo "Created daily note: $today"
-    nvim "$todays_note"
-}
 
 # Environment variables
 export EDITOR='nvim'
@@ -409,6 +381,8 @@ fi
 GEM_USER_DIR=$(<"$_gem_cache")
 
 export GOPATH="$HOME/go"
+# pi's FFF search: never index $HOME when pi launches from it
+export FFF_ENABLE_HOME_SCAN=0
 export DOTNET_ROOT="$HOME/.dotnet"
 export FLYCTL_INSTALL="$HOME/.fly"
 export PATH="\
@@ -422,6 +396,7 @@ $HOME/.fly/bin:\
 $HOME/.dotnet:$HOME/.dotnet/tools:\
 $HOME/perl5/bin:\
 $HOME/go/bin:\
+$GOBIN:\
 $HOME/git-worktree-runner/bin:\
 $HOME/dotfiles/scripts:\
 $GEM_USER_DIR/bin:\
@@ -439,12 +414,15 @@ export PERL_LOCAL_LIB_ROOT="$HOME/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_
 export PERL_MB_OPT="--install_base \"$HOME/perl5\""
 export PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"
 
+# Aristotle API key for Lean proof automation
+export ARISTOTLE_API_KEY="$(cat ~/.secrets/lean.txt 2>/dev/null)"
+
 # Source additional configurations
 [ -f "$HOME/.secrets" ] && source "$HOME/.secrets"
 if [ -f "$HOME/dotfiles/.env" ]; then
     export $(grep -v '^#' "$HOME/dotfiles/.env" | xargs)
 fi
 
-source ~/dotfiles/scripts/__grep_open.sh
+source ~/dotfiles/scripts/grep_open.sh
 
 # mise: shims injected directly into PATH above (no eval subprocess)
