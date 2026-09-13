@@ -7,7 +7,7 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
-  "theme": "Catppuccin Latte",
+  "theme": "Catppuccin Espresso (Blur) [Heavy]",
   "project_panel": {
     "dock": "left"
   },
@@ -28,7 +28,14 @@
       "model": "deepseek-chat",
       "enable_thinking": false
     },
-    "favorite_models": [],
+    "favorite_models": [
+      {
+        "provider": "deepseek",
+        "model": "deepseek-v4-flash",
+        "enable_thinking": true,
+        "effort": "high"
+      }
+    ],
     "model_parameters": []
   },
   "icon_theme": "Zed (Default)",
