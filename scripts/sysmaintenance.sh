@@ -139,6 +139,9 @@ main() {
         log_action "Killed $((claude_count - 1)) orphaned claude process(es)"
     fi
 
+    # --- Cargo --- 
+    cargo install-update -a
+
     # --- Journal logs ---
     log_action "Cleaning system logs (keeping 7 days, max 500M)"
     run_sudo journalctl --vacuum-time=7d --vacuum-size=500M 2>/dev/null \
