@@ -9,8 +9,12 @@
 # Usage
 #   jev.sh --noul 'Is this an account takeover signal?' < evidence.txt
 #   jev.sh --choice 'Which queue?' --option support='ordinary' --option sec='incident'
-#   jev.sh --score 'How grounded?' --level low='unsafe' --level high='grounded'
+#   jev.sh --score 'How grounded?' --level 'unsafe' --level 'grounded'
 #   jev.sh --spec request.json        # raw {state, model, questions} body
+#
+# --option takes key=value because a Choice names its options. --level takes a
+# bare description because Score levels are positional and their order is the
+# meaning. The API returns 422 if score criteria is a map instead of a list.
 #
 # Questions batch: repeat the question flags and one request carries them all.
 # Adding questions costs only question tokens, so one call per decision cycle.
@@ -88,8 +92,25 @@ trace() {
   printf 'jev.sh: %s\n' "$1" >&2
 }
 
+# Carries the HTTP status and the API's own error detail, so one failed call is
+# diagnosable on its own instead of needing a hand-written probe.
 emit_error() {
-  jq -cn --arg r "$1" '{schema_version:"1",status:"error",reason:$r}'
+  local reason="$1" http="null" detail="null"
+  [[ "${POST_CODE:-}" =~ ^[0-9]+$ ]] && http="$POST_CODE"
+  if [[ -n "${POST_FILE:-}" && -f "${POST_FILE:-}" ]]; then
+    detail=$(jq -c '
+      (.detail // .) as $d
+      | (if ($d | type) == "array" then $d[0] else $d end) as $e
+      | if ($e | type) == "object"
+        then { error_type: ($e.error_type // null),
+               message: ($e.message // $e.msg // null),
+               input: ($e.input // null) }
+        else ($e | tostring | .[0:300])
+        end' "$POST_FILE" 2>/dev/null) || detail="null"
+    [[ -n "$detail" && "$detail" != "null" ]] || detail="null"
+  fi
+  jq -cn --arg r "$reason" --argjson s "$http" --argjson d "$detail" \
+    '{schema_version:"1",status:"error",reason:$r,http_status:$s,detail:$d}'
   exit 0
 }
 
@@ -122,7 +143,8 @@ parse_args() {
       --noul)               add_question noul "$(need_arg "$1" "${2:-}")"; shift 2 ;;
       --choice)             add_question choice "$(need_arg "$1" "${2:-}")"; shift 2 ;;
       --score)              add_question score "$(need_arg "$1" "${2:-}")"; shift 2 ;;
-      --option|--level)     add_criterion "$(need_arg "$1" "${2:-}")"; shift 2 ;;
+      --option)             add_option "$(need_arg "$1" "${2:-}")"; shift 2 ;;
+      --level)              add_level "$(need_arg "$1" "${2:-}")"; shift 2 ;;
       --threshold)          THRESHOLD=$(need_arg "$1" "${2:-}"); shift 2 ;;
       --uncertainty-margin) MARGIN=$(need_arg "$1" "${2:-}"); shift 2 ;;
       --model)              MODEL=$(need_arg "$1" "${2:-}"); shift 2 ;;
@@ -141,21 +163,31 @@ usage() {
 }
 
 add_question() {
+  local seed='{}'
+  [[ "$1" == score ]] && seed='[]'
   NAMES+=("q$(( ${#NAMES[@]} + 1 ))")
   TYPES+=("$1")
   INSTRS+=("$2")
-  CRIT+=('{}')
+  CRIT+=("$seed")
   CUR=$(( ${#NAMES[@]} - 1 ))
 }
 
-# `--option k=v` and `--level k=v` both land in that question's criteria map,
-# which the API uses as the option set for choice and the levels for score.
-add_criterion() {
+# Choice criteria is a map of option name to meaning.
+add_option() {
   local pair="$1" k v
-  (( CUR >= 0 )) || die "--option/--level before any question flag"
+  (( CUR >= 0 )) || die "--option before any question flag"
+  [[ "${TYPES[$CUR]}" == choice ]] || die "--option belongs to a --choice question"
   [[ "$pair" == *=* ]] || die "expected key=value, got: $pair"
   k="${pair%%=*}"; v="${pair#*=}"
   CRIT[$CUR]=$(jq -c --arg k "$k" --arg v "$v" '. + {($k): $v}' <<<"${CRIT[$CUR]}")
+}
+
+# Score criteria is an ordered list of levels. Position is the meaning, so the
+# API takes a list here where Choice takes a map.
+add_level() {
+  (( CUR >= 0 )) || die "--level before any question flag"
+  [[ "${TYPES[$CUR]}" == score ]] || die "--level belongs to a --score question"
+  CRIT[$CUR]=$(jq -c --arg v "$1" '. + [$v]' <<<"${CRIT[$CUR]}")
 }
 
 # Trailing newline is trimmed so a state file does not carry one into the
@@ -177,6 +209,20 @@ resolve_state() {
   [[ -n "$STATE" ]] || die "state is empty"
 }
 
+# Runs in the top-level shell, never inside a command substitution, so that die
+# actually stops the script. A die inside $(...) only kills the subshell and
+# lets a malformed request through to jq.
+validate_questions() {
+  local i n t c
+  for (( i=0; i<${#NAMES[@]}; i++ )); do
+    n="${NAMES[$i]}"; t="${TYPES[$i]}"; c="${CRIT[$i]}"
+    case "$t" in
+      score)  (( $(jq 'length' <<<"$c") >= 2 )) || die "$n needs at least two --level values" ;;
+      choice) (( $(jq 'length' <<<"$c") >= 2 )) || die "$n needs at least two --option values" ;;
+    esac
+  done
+}
+
 build_questions() {
   local out='{}' i n t ins c
   for (( i=0; i<${#NAMES[@]}; i++ )); do
@@ -184,7 +230,7 @@ build_questions() {
     out=$(jq -c --arg n "$n" --arg t "$t" --arg i "$ins" --argjson c "$c" \
       '. + {($n): ({type:$t, instructions:$i}
                      + (if ($c | length) > 0 then {criteria:$c} else {} end))}' \
-      <<<"$out") || die "could not assemble question $n"
+      <<<"$out") || return 1
   done
   printf '%s' "$out"
 }
@@ -213,11 +259,13 @@ stub_answers() {
                                | from_entries),
              confidence: 1}
           else
-            {type:"score", score: 1, legend: $c,
+            {type:"score", score: 1,
+             legend: ($c | to_entries
+                       | map({key: (.key | tostring), value: .value})
+                       | from_entries),
              probabilities: ($c | to_entries
-                               | map({key:.key,
-                                      value: (if .key == ($c | keys_unsorted[0])
-                                              then 1 else 0 end)})
+                               | map({key: (.key | tostring),
+                                      value: (if .key == 0 then 1 else 0 end)})
                                | from_entries),
              confidence: 1}
           end)
@@ -332,9 +380,12 @@ main() {
     (( STUB )) && emit_stub "$(jq -c '.questions // {}' <<<"$req")"
   else
     (( ${#NAMES[@]} > 0 )) || die "no questions: pass --noul/--choice/--score"
+    validate_questions
     resolve_state
-    (( STUB )) && emit_stub "$(build_questions)"
-    req=$(build_request "$(jq -cn --arg s "$STATE" '$s')" "$(build_questions)")
+    local questions
+    questions=$(build_questions) || die "could not assemble the questions"
+    (( STUB )) && emit_stub "$questions"
+    req=$(build_request "$(jq -cn --arg s "$STATE" '$s')" "$questions")
   fi
 
   local key
