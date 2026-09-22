@@ -23,7 +23,7 @@
 #   --state TEXT | --state-file FILE   default: stdin (string state)
 #   --threshold N            noul band threshold (default 0.70)
 #   --uncertainty-margin N   half-width of the uncertain band (default 0.10)
-#   --model M                default jev-latest
+#   --model M                default jev-1.13.0
 #   --timeout S              per-attempt timeout (default 10)
 #   --stub                   deterministic offline judge, no network
 #   --no-pace                skip the choke point (tests, replay)
@@ -60,7 +60,9 @@ BREAKER_FILE="$CACHE_DIR/breaker"
 MIN_INTERVAL="${JEV_MIN_INTERVAL:-2}"
 MAX_COOLDOWN=3600
 
-MODEL="${JEV_MODEL:-jev-latest}"
+# Pinned, not floating: the instrument is (model, state representation, question),
+# and a floating alias leaves the model unpinned under your own log.
+MODEL="${JEV_MODEL:-jev-1.13.0}"
 THRESHOLD="${JEV_THRESHOLD:-0.70}"
 MARGIN="${JEV_UNCERTAINTY_MARGIN:-0.10}"
 TIMEOUT="${JEV_TIMEOUT:-10}"
