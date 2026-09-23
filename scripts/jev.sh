@@ -41,7 +41,9 @@
 # decision for the caller, never rounded away here.
 #
 # Credentials: ~/.config/typesafe/credentials.env (TYPESAFE_API_KEY=...), mode
-# 600. Override the path with JEV_CRED_FILE. A key is never taken from argv.
+# 600. Override the path with JEV_CRED_FILE. The key is read from that file and
+# handed to curl through a 0600 --config file, so it never appears on a command
+# line or in argv.
 #
 # Pacing: one process-wide 2s choke point plus an escalating 429 breaker. The
 # published quota is 1,200 req/min but the real one is unpublished, so this
@@ -76,10 +78,12 @@ VERBOSE=0
 CUR=-1
 POST_CODE=""
 POST_FILE=""
+HEADER_FILE=""
 declare -a NAMES=() TYPES=() INSTRS=() CRIT=()
 
 cleanup() {
   [[ -n "$POST_FILE" && -f "$POST_FILE" ]] && rm -f "$POST_FILE"
+  [[ -n "$HEADER_FILE" && -f "$HEADER_FILE" ]] && rm -f "$HEADER_FILE"
   return 0
 }
 trap cleanup EXIT
@@ -347,13 +351,18 @@ record_429() {
 
 # Writes the body to POST_FILE and the HTTP status, or a transport class, to
 # POST_CODE. It never emits: a command substitution would swallow the envelope
-# and exit only the subshell, so the decision belongs to the caller.
+# and exit only the subshell, so the decision belongs to the caller. The bearer
+# token is written to a 0600 file once and handed to curl with --config, so it
+# is not visible in the process list the way a -H argument is.
 post() {
   local raw rc
   POST_FILE=$(mktemp) || die "mktemp failed"
+  HEADER_FILE=$(mktemp) || die "mktemp failed"
+  chmod 600 "$HEADER_FILE" || die "could not tighten the header file"
+  printf 'header = "Authorization: Bearer %s"\nheader = "Content-Type: application/json"\n' "$1" \
+    >"$HEADER_FILE" || die "could not write the header file"
   raw=$(curl -sS -m "$TIMEOUT" -o "$POST_FILE" -w '%{http_code}' -X POST "$ENDPOINT" \
-    -H "Authorization: Bearer $1" -H 'Content-Type: application/json' \
-    --data-binary "$2" 2>/dev/null)
+    --config "$HEADER_FILE" --data-binary "$2" 2>/dev/null)
   rc=$?
   if (( rc != 0 )); then
     (( rc == 28 )) && POST_CODE=timeout || POST_CODE=transport
@@ -393,6 +402,7 @@ main() {
   local key
   key=$(resolve_key)
   [[ -n "$key" ]] || emit_disabled
+  [[ "$key" != *'"'* && "$key" != *$'\n'* ]] || emit_error invalid
 
   pace_gate || emit_error rate_limited
   trace "POST $ENDPOINT"
