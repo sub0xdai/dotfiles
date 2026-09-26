@@ -68,6 +68,8 @@ alias rm=' rm -I --preserve-root'
 alias yayf="yay -Slq | fzf --multi --preview 'yay -Sii {1}' --preview-window=down:75% \
   | xargs -ro yay -S"
 alias sio="sioyek"
+alias limusic='limusic-app'
+alias v="nvim"
 
 # Initialize a new project with your 'Ascended' AI configuration
 alias c-init='cp -rn ~/.claude_template/* . && echo "🚀 Minimalist AI context initialized."'
@@ -108,11 +110,21 @@ cpi() {
 
 #  Open tar or zip
 peel() {
-    if [[ "$1" == *.zip ]]; then
-        unzip "$1"
-    else
-        tar xf "$1"
-    fi
+  if [ -z "$1" ]; then
+    echo "Usage: peel <archive>" >&2
+    return 1
+  fi
+
+  if [ ! -f "$1" ]; then
+    echo "peel: '$1' not found" >&2
+    return 1
+  fi
+
+  if [[ "$1" == *.zip ]]; then
+    unzip "$1"
+  else
+    tar xf "$1"
+  fi
 }
 
 # New typst doc — scaffolds a math note using the @local stoic AMOLED template
@@ -181,6 +193,15 @@ alias trestore='tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/restore.sh
 alias tsd='tsave && tmux detach'
 alias tds='tmux detach'
 alias tm="tmux"
+
+# todo.txt via tuxedo (https://github.com/webstonehq/tuxedo)
+# `t` is the sesh picker below, so the TUI is `td`.
+export TODO_DIR="$HOME/todo"
+export TODO_FILE="$TODO_DIR/todo.txt"
+export DONE_FILE="$TODO_DIR/done.txt"
+alias td='tuxedo'        # TUI
+alias tl='tuxedo ls'     # list (tl @work, tl +proj)
+alias ta='tuxedo add'    # add (ta "call dentist tomorrow")
 
 # Session picker — sesh + fzf entry point (works outside tmux)
 # Tokyo Night palette
@@ -388,6 +409,7 @@ export FLYCTL_INSTALL="$HOME/.fly"
 export PATH="\
 $HOME/.local/share/mise/shims:\
 $HOME/.local/bin:\
+$HOME/.bend/bin:\
 $HOME/.cargo/bin:\
 $HOME/.npm-global/bin:\
 $HOME/.atuin/bin:\

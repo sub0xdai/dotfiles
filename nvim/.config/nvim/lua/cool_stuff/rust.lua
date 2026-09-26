@@ -421,7 +421,7 @@ end, {
 -- Suggested keymaps (uncomment and adjust to taste)
 -- ════════════════════════════════════════════════════════════════════════════
 -- vim.keymap.set("n", "<leader>rb", "<cmd>CargoBuild<cr>", { desc = "Cargo Build" })
--- vim.keymap.set("n", "<leader>rr", "<cmd>CargoRun<cr>", { desc = "Cargo Run" })
+vim.keymap.set("n", "<leader>rr", "<cmd>CargoRun<cr>", { desc = "Cargo Run" })
 -- vim.keymap.set("n", "<leader>rt", "<cmd>CargoTest<cr>", { desc = "Cargo Test" })
 -- vim.keymap.set("n", "<leader>rtf", "<cmd>CargoTestFunc<cr>", { desc = "Cargo Test Func" })
 -- vim.keymap.set("n", "<leader>rk", "<cmd>CargoCheck<cr>", { desc = "Cargo Check" })

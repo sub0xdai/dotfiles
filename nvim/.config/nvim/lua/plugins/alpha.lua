@@ -7,30 +7,37 @@ return {
 	config = function()
 		local alpha = require("alpha")
 		local dashboard = require("alpha.themes.dashboard")
+    local logo = [[
 
-		dashboard.section.header.val = {
-    [[         .======.           ]],
-    [[         | INRI |           ]],
-    [[         |      |           ]],
-    [[         |      |           ]],
-    [[.========'      '========.  ]],
-    [[|   _      xxxx      _   |  ]],
-    [[|  /_;-.__ / _\  _.-;_\  |  ]],
-    [[|     `-._`'`_/'`.-'     |  ]],
-    [['========.`\   /`========'  ]],
-    [[         | |  / |           ]],
-    [[         |/-.(  |           ]],
-    [[         |\_._\ |           ]],
-    [[         | \ \`;|           ]],
-    [[         |  > |/|           ]],
-    [[         | / // |           ]],
-    [[         | |//  |           ]],
-    [[         | \(\  |           ]],
-    [[         |  ``  |           ]],
-    [[         |      |           ]],
-    [[ _\\ _  _\\| \//  |//_ _\//_]],
-    [[ ^ `^`^ ^`` `^ ^` ``^^`  `^^]],
-}
+
+                                      \
+                                  `\,/
+                                  .-'-.
+                                 '     `
+                                 `.   .'
+                          `._  .-~     ~-.   _,'
+                           ( )'           '.( )
+             `._    _       /               .'
+              ( )--' `-.  .'                 ;
+         .    .'        '.;                  ()
+          `.-.`           '                 .'
+----*-----;                                .'
+          .`-'.           ,                `.
+         '    '.        .';                  ()
+              (_)-   .-'  `.                 ;
+             ,'   `-'       \               `.
+                           (_).           .'(_)
+                          .'   '-._   _.-'    `.
+                                 .'   `.
+                                 '     ;              ^sub0x_
+                                  `-,-'
+                                   /`\
+                                 /`
+ 
+    ]]
+
+		dashboard.section.header.val = vim.split(logo, "\n")
+
 		dashboard.section.buttons.val = {
 			-- dashboard.button("e", "  > New file", ":ene <BAR> startinsert <CR>"),
 			dashboard.button("b", "  > Browse files", function() require("mini.files").open() end),

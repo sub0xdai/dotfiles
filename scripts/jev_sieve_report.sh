@@ -29,6 +29,7 @@
 #
 # Thresholds (env):
 #   JEV_SIEVE_MIN_SAMPLES  cached candidates before labeling is worth it   (100)
+#   JEV_SIEVE_MIN_READINGS noul readings before a flatness claim is fair    (100)
 #   JEV_SIEVE_MIN_LIVE     on-mode hides before a bound is computed        (100)
 #   JEV_SIEVE_MAX_FN_PCT   accepted upper bound on false negatives, pct    (2)
 set -uo pipefail
@@ -36,6 +37,7 @@ set -uo pipefail
 LOG="${JEV_SIEVE_LOG:-${XDG_CACHE_HOME:-$HOME/.cache}/jev/sieve.jsonl}"
 BLOCKS="${JEV_SIEVE_BLOCKS:-${XDG_CACHE_HOME:-$HOME/.cache}/jev/blocks}"
 MIN_SAMPLES="${JEV_SIEVE_MIN_SAMPLES:-100}"
+MIN_READINGS="${JEV_SIEVE_MIN_READINGS:-100}"
 MIN_LIVE="${JEV_SIEVE_MIN_LIVE:-100}"
 MAX_FN_PCT="${JEV_SIEVE_MAX_FN_PCT:-2}"
 Z=1.645
@@ -81,14 +83,24 @@ GATE='
   | [$g[] | . as $e | .verdicts[]? | select(.band == "no")
       | { f: "\($e.session)-\(.id)-\(.from)-\(.to).txt", live: ($e.mode == "on") }] as $cand
   | [($cand | map(.f) | unique)[] | select(. as $n | $files | index($n))] as $cached
-  | [($cand[] | select(.live) | .f) | unique[]] as $live
+  | ($cand | map(select(.live) | .f) | unique) as $live
   | ([$live[] | select(. as $n | $recalled | index($n))] | length) as $rb
+  | ([$g[] | .verdicts[]? | .noul | select(type == "number")]) as $n
+  | ($n | length) as $readings
+  | ($n | unique | length) as $distinct
+  | ([$n[]] | min // 0) as $nmin
+  | ([$n[]] | max // 0) as $nmax
+  | ([$g[] | select(.verdicts) | .blocks // 0] | add // 0) as $sent
   | [$q, ($g | length), ([$g[] | .verdicts | length] | add // 0),
-     ($cand | map(.f) | unique | length), ($cached | length), ($live | length), $rb, $last]
+     ($cand | map(.f) | unique | length), ($cached | length), ($live | length), $rb, $last,
+     $readings, $distinct, $nmin, $nmax, $sent]
   | @tsv
 '
 
-ROWS=$(jq -s -r --argjson files "$FILES" "$GATE" "$LOG")
+if ! ROWS=$(jq -s -r --argjson files "$FILES" "$GATE" "$LOG"); then
+  printf 'gate failed: the log at %s could not be read\n' "$LOG" >&2
+  exit 2
+fi
 if [[ -z "$ROWS" ]]; then
   printf 'no decisions logged yet. Nothing to gate.\n'
   exit 0
@@ -108,7 +120,8 @@ else
 fi
 
 rc=0
-while IFS=$'\t' read -r qid docs blocks cand cached live rb last; do
+while IFS=$'\t' read -r qid docs blocks cand cached live rb last \
+  readings distinct nmin nmax sent; do
   [[ -z "$qid" ]] && continue
   if [[ "$qid" != "$TARGET" ]]; then
     printf 'other: %s docs=%s candidates=%s cached=%s (superseded, not gated)\n' \
@@ -121,9 +134,24 @@ while IFS=$'\t' read -r qid docs blocks cand cached live rb last; do
   printf '  hide candidates=%s (%s.%s%% of blocks)  cached=%s  on-mode hides=%s  read-backs=%s\n' \
     "$cand" "$(( tenths / 10 ))" "$(( tenths % 10 ))" "$cached" "$live" "$rb"
 
+  (( sent > blocks )) && printf '  note: %s of %s offered blocks came back unjudged\n' \
+    "$(( sent - blocks ))" "$sent"
+
   if (( cand == 0 )); then
-    printf '  verdict: NOT READY - the band holds no blocks at all, so this\n'
-    printf '           instrument does not separate. Fix the question before sampling.\n'
+    if (( readings < MIN_READINGS )); then
+      printf '  verdict: NOT READY - %s noul readings, want %s. Too few to tell a\n' \
+        "$readings" "$MIN_READINGS"
+      printf '           flat instrument from an unseparated sample. Keep sampling.\n'
+    elif (( distinct * 50 <= readings )); then
+      printf '  verdict: NOT READY - %s readings collapsed to %s distinct values\n' \
+        "$readings" "$distinct"
+      printf '           (range %s-%s). The instrument is flat. Fix the question.\n' \
+        "$nmin" "$nmax"
+    else
+      printf '  verdict: NOT READY - 0 candidates, but the instrument separates:\n'
+      printf '           %s readings, %s distinct values, range %s-%s. Keep sampling.\n' \
+        "$readings" "$distinct" "$nmin" "$nmax"
+    fi
     rc=1
   elif (( cached == 0 )); then
     printf '  verdict: NOT READY - %s candidates but nothing on disk to label.\n' "$cand"

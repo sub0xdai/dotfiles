@@ -36,7 +36,7 @@ configuration {
 	drun-display-format: "{name} [<span weight='light' size='small'><i>({generic})</i></span>]";
 	drun-show-actions: false;
 	drun-url-launcher: "xdg-open";
-	drun-use-desktop-cache: true;
+	drun-use-desktop-cache: false;
 	drun-reload-desktop-cache: false;
 	drun {
 		/** Parse user desktop files. */

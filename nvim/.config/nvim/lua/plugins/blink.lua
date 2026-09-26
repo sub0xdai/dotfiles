@@ -83,6 +83,8 @@ return {
             name = "Snippets",
             module = "blink.cmp.sources.snippets",
             score_offset = 50,
+            -- 2-char triggers (fn, if) need the menu; overrides the global 3 for this source
+            min_keyword_length = 2,
           },
           buffer = {
             name = "Buffer",

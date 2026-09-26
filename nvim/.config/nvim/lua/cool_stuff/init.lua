@@ -1,8 +1,4 @@
-require("cool_stuff.todo_float").setup({
-	target_file = "todo.md",
-	global_file = "~/notes/todo.md",
-})
-
+-- todo_float is set up by its lazy.nvim spec in lua/plugins/todo.lua
 require("cool_stuff.go")
 require("cool_stuff.rust")
 require("cool_stuff.zig")

@@ -38,3 +38,13 @@ end
 require("compat").setup()
 require("vim-options")
 require("lazy").setup("plugins")
+
+-- cool_stuff/init.lua (go/rust/zig tooling) was never required by anything
+require("cool_stuff")
+
+-- add bend
+vim.filetype.add({
+  extension = {
+    bend = "bend",
+  },
+})
