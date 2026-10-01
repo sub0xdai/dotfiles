@@ -81,6 +81,9 @@ alias sysm='sysmaint'  # Alternative short form
 
 alias kebab='$HOME/dotfiles/scripts/kebab_case.sh'
 
+yay() { PATH=/usr/bin:$PATH command yay "$@"; }
+makepkg() { PATH=/usr/bin:$PATH command makepkg "$@"; }
+
 # Function to find the project root and copy project_index.md
 cpi() {
     # Find the root of the git repository
