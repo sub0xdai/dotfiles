@@ -1,6 +1,9 @@
 --target=/home/m0xu
 --dir=/home/m0xu/dotfiles
 --ignore=README.md
+--ignore=SIOYEK_REFERENCE.md
+--ignore=CLAUDE.md
 --ignore=.git
 --ignore=.gitignore
 --ignore=.*\.log$
+--ignore=.*\.tmp$

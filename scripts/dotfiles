@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+STOW_DIR=/home/m0xu/dotfiles
+TARGET=/home/m0xu
+
+command -v stow >/dev/null || { printf 'stow is not installed\n' >&2; exit 1; }
+[ -d "$STOW_DIR/.git" ] || { printf '%s is not a git checkout\n' "$STOW_DIR" >&2; exit 1; }
+
+cd "$STOW_DIR"
+
+packages=$(
+    for d in */; do
+        ls -A "$d" | grep -q '^\.' && printf '%s\n' "${d%/}"
+    done
+)
+
+[ -n "$packages" ] || { printf 'no stow packages found in %s\n' "$STOW_DIR" >&2; exit 1; }
+
+exec stow -R -t "$TARGET" $packages
