@@ -179,9 +179,11 @@ migrate_repo() {
 
 # Dir colors for traditional ls
 if command -v dircolors &> /dev/null; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-elif [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(/usr/bin/dircolors -b ~/.dircolors)" || eval "$(/usr/bin/dircolors -b)"
+    if [ -r ~/.dircolors ]; then
+        eval "$(dircolors -b ~/.dircolors)"
+    else
+        eval "$(dircolors -b)"
+    fi
 else
     # Fallback color configuration matching Kanso Zen theme
     export LS_COLORS='di=38;5;109:ln=38;5;103:so=38;5;145:pi=38;5;145:ex=38;5;174:bd=38;5;109:cd=38;5;109:su=38;5;145:sg=38;5;145:tw=38;5;180:ow=38;5;109'
@@ -445,7 +447,13 @@ export ARISTOTLE_API_KEY="$(cat ~/.secrets/lean.txt 2>/dev/null)"
 # Source additional configurations
 [ -f "$HOME/.secrets" ] && source "$HOME/.secrets"
 if [ -f "$HOME/dotfiles/.env" ]; then
-    export $(grep -v '^#' "$HOME/dotfiles/.env" | xargs)
+    while IFS= read -r _env_line || [ -n "$_env_line" ]; do
+        case $_env_line in
+            ''|'#'*) continue ;;
+            *=*) export "${_env_line%%=*}=${_env_line#*=}" ;;
+        esac
+    done < "$HOME/dotfiles/.env"
+    unset _env_line
 fi
 
 source ~/dotfiles/scripts/grep_open.sh

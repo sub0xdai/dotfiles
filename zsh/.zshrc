@@ -12,6 +12,7 @@ fpath=($HOME/.local/share/mise/completions $fpath $ZSH_CUSTOM/plugins/zsh-autosu
 
 # ─── Source shared configuration ───
 source ~/.shell_common
+[ -f ~/.secrets.sh ] && source ~/.secrets.sh
 
 # ─── Oh My Zsh ───
 ZSH_THEME="robbyrussell"
